@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>HydroSimul - NetCDF</title>
+<title>NetCDF – HydroSimul</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../dataprocess/spatial_data.html" rel="next">
+<link href="../dataprocess/eda_basic.html" rel="next">
 <link href="../dataprocess/data_load.html" rel="prev">
 <link href="../Kan.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -72,17 +72,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4fdaf0600e1712c666c3ca78a995a661.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,6 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -104,69 +111,63 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">HydroSimul</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../dataprocess/index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Dataprocess</span></a>
+    <a class="nav-link active" href="../dataprocess/index.html" aria-current="page"> 
+<span class="menu-text">Dataprocess</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../modelling/index.html" rel="" target="">
- <span class="menu-text">Modelling</span></a>
+    <a class="nav-link" href="../modelling/index.html"> 
+<span class="menu-text">Modelling</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-</div>
           </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../dataprocess/index.html">Dataprocess</a></li><li class="breadcrumb-item"><a href="../dataprocess/NetCDF.html">NetCDF</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../dataprocess/index.html">Dataprocess</a></li><li class="breadcrumb-item"><a href="../dataprocess/basic_format.html">Data-Processing</a></li><li class="breadcrumb-item"><a href="../dataprocess/NetCDF.html">NetCDF</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../dataprocess/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Dataprocess</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../dataprocess/basic_format.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Basic Data &amp; File Format</span></a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../dataprocess/basic_r_python.html" class="sidebar-item-text sidebar-link">
@@ -175,32 +176,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
- <span class="menu-text">Pre-Processing</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data-Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../dataprocess/basic_format.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic Data &amp; File Format</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../dataprocess/data_load.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Loading</span></a>
   </div>
 </li>
-      </ul>
-  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../dataprocess/NetCDF.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">NetCDF</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../dataprocess/eda_basic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploratory data analysis (EDA)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Spatial Data</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -221,9 +234,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Timeserises</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -236,14 +249,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../dataprocess/statistic_basic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Statistic Basic</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../dataprocess/statistic_graphic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Graphical Statistic</span></a>
+  <a href="../dataprocess/timeserises_visual.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visualization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -254,12 +261,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Statistic</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../dataprocess/statistic_basic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistic Basic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../dataprocess/statistic_graphic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Graphical Statistic</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Visualization</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../dataprocess/visual_plotElements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The elements of a plot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../dataprocess/visual_ggplot2Basic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot2 Basic</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
       </ul>
   </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -290,7 +343,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../dataprocess/index.html">Dataprocess</a></li><li class="breadcrumb-item"><a href="../dataprocess/basic_format.html">Data-Processing</a></li><li class="breadcrumb-item"><a href="../dataprocess/NetCDF.html">NetCDF</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">NetCDF</h1>
 </div>
@@ -305,7 +358,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>NetCDF stands for “Network Common Data Form.” It is a file format that is designed to store large <strong>arrays</strong> of data, primarily used in scientific and engineering applications. NetCDF files are self-describing, meaning they <strong>contain metadata</strong> along with the data, which makes it easier to understand the contents. NetCDF is particularly well-suited for storing <strong>multi-dimensional</strong> data, such as time series, spatial data, and climate model outputs. It can handle data with complex structures like grids, which are common in environmental and geospatial datasets.</p>
 <p>In simple terms, NetCDF is a file format for storing multi-dimensional arrays of data along with metadata.</p>
@@ -405,36 +460,36 @@ $author
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the dimensions</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(nc_Test.dimensions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'latitude': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'latitude', size = 6, 'longitude': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'longitude', size = 8, 'time': &lt;class 'netCDF4._netCDF4.Dimension'&gt; (unlimited): name = 'time', size = 3}</code></pre>
+<pre><code>{'latitude': "&lt;class 'netCDF4.Dimension'&gt;": name = 'latitude', size = 6, 'longitude': "&lt;class 'netCDF4.Dimension'&gt;": name = 'longitude', size = 8, 'time': "&lt;class 'netCDF4.Dimension'&gt;" (unlimited): name = 'time', size = 3}</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the variables</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(nc_Test.variables)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'latitude': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+<pre><code>{'latitude': &lt;class 'netCDF4.Variable'&gt;
 float64 latitude(latitude)
     units: degrees_north
     long_name: latitude
 unlimited dimensions: 
 current shape = (6,)
-filling on, default _FillValue of 9.969209968386869e+36 used, 'longitude': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+filling on, default _FillValue of 9.969209968386869e+36 used, 'longitude': &lt;class 'netCDF4.Variable'&gt;
 float64 longitude(longitude)
     units: degrees_east
     long_name: longitude
 unlimited dimensions: 
 current shape = (8,)
-filling on, default _FillValue of 9.969209968386869e+36 used, 'time': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+filling on, default _FillValue of 9.969209968386869e+36 used, 'time': &lt;class 'netCDF4.Variable'&gt;
 int32 time(time)
     units: day since 1961-01-01 00:00:00 +00
     long_name: time
 unlimited dimensions: time
 current shape = (3,)
-filling on, default _FillValue of -2147483647 used, 'T0': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+filling on, default _FillValue of -2147483647 used, 'T0': &lt;class 'netCDF4.Variable'&gt;
 float32 T0(time, longitude, latitude)
     units: cel
     _FillValue: -9999.0
 unlimited dimensions: time
 current shape = (3, 8, 6)
-filling on, 'crs': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+filling on, 'crs': &lt;class 'netCDF4.Variable'&gt;
 float32 crs()
     long_name: coordinate reference system
     EPSG: EPSG:4236
@@ -479,62 +534,62 @@ filling on, default _FillValue of 9.969209968386869e+36 used}</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>, , 1
 
-            [,1]      [,2]      [,3]      [,4]      [,5]       [,6]      [,7]
-[1,] 0.725443244 0.6732702 0.5703731 0.5483580 0.2537033 0.94056231 0.7548797
-[2,] 0.814703703 0.5736017 0.1296277 0.4551281 0.1588579 0.71151888 0.6034713
-[3,] 0.216821894 0.5321406 0.4085952 0.3278248 0.5430235 0.82378107 0.6014815
-[4,] 0.297041595 0.7512726 0.9008501 0.5378256 0.3988290 0.97841108 0.3478752
-[5,] 0.618472338 0.3600799 0.6185356 0.5353751 0.1055002 0.01782655 0.4251221
-[6,] 0.002724555 0.3111249 0.1833881 0.1643889 0.9843024 0.71265191 0.9824668
-           [,8]
-[1,] 0.89867812
-[2,] 0.83212894
-[3,] 0.85922885
-[4,] 0.62324673
-[5,] 0.06894559
-[6,] 0.93136758
+          [,1]      [,2]      [,3]      [,4]      [,5]      [,6]       [,7]
+[1,] 0.6815190 0.6685974 0.3355391 0.8300888 0.4126872 0.4213721 0.40900978
+[2,] 0.5834032 0.1514063 0.3042631 0.2520407 0.5793471 0.1833323 0.32067558
+[3,] 0.4924265 0.7376668 0.3327484 0.9493681 0.2489835 0.5988685 0.07783964
+[4,] 0.8509517 0.6454237 0.5295522 0.8479783 0.4104529 0.4381394 0.19551247
+[5,] 0.9409876 0.8425627 0.8565235 0.4752189 0.2917338 0.4781619 0.81465298
+[6,] 0.2088355 0.6121973 0.3734793 0.7684925 0.9713812 0.5124385 0.34575224
+          [,8]
+[1,] 0.5420827
+[2,] 0.8335595
+[3,] 0.9659727
+[4,] 0.6240343
+[5,] 0.7685761
+[6,] 0.3649738
 
 , , 2
 
-           [,1]       [,2]      [,3]       [,4]      [,5]       [,6]      [,7]
-[1,] 0.59483874 0.13798767 0.4353234 0.84987003 0.4080514 0.37254110 0.8453325
-[2,] 0.02716501 0.13771591 0.4015263 0.81022775 0.2442435 0.06005965 0.6033576
-[3,] 0.63030612 0.07624923 0.8082347 0.09031754 0.1274646 0.99918461 0.3695562
-[4,] 0.17796901 0.58655804 0.9450504 0.45794815 0.3458956 0.50446874 0.7934223
-[5,] 0.90312028 0.64233494 0.6922982 0.93077385 0.3621833 0.98565292 0.2701277
-[6,] 0.12467533 0.98434967 0.7130268 0.02969582 0.8022981 0.14341900 0.7787448
+          [,1]      [,2]       [,3]      [,4]       [,5]      [,6]      [,7]
+[1,] 0.2292564 0.5033694 0.48205003 0.8213873 0.21405630 0.8678198 0.7539087
+[2,] 0.6349170 0.4978186 0.56034225 0.4690158 0.95863396 0.1501258 0.2760119
+[3,] 0.2507486 0.8313300 0.04853146 0.1445253 0.08056273 0.3183620 0.7758245
+[4,] 0.5768890 0.2531487 0.45174122 0.1941784 0.02582907 0.4415914 0.9977322
+[5,] 0.7781205 0.6768693 0.71639782 0.8491389 0.13584627 0.2038828 0.1653473
+[6,] 0.3596051 0.2155040 0.62368399 0.5900931 0.57847399 0.6779157 0.4215007
            [,8]
-[1,] 0.92375302
-[2,] 0.78221768
-[3,] 0.77616996
-[4,] 0.53530270
-[5,] 0.06008475
-[6,] 0.07561103
+[1,] 0.80507427
+[2,] 0.36874512
+[3,] 0.21089411
+[4,] 0.32393828
+[5,] 0.49121958
+[6,] 0.05253027
 
 , , 3
 
-          [,1]      [,2]       [,3]      [,4]      [,5]      [,6]      [,7]
-[1,] 0.6394395 0.2947552 0.22762527 0.2802765 0.4507208 0.4534548 0.9134229
-[2,] 0.8064501 0.9236657 0.26099709 0.6815231 0.8750964 0.4788742 0.6474289
-[3,] 0.8841326 0.6565964 0.41490734 0.5396990 0.3399962 0.2538978 0.9127330
-[4,] 0.9628072 0.2631489 0.93086725 0.9477316 0.1059119 0.6934257 0.6424375
-[5,] 0.3258024 0.2492901 0.87350070 0.1397025 0.7364389 0.1140606 0.5135770
-[6,] 0.8484380 0.6546680 0.02836124 0.1543205 0.8428516 0.7323521 0.2617310
+           [,1]       [,2]       [,3]       [,4]      [,5]      [,6]      [,7]
+[1,] 0.44514486 0.51928353 0.57821035 0.79330933 0.4629536 0.5375589 0.9546921
+[2,] 0.43322235 0.92014349 0.52168131 0.18247831 0.9246678 0.3676251 0.8033844
+[3,] 0.46280038 0.08913017 0.76012933 0.46169522 0.8953038 0.1482120 0.5176442
+[4,] 0.38045707 0.69357723 0.12975638 0.23547187 0.4842421 0.6838360 0.6942847
+[5,] 0.09263945 0.19688506 0.02503374 0.49694207 0.6021117 0.3664415 0.3513815
+[6,] 0.52355707 0.57813245 0.61153209 0.03659012 0.9769987 0.9546434 0.5306273
           [,8]
-[1,] 0.1782982
-[2,] 0.1185690
-[3,] 0.6765702
-[4,] 0.7235187
-[5,] 0.1176458
-[6,] 0.4182399</code></pre>
+[1,] 0.3938288
+[2,] 0.4538694
+[3,] 0.9583837
+[4,] 0.5619988
+[5,] 0.4093841
+[6,] 0.6018101</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve a subset of the variable "T0"</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This subset starts at position (1, 1, 1) and has a count of (2, 3, 1) along each dimension</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ncvar_get</span>(nc_Test, <span class="st">"T0"</span>, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">count =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]      [,2]      [,3]
-[1,] 0.7254432 0.6732702 0.5703731
-[2,] 0.8147037 0.5736017 0.1296277</code></pre>
+[1,] 0.6815190 0.6685974 0.3355391
+[2,] 0.5834032 0.1514063 0.3042631</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve attributes associated with the variable "T0"</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ncatt_get</span>(nc_Test, <span class="st">"T0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -557,49 +612,49 @@ $`_FillValue`
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>t0_variable <span class="op">=</span> nc_Test.variables[<span class="st">"T0"</span>][:]</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"T0 variable (whole):"</span>, t0_variable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>T0 variable (whole): [[[0.72544324 0.8147037  0.2168219  0.2970416  0.61847234 0.00272455]
-  [0.67327017 0.57360166 0.5321406  0.75127256 0.36007988 0.31112486]
-  [0.5703731  0.12962769 0.40859517 0.90085006 0.6185356  0.18338805]
-  [0.548358   0.45512813 0.3278248  0.5378256  0.5353751  0.16438887]
-  [0.25370327 0.15885793 0.54302347 0.39882904 0.10550024 0.9843024 ]
-  [0.9405623  0.7115189  0.8237811  0.9784111  0.01782655 0.7126519 ]
-  [0.75487965 0.60347134 0.6014815  0.34787518 0.4251221  0.9824668 ]
-  [0.8986781  0.83212894 0.85922885 0.6232467  0.06894559 0.9313676 ]]
+<pre><code>T0 variable (whole): [[[0.68151903 0.58340317 0.4924265  0.85095173 0.9409876  0.20883553]
+  [0.6685974  0.15140632 0.7376668  0.64542365 0.84256274 0.61219734]
+  [0.33553913 0.30426314 0.33274835 0.52955216 0.8565235  0.3734793 ]
+  [0.8300888  0.2520407  0.9493681  0.8479783  0.47521892 0.7684925 ]
+  [0.4126872  0.5793471  0.24898352 0.41045293 0.29173383 0.97138125]
+  [0.42137206 0.18333228 0.59886855 0.43813944 0.47816187 0.5124385 ]
+  [0.40900978 0.32067558 0.07783964 0.19551247 0.814653   0.34575224]
+  [0.54208267 0.83355945 0.96597266 0.62403435 0.76857615 0.3649738 ]]
 
- [[0.59483874 0.02716501 0.6303061  0.17796901 0.9031203  0.12467533]
-  [0.13798767 0.1377159  0.07624923 0.58655804 0.64233494 0.98434967]
-  [0.43532342 0.40152633 0.8082347  0.9450504  0.69229823 0.71302676]
-  [0.84987    0.81022775 0.09031754 0.45794815 0.93077385 0.02969582]
-  [0.40805143 0.24424349 0.12746462 0.34589556 0.36218333 0.8022981 ]
-  [0.3725411  0.06005965 0.9991846  0.50446874 0.9856529  0.143419  ]
-  [0.8453325  0.60335755 0.36955625 0.79342234 0.2701277  0.7787448 ]
-  [0.923753   0.7822177  0.77616996 0.5353027  0.06008475 0.07561103]]
+ [[0.22925638 0.63491696 0.2507486  0.576889   0.77812046 0.35960513]
+  [0.5033694  0.4978186  0.83133    0.25314873 0.6768693  0.21550402]
+  [0.48205003 0.56034225 0.04853146 0.45174122 0.7163978  0.623684  ]
+  [0.8213873  0.4690158  0.14452533 0.1941784  0.8491389  0.5900931 ]
+  [0.2140563  0.95863396 0.08056273 0.02582907 0.13584627 0.578474  ]
+  [0.8678198  0.15012585 0.31836203 0.44159144 0.20388278 0.6779157 ]
+  [0.7539087  0.2760119  0.7758245  0.9977322  0.16534728 0.4215007 ]
+  [0.8050743  0.36874512 0.21089411 0.32393828 0.49121958 0.05253027]]
 
- [[0.6394395  0.80645007 0.8841326  0.96280724 0.3258024  0.84843796]
-  [0.2947552  0.9236657  0.6565964  0.26314893 0.24929011 0.65466803]
-  [0.22762527 0.2609971  0.41490734 0.93086725 0.8735007  0.02836124]
-  [0.28027648 0.6815231  0.539699   0.94773155 0.1397025  0.1543205 ]
-  [0.4507208  0.87509644 0.33999622 0.10591187 0.7364389  0.84285164]
-  [0.4534548  0.47887424 0.25389776 0.69342566 0.11406064 0.73235214]
-  [0.9134229  0.64742893 0.91273296 0.64243746 0.513577   0.26173097]
-  [0.17829823 0.11856905 0.67657024 0.7235187  0.11764584 0.41823992]]]</code></pre>
+ [[0.44514486 0.43322235 0.46280038 0.38045707 0.09263945 0.52355707]
+  [0.51928353 0.9201435  0.08913017 0.69357723 0.19688506 0.57813245]
+  [0.57821035 0.5216813  0.76012933 0.12975638 0.02503374 0.6115321 ]
+  [0.79330933 0.18247831 0.46169522 0.23547187 0.49694207 0.03659012]
+  [0.46295357 0.9246678  0.8953038  0.48424208 0.6021117  0.97699875]
+  [0.53755885 0.36762506 0.14821199 0.68383604 0.36644155 0.95464337]
+  [0.9546921  0.8033844  0.5176442  0.69428474 0.35138154 0.53062725]
+  [0.3938288  0.45386937 0.95838374 0.56199884 0.4093841  0.6018101 ]]]</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve a subset of the "T0" variable</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This subset starts at position (0, 0, 0) and has a count of (2, 3, 1) along each dimension</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t0_variable[<span class="dv">0</span>:<span class="dv">2</span>, <span class="dv">0</span>:<span class="dv">3</span>, <span class="dv">0</span>:<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[[0.72544324]
-  [0.67327017]
-  [0.5703731 ]]
+<pre><code>[[[0.68151903]
+  [0.6685974 ]
+  [0.33553913]]
 
- [[0.59483874]
-  [0.13798767]
-  [0.43532342]]]</code></pre>
+ [[0.22925638]
+  [0.5033694 ]
+  [0.48205003]]]</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access attributes associated with the "T0" variable</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(nc_Test.variables[<span class="st">"T0"</span>].__dict__)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'units': 'cel', '_FillValue': -9999.0}</code></pre>
+<pre><code>{'units': 'cel', '_FillValue': np.float32(-9999.0)}</code></pre>
 </div>
 </div>
 </div>
@@ -637,7 +692,7 @@ $`_FillValue`
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
-<p>In R, you need after defining the dimensions and variables to create the file in the system. See <a href="#sec-createNetCDFR">Section&nbsp;3.4</a>.</p>
+<p>In R, you need after defining the dimensions and variables to create the file in the system. See <a href="#sec-createNetCDFR" class="quarto-xref">Section&nbsp;3.4</a>.</p>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
 <p>In Python, you first need to create (connect) a new empty file in the system and an object in Python.</p>
@@ -690,15 +745,15 @@ $`_FillValue`
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define dimensions</span></span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>nc_Create.createDimension(<span class="st">"longitude"</span>, <span class="bu">len</span>(num_Dim_Lon))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'longitude', size = 9</code></pre>
+<pre><code>"&lt;class 'netCDF4.Dimension'&gt;": name = 'longitude', size = 9</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>nc_Create.createDimension(<span class="st">"latitude"</span>, <span class="bu">len</span>(num_Dim_Lat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'latitude', size = 7</code></pre>
+<pre><code>"&lt;class 'netCDF4.Dimension'&gt;": name = 'latitude', size = 7</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>nc_Create.createDimension(<span class="st">"time"</span>, <span class="bu">len</span>(num_Dim_Time))  <span class="co"># Use None for unlimited dimension</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'time', size = 3</code></pre>
+<pre><code>"&lt;class 'netCDF4.Dimension'&gt;": name = 'time', size = 3</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>dim_lon <span class="op">=</span> nc_Create.createVariable(<span class="st">"longitude"</span>, <span class="st">"f4"</span>, <span class="st">"longitude"</span>)</span>
@@ -913,18 +968,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -956,11 +1000,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -970,8 +1051,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -983,7 +1073,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1027,6 +1239,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1052,6 +1265,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1113,17 +1352,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../dataprocess/data_load.html" class="pagination-link">
+      <a href="../dataprocess/data_load.html" class="pagination-link" aria-label="Data Loading">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data Loading</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../dataprocess/spatial_data.html" class="pagination-link">
-        <span class="nav-page-text">Basic Manipulation</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../dataprocess/eda_basic.html" class="pagination-link" aria-label="Exploratory data analysis (EDA)">
+        <span class="nav-page-text">Exploratory data analysis (EDA)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
