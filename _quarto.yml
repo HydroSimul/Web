@@ -28,6 +28,7 @@ website:
                 - dataprocess/basic_format.qmd      
                 - dataprocess/data_load.qmd      
                 - dataprocess/NetCDF.qmd      
+                - dataprocess/eda_basic.qmd      
             - section: "Spatial Data"
               contents:
                 - dataprocess/spatial_data.qmd      

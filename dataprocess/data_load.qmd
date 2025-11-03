@@ -503,4 +503,4 @@ However, there are instances where the data type in Excel is not correctly set, 
 
 # Text & String {#sec-string}
 
-more details 
+Coming soon ... 

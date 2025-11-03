@@ -28,11 +28,22 @@ where
 
 The first two components can be treat as systematic pattern, which are deterministic in nature, whereas the stochastic component accounts for the random error.
 
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+library(plotly)
+library(xts)
+library(forecast)
+library(tseries)
+library(car)
+
+xts_Component <- read_csv("../data_share/df_TS_Component.csv") |> as.xts()
+
+```
 
 
-## Stationarity (Homogeneity) and Trend
+# Stationarity and Trend
 
-The term ‘homogeneity’ implies that the data in the series belong to one population, and therefore have a time invariant mean [@HydroTimeSeries_machiwal_2012]. Homogeneity in the time dimension is one aspect of stationarity. It means that the statistical characteristics of the time series, like its mean and variance, don't change significantly across different time periods. 
 
 A time series is said to be **strictly stationary** if its statistical properties do not vary with changes of time origin. A less strict type of stationarity, called weak stationarity or second-order stationarity, is that in which the first- and secondorder moments depend only on time differences [@HydroTimeSerises_chen_2002]. In nature, strictly stationary time series does not exist, and weakly stationary time series is practically considered as stationary time series [@HydroTimeSeries_machiwal_2012].
 
@@ -41,16 +52,548 @@ A ‘trend’ is defined as “a unidirectional and gradual change (falling or r
 A time series is said to have trends, if there is a significant correlation (positive or negative) between the observed values and time. Trends and shifts in a hydrologic time series are usually introduced due to gradual natural or human-induced changes in the hydrologic environment producing the time series [@StatisticHydro_haan_1977].
 
 
-## Periodicity
 
-‘Periodicity’  represents a regular or oscillatory form of movement that is recurring over a fixed interval of time [@StatisticWater_shahin_1993]. It generally occurs due to astronomic cycles such as earth’s rotation around the sun [@StatisticHydro_haan_1977].
 
-- Annual: Precipetation, evapotranspiration
-- Weekly: water-use data of domestic, industrial
+## Stationarity Tests
 
-## Persistence
+### Augmented Dickey-Fuller (ADF) Test
 
-the phenomenon of ‘persistence’ is highly relevant to the hydrologic time series, which means that the successive members of a time series are linked in some dependent manner [@StatisticWater_shahin_1993]. In other words, ‘persistence’ denotes the tendency for the magnitude of an event to be dependent on the magnitude of previous event(s), i.e., a memory effect [@HydroTimeSeries_machiwal_2012].
+The Augmented Dickey-Fuller (ADF) test checks whether a time series has a **unit root**, i.e., whether it is **non-stationary**.  
 
+- **Null hypothesis (H₀):** The series has a unit root → **non-stationary**  
+- **Alternative hypothesis (H₁):** The series is stationary  
+
+Interpretation:
+
+- p-value < 0.05 → reject H₀ → series is **stationary**  
+- p-value ≥ 0.05 → fail to reject H₀ → series is likely **non-stationary**  
+
+```{r}
+adf.test(coredata(xts_Component))
+
+```
+
+### KPSS Test
+
+The KPSS (Kwiatkowski–Phillips–Schmidt–Shin) test is complementary to the ADF test.  
+It tests whether a series is **stationary around a level or trend**.  
+
+- **Null hypothesis (H₀):** The series is stationary  
+- **Alternative hypothesis (H₁):** The series is non-stationary  
+
+Interpretation:
+
+- p-value ≥ 0.05 → fail to reject H₀ → series is **stationary**  
+- p-value < 0.05 → reject H₀ → series is **non-stationary**
+
+```{r}
+kpss.test(coredata(xts_Component), null = "Level")
+
+```
+
+
+
+## Trend
+
+Trend analysis helps reveal **long-term changes** in a time series by smoothing out short-term fluctuations.  
+Different methods can be used depending on the data characteristics and analysis goals — from flexible non-parametric smoothing to simple linear regression or aggregation-based trends.
+
+### LOESS Fit
+
+The **LOESS (Locally Estimated Scatterplot Smoothing)** method provides a flexible, non-linear fit that adapts to local patterns in the data.  
+It is especially useful when the trend is not strictly linear but varies over time.  
+
+The `span` parameter controls the smoothness — higher values produce smoother curves.
+
+```{r}
+# LOESS with a wide smoothing window (span = 1)
+trend_Fit100 <- stats::loess(coredata(xts_Component) ~ as.numeric(index(xts_Component)), span = 1)
+trend_Loess100 <- trend_Fit100$fitted
+
+# LOESS with a narrower smoothing window (span = 0.5)
+trend_Fit50 <- stats::loess(coredata(xts_Component) ~ as.numeric(index(xts_Component)), span = 0.5)
+trend_Loess50 <- trend_Fit50$fitted
+```
+
+
+
+
+### Linear Regression Fit
+
+A **linear regression trend** assumes that the time series follows a steady, linear increase or decrease over time.
+This simple model is often used as a baseline or to capture overall tendencies.
+
+This approach assumes linearity — it may not capture seasonal or cyclical behavior, but it provides a clear long-term direction.
+
+```{r}
+# Fit a linear regression model on time (index) and data values
+trend_LM <- stats::lm(coredata(xts_Component) ~ as.numeric(index(xts_Component)))
+
+# Extract fitted (predicted) trend values
+trend_Lin <- trend_LM$fitted.values
+```
+
+
+
+
+
+### Period Means
+
+For datasets with strong seasonality or noise, calculating **period averages** (e.g., yearly means) can be an effective way to reveal large-scale trends.
+A linear fit on these aggregated means reduces variability and highlights gradual changes over longer timescales.
+
+Yearly-mean trends are particularly useful when short-term fluctuations (like daily or monthly variability) obscure the long-term signal.
+
+
+```{r}
+# Aggregate the data to yearly means
+xts_Year <- apply.yearly(xts_Component, colMeans)
+
+# Set the date to mid-year for better visual alignment
+index(xts_Year) <- as.Date(paste0(format(index(xts_Year), "%Y"), "-07-01"))
+
+# Fit a linear model to the yearly means
+trend_YearLM <- stats::lm(coredata(xts_Year) ~ as.numeric(index(xts_Year)))
+
+# Extract the fitted trend line for yearly data
+trend_YearLin <- trend_YearLM$fitted.values
+```
+
+
+
+### Trend Visualization
+
+The following plot compares different trend estimation approaches — **LOESS fits**, **linear regression**, and **yearly mean trends**.
+
+```{r}
+#| code-fold: true
+
+# Convert daily xts data to a data frame for plotting
+df_TS_Trend_Daily <- data.frame(
+  Date = index(xts_Component) |> as_date(),
+  Loess100 = trend_Loess100,     # LOESS with span = 1.0
+  Loess50  = trend_Loess50,      # LOESS with span = 0.5
+  Lin      = trend_Lin           # Linear regression (full dataset)
+)
+
+# Convert yearly aggregated data
+df_TS_Trend_Yearly <- data.frame(
+  Date = index(xts_Year) |> as_date(),
+  Value = coredata(xts_Year) |> as.numeric(),  # Yearly means
+  YearLin = trend_YearLin                      # Linear regression on yearly means
+)
+
+# Combine and plot all trend lines for comparison
+gp_trend <- ggplot() +
+  geom_line(data = df_TS_Trend_Yearly, aes(x = Date, y = Value, color = "Yearly mean"), linewidth = 0.6) +
+  geom_line(data = df_TS_Trend_Daily, aes(x = Date, y = Loess100, color = "LOESS (span = 1.0)"), linewidth = 1) +
+  geom_line(data = df_TS_Trend_Daily, aes(x = Date, y = Loess50,  color = "LOESS (span = 0.5)"), linewidth = 1) +
+  geom_line(data = df_TS_Trend_Daily, aes(x = Date, y = Lin,      color = "Linear (full)"), linewidth = 1) +
+  geom_line(data = df_TS_Trend_Yearly, aes(x = Date, y = YearLin, color = "Linear (yearly)"), linewidth = 1) +
+  scale_color_manual(
+    name = "Trend Type",
+    values = c(
+      "Yearly mean"       = "gray80",
+      "LOESS (span = 1.0)" = "#1b9e77",
+      "LOESS (span = 0.5)" = "#7570b3",
+      "Linear (full)"      = "#d95f02",
+      "Linear (yearly)"    = "#e7298a"
+    )
+  ) +
+  labs(
+    x = "Date",
+    y = "Temperature (°C)",
+    title = "Comparison of Trend Estimation Methods"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank()
+  )
+
+# Convert static ggplot to interactive plotly visualization
+ggplotly(gp_trend)
+```
+
+
+The smoother LOESS curves (with different spans) show local variations, while the linear fits highlight long-term directional changes. The yearly mean trend provides an aggregated perspective, reducing short-term variability.
+
+
+Here’s an improved and polished version of your text and code section with clearer explanations, smoother academic phrasing, and well-structured code comments suitable for a Quarto/R Markdown document:
+
+
+
+# Homogeneity Test Across Groups
+
+The term ‘homogeneity’ implies that the data in the series belong to one population, and therefore have a time invariant mean [@HydroTimeSeries_machiwal_2012]. Homogeneity in the time dimension is one aspect of stationarity. It means that the statistical characteristics of the time series, like its mean and variance, don't change significantly across different time periods. 
+
+
+When analyzing data from **different groups** (such as years, regions, or time periods), it is important to check whether their **variances are comparable**.
+This property is known as **homogeneity of variance**, and it is a key assumption in many classical statistical methods, including **t-tests** and **ANOVA**.
+
+## t-test and ANOVA
+
+To investigate differences between groups, we can apply **t-tests** and **Analysis of Variance (ANOVA)**:
+
+* The **t-test** is used when comparing the means of **two groups**, such as upstream vs. downstream stations.
+* The **ANOVA** test generalizes this to **three or more groups**, for example when comparing data across multiple years or months.
+
+Both tests assess whether the group means differ significantly from each other. To interpret their results, we consider the hypotheses and the resulting p-value:
+
+* **Null hypothesis (H₀):** All group means are equal (no significant difference).
+* **Alternative hypothesis (H₁):** At least one group mean is different.
+
+Interpretation:
+
+* A **large p-value** (typically > 0.05) → Fail to reject H₀ → No significant difference between groups.
+* A **small p-value** (< 0.05) → Reject H₀ → Significant difference exists between groups, suggesting that group characteristics (e.g., mean temperature) vary meaningfully.
+
+When using these tests, it is also good practice to check **homogeneity of variances** (e.g., with the Levene test), since standard ANOVA assumes that all groups have similar variance.
+
+## Levene’s Test for Equal Variances
+
+The **Levene Test** is a robust and widely used method to assess the **homogeneity of variance** among groups.
+
+* **Null hypothesis (H₀):** All group variances are equal.
+* **Alternative hypothesis (H₁):** At least one group has a different variance.
+
+Interpretation:
+
+* A **large p-value** (typically > 0.05) → Fail to reject H₀ → Variances are **not significantly different**.
+* A **small p-value** (< 0.05) → Reject H₀ → Variances are **significantly different**, and equal-variance methods (like standard ANOVA) should be applied cautiously.
+
+
+## Example with different Grouping
+
+### Example: Annual Grouping
+
+We first test whether yearly data show significant mean or variance differences.
+
+```{r}
+# Group data by year
+group_Homo_Year <- factor(format(index(xts_Component), "%Y"))
+
+# One-way ANOVA: check for mean differences between years
+summary(aov(xts_Component ~ group_Homo_Year))
+
+# Levene’s test: check for homogeneity of variances across years
+leveneTest(y = xts_Component |> as.numeric(), group = group_Homo_Year)
+```
+
+
+
+### Example: Two Time Periods (Decades)
+
+We can also split the dataset into two large periods (e.g., first vs. second half) and test for differences.
+
+```{r}
+# Divide dataset into two halves
+n_Data <- nrow(xts_Component)
+group_Homo_Decade <- factor(ifelse(1:n_Data <= n_Data/2, "FirstHalf", "SecondHalf"))
+
+# t-test: compare mean values between the two halves
+t.test(xts_Component ~ group_Homo_Decade)
+
+# Levene’s test: compare variances between the two halves
+leveneTest(y = xts_Component |> as.numeric(), group = group_Homo_Decade)
+```
+
+
+
+### Example: Random Two-Group Test
+
+To check how the tests behave under random grouping (without actual structure), we can randomly assign each observation to one of two groups.
+
+```{r}
+set.seed(666)
+
+# Randomly assign data to two groups
+group_Homo_Random <- sample(1:2, size = n_Data, replace = TRUE, prob = rep(1/2, 2)) |> factor()
+
+# Apply t-test and Levene’s test
+t.test(xts_Component ~ group_Homo_Random)
+leveneTest(y = xts_Component |> as.numeric(), group = group_Homo_Random)
+```
+
+
+
+### Example: Random Multi-Group Test (ANOVA)
+
+Finally, we create five random groups to illustrate multi-group testing.
+
+```{r}
+set.seed(2025)
+
+# Randomly assign data to five groups
+group_Homo_Random <- sample(1:5, size = n_Data, replace = TRUE, prob = rep(1/5, 5)) |> factor()
+
+# ANOVA: compare means among five random groups
+summary(aov(xts_Component ~ group_Homo_Random))
+
+# Levene’s test: check variance homogeneity among groups
+leveneTest(y = xts_Component |> as.numeric(), group = group_Homo_Random)
+```
+
+
+
+
+While random groupings typically show no meaningful differences, structured groupings (e.g., by year or region) can highlight systematic trends or changes in variance, which may indicate shifts in climate, instrumentation, or data quality.
+
+In practical applications, especially when preparing data for machine learning or statistical modeling, it is often necessary to divide the dataset into separate parts (e.g., training and testing). Before doing so, we can check whether these parts are homogeneous in their statistical properties. The following example divides the dataset into two halves and tests whether their means and variances differ significantly:
+
+When dividing a dataset into training and testing subsets (as commonly done in machine learning), it is important to ensure that both subsets are statistically homogeneous.
+If the two parts of the dataset differ significantly in their mean or variance, the trained model may not generalize well to unseen data — a problem known as data leakage or sampling bias.
+
+By performing homogeneity tests (such as the t-test or Levene’s test) before splitting or after sampling, we can verify that both parts of the dataset come from similar distributions.
+This ensures that the model learns general patterns rather than artifacts caused by unequal group characteristics.
+
+
+
+# Periodicity / Seasonality
+
+‘Periodicity’ represents a regular or oscillatory movement that recurs over a fixed time interval [@StatisticWater_shahin_1993]. In hydrology and climatology, such repeating behavior is typically driven by **astronomical cycles**, such as the Earth’s rotation around the sun, which leads to seasonal variation in climatic variables [@StatisticHydro_haan_1977].
+
+Examples include:
+
+* **Annual periodicity:** precipitation, evapotranspiration, or temperature cycles that repeat every year.
+* **Weekly periodicity:** water-use patterns in domestic or industrial systems that follow weekly routines.
+
+The **key characteristic** of seasonality is repetition, patterns that reappear consistently over known intervals. Therefore, before performing any seasonal analysis, it is essential to understand the **data’s physical meaning** and **expected period length** (e.g., yearly, monthly, or weekly cycles).
+
+
+
+## Seasonality based on daily data with different resolutions
+
+In this part, we remove the long-term trend and extract the repeating seasonal components at different temporal resolutions (daily, weekly, and monthly).
+
+```{r}
+# Remove the long-term LOESS trend to isolate seasonal fluctuations
+xts_Detrend <- xts_Component - trend_Loess100
+
+# Aggregate to monthly and weekly mean values for coarser seasonal patterns
+xts_Detrend_Month <- apply.monthly(xts_Detrend, colMeans)
+xts_Detrend_Week <- apply.weekly(xts_Detrend, colMeans)
+
+# Extract numeric and temporal indices
+num_Detrend <- as.numeric(xts_Detrend)
+time_index <- index(xts_Component)
+season_Day_Index <- as.numeric(format(time_index, "%j"))   # day of year (1–365)
+season_Week_Index <- as.numeric(format(time_index, "%V"))  # week number (1–53)
+season_Month_Index <- as.numeric(format(time_index, "%m")) # month (1–12)
+
+# Compute mean seasonal cycles for each resolution
+season_Day <- ave(num_Detrend, season_Day_Index, FUN = mean, na.rm = TRUE)
+season_Week <- ave(num_Detrend, season_Week_Index, FUN = mean, na.rm = TRUE)
+season_Month <- ave(num_Detrend, season_Month_Index, FUN = mean, na.rm = TRUE)
+```
+
+The resulting seasonal cycles help visualize how the detrended temperature data fluctuate across different time scales.
+
+```{r}
+#| code-fold: true
+
+# Combine daily, weekly, and monthly seasonal signals into one data frame
+
+df_Season <- data.frame(
+Date = time_index,
+Day = season_Day,
+Week = season_Week,
+Month = season_Month
+) |> filter(Date >= as.Date("2023-01-01"), Date <= as.Date("2024-12-31"))
+
+# Reshape to long format for ggplot visualization
+
+df_Season_Long <- df_Season |>
+select(Date, Day, Week, Month) |>
+pivot_longer(cols = c(Day, Week, Month), names_to = "Seasonality", values_to = "Value")
+
+# Plot different seasonal resolutions over time
+
+gp_Season1 <- ggplot(df_Season_Long, aes(x = Date, y = Value, color = Seasonality)) +
+geom_line() +
+labs(
+title = "Seasonality Component (2023–2024)",
+x = "Date",
+y = "Temperature (°C)",
+color = ""
+) +
+theme(
+legend.position = "top",
+legend.title = element_blank()
+)
+
+ggplotly(gp_Season1)
+
+```
+
+
+## Seasonality with smoothing
+
+Short-term noise can obscure seasonal patterns. To clarify them, a rolling mean (7-day window) is applied to smooth the daily seasonality.
+
+```{r}
+# Convert to xts and apply 7-day rolling mean to smooth short-term variability
+xts_Season <- as.xts(df_Season)
+xts_Season_Roll <- rollmean(xts_Season, 7)
+df_Season_Roll <- as.data.frame(xts_Season_Roll)
+df_Season_Roll$Date <- index(xts_Season_Roll)
+```
+
+
+```{r}
+#| code-fold: true
+
+# Reshape smoothed seasonal data for plotting
+
+df_Season_Roll_Long <- df_Season_Roll |>
+select(Date, Day, Week, Month) |>
+pivot_longer(cols = c(Day, Week, Month), names_to = "Season_Rollality", values_to = "Value")
+
+# Plot smoothed (rolling mean) seasonal components
+
+gp_Season2 <- ggplot(df_Season_Roll_Long, aes(x = Date, y = Value, color = Season_Rollality)) +
+geom_line() +
+labs(
+title = "Season_Rollality Component (2023–2024)",
+x = "Date",
+y = "Temperature (°C)",
+color = ""
+) +
+theme(
+legend.position = "top",
+legend.title = element_blank()
+)
+ggplotly(gp_Season2)
+
+```
+
+
+## Seasonality based on different resolutions
+
+Finally, to compare the influence of aggregation levels, we compute and visualize seasonal cycles derived from **monthly** and **weekly** means. Aggregating data changes the apparent smoothness and can affect the detectability of seasonal components.
+
+```{r}
+# Aggregate to monthly and weekly means
+xts_Detrend_Month <- apply.monthly(xts_Detrend, colMeans, na.rm = TRUE)
+xts_Detrend_Week  <- apply.weekly(xts_Detrend, colMeans, na.rm = TRUE)
+
+# Adjust indices to represent middle of month or week
+index(xts_Detrend_Month) <- as.Date(format(index(xts_Detrend_Month), "%Y-%m-15"))
+index(xts_Detrend_Week) <- index(xts_Detrend_Week) - 3  # approximate mid-week
+
+# Compute mean seasonality at each resolution
+idx_Month_Middle <- as.numeric(format(index(xts_Detrend_Month), "%m"))
+idx_Week_Middle  <- as.numeric(format(index(xts_Detrend_Week), "%V"))
+
+season_MonthMean <- ave(as.numeric(coredata(xts_Detrend_Month)), idx_Month_Middle, FUN = mean, na.rm = TRUE)
+season_WeekMean  <- ave(as.numeric(coredata(xts_Detrend_Week)), idx_Week_Middle, FUN = mean, na.rm = TRUE)
+```
+
+These comparisons illustrate how **temporal resolution** affects the perception of periodic patterns. Monthly averages emphasize long-term seasonal cycles, while weekly data preserve more short-term variations within the broader annual trend.
+
+```{r}
+#| code-fold: true
+
+# Combine and visualize monthly vs weekly seasonality
+
+df_PeriodMean <- rbind(
+data.frame(Date = index(xts_Detrend_Month), Seasonality = season_MonthMean, Type = "Monthly"),
+data.frame(Date = index(xts_Detrend_Week),  Seasonality = season_WeekMean,  Type = "Weekly")
+) |> filter(Date >= as.Date("2023-01-01"), Date <= as.Date("2024-12-31"))
+
+gp_Season3 <- ggplot(df_PeriodMean, aes(x = Date, y = Seasonality, color = Type)) +
+geom_line() +
+labs(
+title = "Weekly and Monthly Seasonality (2023–2024)",
+x = "Date",
+y = "Temperature (°C)",
+color = ""
+) +
+theme(
+legend.position = "top",
+legend.title = element_blank()
+)
+ggplotly(gp_Season3)
+
+```
+
+# Autocorrelation of timeserise
+
+For time series data, the value at one time point is often not independent from its previous or following values, specially the state-variable, or langduration events-based variable. This dependency is called **autocorrelation**, and it describes how much a variable is related to itself over time.  
+Understanding autocorrelation helps us to recognize the internal structure of the data, check for repeated patterns, and detect problems such as non-randomness or missing trends.
+
+
+## Autocorrelation Function (ACF)
+
+The **Autocorrelation Function (ACF)** shows the correlation between a time series and its lagged values.  
+
+Mathematically, for a time series $x_t$ of length $n$, the autocorrelation at lag $k$ is defined as:
+
+$$
+\rho_k = \frac{\text{Cov}(x_t, x_{t+k})}{\text{Var}(x_t)} = \frac{\sum_{t=1}^{n-k} (x_t - \bar{x})(x_{t+k} - \bar{x})}{\sum_{t=1}^{n} (x_t - \bar{x})^2}
+$$
+
+where $\bar{x}$ is the mean of the series.  
+
+**How to read the ACF plot:**
+
+- The x-axis shows the **lag** (number of time steps).  
+- The y-axis shows the **correlation** at each lag.  
+- The horizontal dashed lines indicate the **95% confidence interval** ($\frac{1.96}{\sqrt{n}}$). Values outside these lines are usually considered statistically significant autocorrelations.  
+- A **slowly decaying ACF** suggests a strong trend or persistent correlation.  
+- A **spike at a specific lag** may indicate seasonality or periodic patterns.  
+- If the ACF drops quickly to zero, the series is likely **random** or has weak temporal dependence.
+
+```{r}
+num_ACF <- acf(coredata(xts_Component), 400, plot = FALSE)
+df_ACF <- with(num_ACF, data.frame(lag = lag, acf = acf))
+gp_ACF <- ggplot(df_ACF, aes(x = lag, y = acf)) +
+  geom_segment(aes(x = lag, xend = lag, y = 0, yend = acf), color = "#17365c") +
+  geom_hline(yintercept = 0, color = "black") +
+  geom_hline(yintercept = c(2, -2) / sqrt(length(xts_Component)), 
+             linetype = "dashed", color = "#EC008D") +
+  labs(title = "Autocorrelation Function (ACF)",
+       x = "Lag",
+       y = "ACF")
+ggplotly(gp_ACF)
+
+```
+
+## Partial Autocorrelation Function (PACF)
+
+The **Partial Autocorrelation Function (PACF)** measures the correlation between $x_t$ and $x_{t+k}$ after removing the effects of all intermediate lags $1, 2, ..., k-1$.  
+
+The **Partial Autocorrelation Function (PACF)** is similar to the ACF but shows the correlation between the series and its lagged values **after removing the effect of shorter lags**.  
+In other words, the PACF tells us the direct influence of a specific lag on the current value.
+
+The PACF plot is very useful to identify the order of autoregressive (AR) processes in time series models.  
+For example, if the PACF cuts off after lag 1, it indicates that an AR(1) model might describe the data well.  
+Together with the ACF, the PACF gives a complete picture of the temporal dependence structure of the dataset.
+
+**How to read the PACF plot:**
+
+- The x-axis shows the **lag**, and the y-axis shows the **partial correlation**.  
+- The horizontal dashed lines indicate the **95% confidence interval**. Values outside are statistically significant.  
+- A **sharp cutoff** after lag $p$ indicates an **AR($p$) process**.  
+- Significant spikes at multiple lags may suggest the series requires a more complex model, such as ARMA.  
+- PACF helps distinguish the **direct influence** of a lag from indirect effects through shorter lags.
+
+By examining both the **ACF and PACF plots together**, we can identify trends, seasonality, and the appropriate order of autoregressive and moving average models for time series analysis.
+
+
+```{r}
+num_PACF <- pacf(coredata(xts_Component), 400, plot = FALSE)
+df_PACF <- with(num_PACF, data.frame(lag = lag, acf = acf))
+gp_PACF <- ggplot(df_PACF, aes(x = lag, y = acf)) +
+  geom_segment(aes(x = lag, xend = lag, y = 0, yend = acf), color = "#17365c") +
+  geom_hline(yintercept = 0, color = "black") +
+  geom_hline(yintercept = c(2, -2) / sqrt(length(xts_Component)), 
+             linetype = "dashed", color = "#EC008D") +
+  labs(title = "Autocorrelation Function (ACF)",
+       x = "Lag",
+       y = "PACF")
+ggplotly(gp_PACF)
+
+```
 
 
