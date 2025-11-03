@@ -16,7 +16,7 @@ In this article, we will learn how to manage the entire **hydrological modeling 
 
 # Library
 
-All the functions used in this tutorial are bundled in the [HydroCourse](https://hydrosimul.github.io/HydroCourse/index.html) package. You will need to install this package from GitHub before loading it.
+All the functions used in this tutorial are bundled in the [HydroRUB](https://hydrosimul.github.io/HydroRUB/index.html) package. You will need to install this package from GitHub before loading it.
 
 Once installed, you'll also need to load the following packages into your R workspace: `HydroCourse`, `hydroGOF`, `tidyverse`, and `plotly`.
 
@@ -25,7 +25,7 @@ Once installed, you'll also need to load the following packages into your R work
 # If don't installed:
 # If remotes not installed, use: install.packages("remotes")
 # remotes::install_github("HydroSimul/HydroCourse")
-library(HydroCourse)
+library(HydroRUB)
 # Evalute functions
 library(hydroGOF)
 

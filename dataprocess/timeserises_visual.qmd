@@ -167,8 +167,8 @@ ggplot(melt_Balance_Q, aes(Date, perc, fill = variable)) +
 ```{r}
 # If don't installed:
 # If remotes not installed, use: install.packages("remotes")
-# remotes::install_github("HydroSimul/HydroCourse")
-library(HydroCourse)
+# remotes::install_github("HydroSimul/HydroRUB")
+library(HydroRUB)
 plot_water_balance.HBV(df_Plot)
 
 ```

@@ -1,8 +1,11 @@
 {
-  "hash": "d6614f0962b222e85c3229a98f61371e",
+  "hash": "c5960998ba2afa094cf6392253cd4bba",
   "result": {
-    "markdown": "---\ntitle: \"Hydro\"\nsidebar:\n  contents: auto\n---\n\n\n# H1\n\nAbout this site test1\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 2\n```\n:::\n:::\n\n\n## H2\n\nAbout this site test2\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 2\n```\n:::\n:::\n",
-    "supporting": [],
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Hydro\"\nsidebar:\n  contents: auto\n---\n\n\n\n# H1\n\nAbout this site test1\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n\n\n\n## H2\n\nAbout this site test2\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
+    "supporting": [
+      "hydro_files"
+    ],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],

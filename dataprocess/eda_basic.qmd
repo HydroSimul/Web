@@ -12,11 +12,12 @@ bibliography: ../../references.bib
 
 
 
+
+# Statistical Overview
+
 Before conducting any formal analysis, it is essential to first develop a preliminary understanding of the dataset. This step involves exploring the basic structure, summarizing key characteristics, and evaluating data quality. Therefore, **Exploratory Data Analysis (EDA)** serves as a crucial first stage in any data analysis process.
 
 During the initial phase of EDA, it is encouraged to freely investigate any hypothesis or question that arises [@DataR_Wickham_2023].
-
-# Statistical Overview
 
 Statistical summaries provide the most fundamental insights into a dataset and are typically the easiest to obtain. More comprehensive summaries—such as quantiles, distributions, and visual representations—are discussed in the companion sections [Statistic Basics](statistic_basic.qmd) and [Graphical Statistics](statistic_graphic.qmd).
 
