@@ -6,7 +6,7 @@ execute:
 sidebar:
   contents: auto
 number-sections: true
-bibliography: ../../references.bib
+bibliography: ../references.bib
 ---
 
 
@@ -121,7 +121,7 @@ A **basic overview** of the dataset is presented below using an **interactive li
 
 ```{r}
 # Read the synthetic temperature dataset and convert it into an xts time series object
-xts_Outlier <- read_csv("../data_share/df_TS_Outlier.csv") |> 
+xts_Outlier <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Outlier.csv") |> 
   as.xts()
 ```
 
@@ -374,7 +374,7 @@ In order to detedc the distance between raw values and tresnd, the remeinder vla
 ```{r}
 # Subset 2008 data and compute residuals after removing trend
 xts_Outlier_TS_Trend <- xts_Outlier["2008-01-01/2008-12-31"]
-xts_Trend <- read_csv("../data_share/df_TS_TrendSeason.csv") |> as.xts()
+xts_Trend <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_TrendSeason.csv") |> as.xts()
 # Remaeinder
 xts_Remainder <- xts_Outlier_TS_Trend - xts_Trend
 ```
@@ -463,8 +463,8 @@ However, Bachum occasionally reports unusually high values. Comparing with Villi
 
 ```{r}
 # Load discharge data for both stations
-xts_Bachum <- read_csv("../data_share/df_TS_Bachum.csv") |> as.xts()
-xts_Villigst <- read_csv("../data_share/df_TS_Villigst.csv") |> as.xts()
+xts_Bachum <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Bachum.csv") |> as.xts()
+xts_Villigst <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Villigst.csv") |> as.xts()
 ```
 
 ```{r}
@@ -509,7 +509,7 @@ The basic line plot is shown below:
 
 
 ```{r}
-xts_Missing_T <- read_csv("../data_share/df_TS_Missing_T.csv") |> as.xts()
+xts_Missing_T <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Missing_T.csv") |> as.xts()
 ```
 
 
@@ -652,7 +652,7 @@ If the time series has a clear trend and seasonal pattern, missing values can be
 
 ```{r}
 # Load pre-calculated trend and seasonality components
-xts_TrendSeason <- read_csv("../data_share/df_TS_TrendSeason.csv") |> as.xts()
+xts_TrendSeason <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_TrendSeason.csv") |> as.xts()
 # Create copies for linear interpolation approach
 xts_Missing_T_TrendSeason <- xts_Missing_T
 # Fill missing values using the corresponding trend component
@@ -694,8 +694,8 @@ When there is a strong linear relationship between variables, we can use regress
 
 ```{r}
 # Load time series data
-xts_Bachum_Missing <- read_csv("../data_share/df_TS_Bachum_Missing.csv") |> as.xts()
-xts_Villigst <- read_csv("../data_share/df_TS_Villigst.csv") |> as.xts()
+xts_Bachum_Missing <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Bachum_Missing.csv") |> as.xts()
+xts_Villigst <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Villigst.csv") |> as.xts()
 
 # Identify indices of missing values in Bachum series
 idx_Missing_Q <- which(is.na(xts_Bachum_Missing))

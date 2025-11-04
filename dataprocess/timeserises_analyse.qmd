@@ -6,10 +6,10 @@ execute:
 sidebar:
   contents: auto
 number-sections: true
-bibliography: ../../references.bib
+bibliography: ../references.bib
 ---
 
-# Structure of Time Series
+# Component of Time Series
 
 A time series is often adequately described as a function of four components: trend, seasonality, dependent stochastic component and independent residual component [@HydroTimeSeries_machiwal_2012]. It can be mathematically expressed as [@StatisticWater_shahin_1993]:
 
@@ -28,6 +28,14 @@ where
 
 The first two components can be treat as systematic pattern, which are deterministic in nature, whereas the stochastic component accounts for the random error.
 
+
+## Dataset Description
+
+For demonstration purposes, we will use a **synthetic dataset** derived from **daily temperature data** recorded at the [Düsseldorf station of the DWD](https://www.dwd.de/DE/leistungen/klimadatendeutschland/klarchivtagmonat.html), covering the period from **2005 to 2024**.  
+
+The following R packages are required and will be loaded below:
+
+
 ```{r}
 library(tidyverse)
 theme_set(theme_bw())
@@ -37,7 +45,69 @@ library(forecast)
 library(tseries)
 library(car)
 
-xts_Component <- read_csv("../data_share/df_TS_Component.csv") |> as.xts()
+xts_Component <- read_csv("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_TS_Component.csv") |> as.xts()
+
+```
+
+The components of the dataset from 2020 to 2024 are shown as follows:
+
+```{r}
+#| code-fold: true
+# --- 1. Fit a loess trend to the time series
+# Use a span of 1 (full smoothing window) to estimate the trend
+trend_Fit100 <- stats::loess(coredata(xts_Component) ~ as.numeric(index(xts_Component)), span = 1)
+
+# Extract the fitted trend values
+trend_Loess100 <- trend_Fit100$fitted
+xts_Trend <- xts(trend_Loess100, order.by = index(xts_Component))
+# Detrend the original series by subtracting the fitted trend
+xts_Detrend <- xts_Component - trend_Loess100
+
+# Extract the time index from the xts object
+time_index <- index(xts_Component)
+
+# --- 2. Compute seasonal component based on day of the year
+# Convert dates to day-of-year (1–365/366)
+season_Day_Index <- as.numeric(format(time_index, "%j"))
+
+# Compute the mean of the detrended series for each day-of-year
+# This gives the seasonal effect for each day
+season_Day <- ave(xts_Detrend, season_Day_Index, FUN = mean, na.rm = TRUE)
+
+# Compute the residual component (remainder) after removing trend and seasonal effects
+remainder_Day <- xts_Detrend - season_Day
+
+# --- 3. Combine results into a tidy data frame for plotting
+df_TS_Plot <- data.frame(
+  date = index(xts_Component["2020-01-01/2024-12-31"]),             # time index
+  Original = xts_Component["2020-01-01/2024-12-31"] |> as.numeric(),# original time series
+  Trend = xts_Trend["2020-01-01/2024-12-31"] |> as.numeric(),  # extracted trend
+  Seasonal = season_Day["2020-01-01/2024-12-31"] |> as.numeric(),   # extracted seasonal component
+  Residual = remainder_Day["2020-01-01/2024-12-31"] |> as.numeric() # residual component
+) |>
+  pivot_longer(
+    cols = c(Original, Trend, Seasonal, Residual), # pivot components into long format
+    names_to = "Component",                        # column indicating component type
+    values_to = "Value"                            # column containing values
+  )
+
+# --- 4. Plot the time series decomposition using ggplot2
+gp_TS <- ggplot(df_TS_Plot, aes(x = date, y = Value)) +
+  geom_line(aes(color = Component)) +                # plot lines colored by component
+  facet_wrap(~Component, ncol = 1, scales = "free_y") + # separate facet for each component, free y-scale
+  labs(
+    x = NULL, 
+    y = "Value", 
+    title = "Time Series Decomposition"
+  ) +
+  theme(
+    strip.text = element_text(face = "bold", size = 12), # bold facet labels
+    panel.grid.minor = element_blank()                  # remove minor grid lines
+  )
+
+# Convert ggplot object to interactive plotly plot
+ggplotly(gp_TS)
+
 
 ```
 
