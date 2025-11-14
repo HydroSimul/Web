@@ -55,11 +55,11 @@ library(terra)
 library(tidyterra)
 library(patchwork)
 # DATEN
-vct_Boundry_NRW <- vect("../data_share/vct_Boundry_NRW.geojson") # |> project("EPSG:25832")
-vct_Station_NRW_S10 <- vect("../data_share/vct_Station_NRW_S10.geojson") # |> project("EPSG:25832")
-vct_Station_NRW_S50 <- vect("../data_share/vct_Station_NRW_S50.geojson") # |> project("EPSG:25832")
-vct_Segment_S10    <- vect("../data_share/vct_Segment_S10.geojson") # |> project("EPSG:25832")
-vct_Point_Unknow   <- vect("../data_share/vct_Point_Unknow.geojson") # |> project("EPSG:25832")
+vct_Boundry_NRW <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Boundry_NRW.geojson")
+vct_Station_NRW_S10 <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Station_NRW_S10.geojson")
+vct_Station_NRW_S50 <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Station_NRW_S50.geojson")
+vct_Segment_S10    <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Segment_S10.geojson")
+vct_Point_Unknow   <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Point_Unknow.geojson")
 ```
 
 ```{r}
@@ -126,7 +126,11 @@ $$
 
 
 ```{r}
+# Calculate the mean of the annual precipitation ('NiederschlagJahr') 
+# from the data frame or vector 'vct_Station_NRW_S10'
 num_GlobalMean <- vct_Station_NRW_S10$NiederschlagJahr |> mean()
+
+# Display the calculated mean
 num_GlobalMean
 ```
 
@@ -192,8 +196,15 @@ $$
 
 
 ```{r}
+# Find the index of the shortest segment in 'vct_Segment_S10' based on 'length_km'
+# 'order()' returns the indices of segments sorted in ascending order
 idx_Near1 <- order(vct_Segment_S10$length_km)[1]
+
+# Use this index to get the corresponding annual precipitation value
+# from 'vct_Station_NRW_S10'
 num_Near1 <- vct_Station_NRW_S10$NiederschlagJahr[idx_Near1]
+
+# Display the precipitation value of the station nearest to the shortest segment
 num_Near1
 ```
 
@@ -266,9 +277,16 @@ $$
 
 
 ```{r}
+# Find the indices of the 4 shortest segments in 'vct_Segment_S10' based on 'length_km'
+# 'order()' sorts the lengths in ascending order and returns their indices
 idx_Near5 <- order(vct_Segment_S10$length_km)[1:4]
+
+# Use these indices to select the corresponding annual precipitation values
+# from 'vct_Station_NRW_S10' and calculate their mean
 num_Near5 <- vct_Station_NRW_S10$NiederschlagJahr[idx_Near5] |> mean()
 
+# Display the precipitation value of the station nearest 5 to the shortest segment
+num_Near5
 ```
 
 ```{r}
@@ -340,9 +358,17 @@ where $d_i$ is the distance between the unmeasured location and observation $i$,
 **Note:** A larger value of $p$ assigns more weight to closer points. Typically, $p = 1$ is used.
 
 ```{r}
-num_IDW_ID <- 1/(vct_Segment_S10$length_km[idx_Near5])
+# Calculate inverse distance weights for the 4 nearest segments
+# Closer segments (shorter 'length_km') get higher weights
+num_IDW_ID <- 1 / (vct_Segment_S10$length_km[idx_Near5])
+
+# Normalize the weights so they sum to 1 and round to 3 decimal places
 num_IDW_Weight <- round(num_IDW_ID / sum(num_IDW_ID), 3)
+
+# Compute the weighted mean precipitation using the inverse distance weights
 num_IDW <- sum(vct_Station_NRW_S10$NiederschlagJahr[idx_Near5] * num_IDW_Weight)
+
+# Display the inverse distance weighted precipitation value
 num_IDW
 ```
 
@@ -423,41 +449,59 @@ where $N(h)$ is the set of all pairs of points separated by lag distance $h$.
 
 ```{r}
 #| echo: false
+# Create a data frame from the station vector
+# 'geom(vct_Station_NRW_S50)[, c("x", "y")]' extracts coordinates
+# 'as.data.frame(vct_Station_NRW_S50)' extracts attribute data
 df_Station <- data.frame(
   geom(vct_Station_NRW_S50)[, c("x", "y")],
   as.data.frame(vct_Station_NRW_S50)
 )
 
-
-## Variogram -------
+## Variogram calculation -------
+# Set up a gstat model for the annual precipitation ('NiederschlagJahr')
+# '~ 1' means we are modeling only the mean (no trend) 
+# 'locations = ~x + y' tells gstat to use the x and y coordinates
 model_Vario <- gstat(
   formula = NiederschlagJahr ~ 1,
   locations = ~x + y,
   data = df_Station
 )
 
+# Calculate the experimental variogram
+# 'width = 0.05' defines the lag bin width for distance intervals
 vario_S50 <- variogram(model_Vario, width = 0.05)
-psill  <- 6e4
-range  <- .5
-nugget <- 3e3
 
-fit_Sph <- fit.variogram(vario_S50, vgm(psill, "Sph", range, nugget))
+# Define initial variogram parameters for model fitting
+num_psill  <- 6e4     # partial sill (variance explained by spatial structure)
+num_range  <- 0.5     # range (distance beyond which points are uncorrelated)
+num_nugget <- 3e3     # nugget effect (micro-scale variability or measurement error)
 
+# Fit a spherical variogram model to the experimental variogram
+fit_Sph <- fit.variogram(vario_S50, vgm(num_psill, "Sph", num_range, num_nugget))
+
+# Extract station coordinates
 coord_S50 <- crds(vct_Station_NRW_S50)
 
-# Create all pairwise combinations
+# Create all pairwise combinations of stations for segment construction
 n_points <- nrow(coord_S50)
 combinations <- combn(1:n_points, 2)
 
-# Create segments for each pair
+# Build segments connecting each pair of stations
 coord_AllSegment <- lapply(1:ncol(combinations), \(i) {
-  idx1 <- combinations[1, i]
-  idx2 <- combinations[2, i]
-  rbind(coord_S50[idx1, ], coord_S50[idx2, ])
+  idx1 <- combinations[1, i]  # index of first station
+  idx2 <- combinations[2, i]  # index of second station
+  rbind(coord_S50[idx1, ], coord_S50[idx2, ])  # create a line segment
 })
 
+# Convert all pairwise segments into a vector spatial object (lines)
+# 'crs = crs(vct_Point_Unknow)' sets the coordinate reference system
 vct_AllSegment_S50 <- vect(coord_AllSegment, type = "lines", crs = crs(vct_Point_Unknow))
+
+# Compute the length of each segment in kilometers
+# 'perim()' returns the length of the line in map units (usually meters)
 vct_AllSegment_S50$length_km <- perim(vct_AllSegment_S50) / 1000
+
+# Generate fitted variogram values along distances for plotting the variogram model
 df_Cuver_Fit <- variogramLine(fit_Sph, maxdist = max(vario_S50$dist))
 ```
 
@@ -878,14 +922,24 @@ ggplot() +
 In order to perform the interpolation, it is necessary to define a **template raster**, which specifies the locations where predictions should be made. The template raster allows the user to control the **spatial resolution** and the **extent** of the interpolation, ensuring that the resulting surface matches the desired research area and level of detail.
 
 ```{r}
+# Create a template raster over the NRW boundary
+# 'rast(vct_Boundry_NRW, res = 0.01)' defines a raster with 0.01 degree resolution
 rst_Template_NRW <- rast(vct_Boundry_NRW, res = 0.01) 
+
+# Assign a default value of 1 to all raster cells
 values(rst_Template_NRW) <- 1
-rst_Template_NRW <-  mask(rst_Template_NRW, vct_Boundry_NRW)
 
-# Convert station SpatVector to a data.frame with coordinates
-df_Station_NRW_S50 <- data.frame(geom(vct_Station_NRW_S50)[, c("x", "y")],
-                                 as.data.frame(vct_Station_NRW_S50))
+# Mask the raster using the NRW boundary
+# This sets all cells outside the boundary to NA
+rst_Template_NRW <- mask(rst_Template_NRW, vct_Boundry_NRW)
 
+# Convert station SpatVector to a data frame including coordinates
+# 'geom(...)[, c("x", "y")]' extracts x and y coordinates
+# 'as.data.frame(...)' extracts attribute data
+df_Station_NRW_S50 <- data.frame(
+  geom(vct_Station_NRW_S50)[, c("x", "y")],
+  as.data.frame(vct_Station_NRW_S50)
+)
 ```
 
 
@@ -901,6 +955,11 @@ The nearest neighbor method is closely related to **Thiessen polygons** (also ca
 
 
 ```{r}
+# Create a gstat model for nearest neighbor interpolation
+# 'NiederschlagJahr ~ 1' models only the mean (no trend)
+# 'locations = ~x + y' specifies station coordinates
+# 'nmax = 1' uses only the nearest station for each prediction
+# 'set = list(idp = 0)' sets inverse distance power to 0, making it pure nearest neighbor
 model_Near1 <- gstat(
   formula = NiederschlagJahr ~ 1,
   locations = ~x + y,
@@ -909,7 +968,9 @@ model_Near1 <- gstat(
   set = list(idp = 0)
 )
 
-# Interpolate on raster grid
+# Interpolate the raster using the nearest neighbor model
+# 'rst_Template_NRW' provides the grid where predictions are made
+# 'mask(vct_Boundry_NRW)' ensures values outside NRW are set to NA
 rst_Near1 <- interpolate(rst_Template_NRW, model_Near1, debug.level = 0) |> 
   mask(vct_Boundry_NRW)
 
@@ -932,7 +993,13 @@ The resulting Thiessen polygons effectively assign each unsampled location to th
 In R, Thiessen polygons are implemented as **Voronoi polygons** using the `voronoi()` function:
 
 ```{r}
-vct_Voronoi_NRW_S50 <- voronoi(vct_Station_NRW_S50) |> crop(vct_Boundry_NRW)
+# Create Voronoi polygons from the station locations
+# Each Voronoi cell contains all points closer to that station than to any other
+vct_Voronoi_NRW_S50 <- voronoi(vct_Station_NRW_S50) |> 
+
+  # Crop the Voronoi polygons to the NRW boundary
+  # Ensures polygons do not extend beyond the study area
+  crop(vct_Boundry_NRW)
 ```
 
 This function generates the polygonal tessellation corresponding to the nearest neighbor regions of the input points.
@@ -1015,6 +1082,11 @@ gp_Voronoi_NRW_S50 <- ggplot() +
 
 
 ```{r}
+# Create a gstat model for nearest neighbor interpolation using the 5 closest stations
+# 'NiederschlagJahr ~ 1' models only the mean (no trend)
+# 'locations = ~x + y' specifies station coordinates
+# 'nmax = 5' uses the 5 nearest stations for each prediction
+# 'set = list(idp = 0)' sets inverse distance power to 0, so all selected stations are equally weighted
 model_Near5 <- gstat(
   formula = NiederschlagJahr ~ 1,
   locations = ~x + y,
@@ -1023,7 +1095,9 @@ model_Near5 <- gstat(
   set = list(idp = 0)
 )
 
-# Interpolate on raster grid
+# Interpolate the raster using the nearest 5 neighbor model
+# 'rst_Template_NRW' provides the grid for predictions
+# 'mask(vct_Boundry_NRW)' ensures values outside NRW are set to NA
 rst_Near5 <- interpolate(rst_Template_NRW, model_Near5, debug.level = 0) |> 
   mask(vct_Boundry_NRW)
 
@@ -1071,12 +1145,21 @@ gp_Near5 <- ggplot() +
 ## Inverse Distance Weighting (IDW)
 
 ```{r}
+# Create a gstat model for inverse distance weighted (IDW) interpolation
+# 'NiederschlagJahr ~ 1' models only the mean (no trend)
+# 'locations = ~x + y' specifies station coordinates
+# 'nmax = 5' uses the 5 nearest stations for each prediction
+# Since 'idp' is not set, the default inverse distance weighting is applied
 model_IDW <- gstat(
   formula = NiederschlagJahr ~ 1,
   locations = ~x + y,
   data = df_Station_NRW_S50,
   nmax = 5
 )
+
+# Interpolate the raster using the IDW model
+# 'rst_Template_NRW' provides the grid for predictions
+# 'mask(vct_Boundry_NRW)' ensures values outside NRW are set to NA
 rst_IDW <- interpolate(rst_Template_NRW, model_IDW, debug.level = 0) |> 
   mask(vct_Boundry_NRW)
 
@@ -1147,29 +1230,33 @@ This demonstrates the trade-off between smoothing and sensitivity to local extre
 
 
 ```{r}
-# Define combinations of neighbors (nmax) and power (idp)
+# Define combinations of neighbors (nmax) and inverse distance powers (idp) for IDW
+# Each element is a list with a specific nmax and idp value
 lst_IDW_Params <- list(
-  k5p1  = list(nmax = 5, idp = 1),
-  k10p1 = list(nmax = 10, idp = 1),
-  k5p3  = list(nmax = 5, idp = 3),
-  k10p3 = list(nmax = 10, idp = 3)
+  k5p1  = list(nmax = 5, idp = 1),   # 5 nearest neighbors, idp = 1
+  k10p1 = list(nmax = 10, idp = 1),  # 10 nearest neighbors, idp = 1
+  k5p3  = list(nmax = 5, idp = 3),   # 5 nearest neighbors, idp = 3 (stronger weighting for closer stations)
+  k10p3 = list(nmax = 10, idp = 3)   # 10 nearest neighbors, idp = 3
 )
 
-# Function to create IDW raster
+# Function to create an IDW raster given nmax and idp
 create_idw <- function(nmax, idp) {
+  # Set up gstat model for IDW
   model <- gstat(
-    formula = NiederschlagJahr ~ 1,
-    locations = ~x + y,
-    data = df_Station_NRW_S50,
-    nmax = nmax,
-    set = list(idp = idp)
+    formula = NiederschlagJahr ~ 1,       # model only the mean
+    locations = ~x + y,                    # use station coordinates
+    data = df_Station_NRW_S50,            # station data
+    nmax = nmax,                           # number of nearest neighbors
+    set = list(idp = idp)                  # inverse distance power
   )
-  interpolate(rst_Template_NRW, model, debug.level = 0) |> mask(vct_Boundry_NRW)
+  
+  # Interpolate on the template raster and mask to NRW boundary
+  interpolate(rst_Template_NRW, model, debug.level = 0) |> 
+    mask(vct_Boundry_NRW)
 }
 
-
-
-# Generate all four rasters
+# Generate IDW rasters for all parameter combinations
+# Result is a list of raster layers, one for each combination
 lst_rst_IDW <- lapply(lst_IDW_Params, \(p) create_idw(p$nmax, p$idp))
 
 ```
@@ -1249,23 +1336,37 @@ The variogram fitting process requires plausible initial estimates for the follo
 Providing reasonable initial values for these parameters is crucial, as they ensure stable and accurate variogram fitting during model optimization.
 
 ```{r}
+# Set up a gstat model for variogram calculation
+# 'NiederschlagJahr ~ 1' models only the mean (no trend)
+# 'locations = ~x + y' specifies the station coordinates
 model_Vario <- gstat(
   formula = NiederschlagJahr ~ 1,
   locations = ~x + y,
   data = df_Station_NRW_S50
 )
 
+# Compute the experimental variogram with a lag width of 0.05
 vario_S50 <- variogram(model_Vario, width = 0.05)
 
+# Define names of theoretical variogram models to try
 name_VarioModel <- c("Exp", "Sph", "Cir", "Gau", "Lin", "Mat")
-names(name_VarioModel) <- name_VarioModel
+names(name_VarioModel) <- name_VarioModel  # set names for easier reference
 
+# Set initial parameters for variogram fitting
+num_psill  <- 6e4    # partial sill (variance explained by spatial structure)
+num_range  <- 0.5    # range (distance beyond which points are uncorrelated)
+num_nugget <- 3e3    # nugget effect (small-scale variability or measurement error)
 
-psill  <- 6e4
-range  <- 0.5
-nugget <- 3e3
-lst_FitVario <- map(name_VarioModel[-6], \(m_Vario) fit.variogram(vario_S50, vgm(psill, m_Vario, range, nugget)))
-lst_FitVario$Mat <- fit.variogram(vario_S50, vgm(psill, "Mat", range, nugget, kappa=.9))
+# Fit variogram models (excluding 'Mat') to the experimental variogram
+lst_FitVario <- map(name_VarioModel[-6], \(m_Vario) 
+  fit.variogram(vario_S50, vgm(num_psill, m_Vario, num_range, num_nugget))
+)
+
+# Fit the 'Matérn' variogram separately with kappa = 0.9
+lst_FitVario$Mat <- fit.variogram(
+  vario_S50, 
+  vgm(num_psill, "Mat", num_range, num_nugget, kappa = 0.9)
+)
 
 ```
 
@@ -1354,14 +1455,30 @@ The following table summarizes the **root mean square error (RMSE)** for six var
 
 
 ```{r}
+# Compute RMSE for each fitted variogram model using cross-validation
 lst_RMSE_VarioFit <- map(lst_FitVario, \(m_Fit) {
-  cv_model <-  krige.cv(NiederschlagJahr ~ 1, locations = ~x + y, data = df_Station, model = m_Fit)
-  obs <- cv_model$observed
+  
+  # Perform leave-one-out cross-validation using kriging
+  # 'NiederschlagJahr ~ 1' models only the mean
+  # 'locations = ~x + y' specifies station coordinates
+  # 'model = m_Fit' uses the fitted variogram model
+  cv_model <- krige.cv(
+    NiederschlagJahr ~ 1, 
+    locations = ~x + y, 
+    data = df_Station, 
+    model = m_Fit
+  )
+  
+  # Extract observed and predicted values
+  obs  <- cv_model$observed
   pred <- cv_model$var1.pred
+  
+  # Compute Root Mean Squared Error (RMSE)
+  # 'na.rm = TRUE' ignores missing values
   sqrt(mean((obs - pred)^2, na.rm = TRUE))
 })
 
-
+# Print the RMSE values for all variogram models
 print(lst_RMSE_VarioFit |> unlist())
 
 ```
@@ -1380,6 +1497,11 @@ There is no significant difference between the two methods in overall pattern. O
 
 
 ```{r}
+# Create an ordinary kriging (OK) model using the spherical variogram
+# 'NiederschlagJahr ~ 1' models only the mean (no trend)
+# 'locations = ~x + y' specifies the station coordinates
+# 'model = lst_FitVario$Sph' uses the fitted spherical variogram
+# 'nmax = 5' limits the number of nearest stations used for each prediction
 model_OK <- gstat(
   formula = NiederschlagJahr ~ 1,
   locations = ~x + y,
@@ -1388,6 +1510,9 @@ model_OK <- gstat(
   nmax = 5
 )
 
+# Interpolate precipitation values on the raster grid using ordinary kriging
+# 'rst_Template_NRW' provides the grid for prediction
+# 'mask(vct_Boundry_NRW)' ensures results are limited to NRW boundary
 rst_OK <- interpolate(rst_Template_NRW, model_OK, debug.level = 0) |> 
   mask(vct_Boundry_NRW)
 
@@ -1440,17 +1565,20 @@ The subsequent figure shows the results for four different variogram models appl
 This demonstrates that, for this dataset, ordinary kriging is robust to the selection of standard variogram models, and the key influence on the interpolation comes from the short-range spatial correlation captured in the variogram.
 
 ```{r}
+# Generate ordinary kriging rasters for all fitted variogram models
 lst_rst_OK_VarioModel <- map(lst_FitVario, \(m_OK) {
+
+  # Create ordinary kriging model using the fitted variogram
   model_OK <- gstat(
-  formula = NiederschlagJahr ~ 1,
-  locations = ~x + y,
-  data = df_Station,
-  model = lst_FitVario$Sph
-)
+    formula = NiederschlagJahr ~ 1,   # model only the mean
+    locations = ~x + y,                # use station coordinates
+    data = df_Station,                 # station data
+    model = m_OK                        # use the current variogram model from the list
+  )
 
-interpolate(rst_Template_NRW, model_OK, debug.level = 0) |> 
-  mask(vct_Boundry_NRW)
-
+  # Interpolate the raster using the kriging model and mask to NRW boundary
+  interpolate(rst_Template_NRW, model_OK, debug.level = 0) |> 
+    mask(vct_Boundry_NRW)
 })
 
 ```

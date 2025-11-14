@@ -440,12 +440,12 @@ window.Quarto = {
 <li>A set of polygons</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rst_Random  <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"../data_share/rst_Extract_Random.asc"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vct_Grid    <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Extract_Grid.geojson"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>vct_Region    <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Extract_Region.geojson"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>vct_Point   <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Extract_Point.geojson"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>vct_Voronoi <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Extract_Voronoi.geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rst_Random  <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/rst_Extract_Random.asc"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rst_Random) <span class="ot">&lt;-</span> <span class="st">"RandomValues"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vct_Grid    <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Grid.geojson"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>vct_Region    <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Region.geojson"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>vct_Point   <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Point.geojson"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>vct_Voronoi <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Voronoi.geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
@@ -547,8 +547,8 @@ window.Quarto = {
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 'na.rm = TRUE' ensures that NA values are ignored in the calculation</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(rst_CropTouch, <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          mean
-lyr.1 43.21053</code></pre>
+<pre><code>                 mean
+RandomValues 43.21053</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply a mask to 'rst_Random' using the second polygon in 'vct_Region'</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'touches = FALSE' means that **only cells fully inside** the polygon are included</span></span>
@@ -558,8 +558,8 @@ lyr.1 43.21053</code></pre>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Again, NA values are ignored</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(rst_CropCenter, <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      mean
-lyr.1   47</code></pre>
+<pre><code>             mean
+RandomValues   47</code></pre>
 </div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
@@ -619,8 +619,8 @@ lyr.1   47</code></pre>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 'na.rm = TRUE' ensures missing values are ignored</span></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(rst_CropTouch_Disagg, <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          mean
-lyr.1 47.21555</code></pre>
+<pre><code>                 mean
+RandomValues 47.21555</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mask the disaggregated raster using the second polygon</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'touches = FALSE' includes only cells completely inside the polygon</span></span>
@@ -629,8 +629,8 @@ lyr.1 47.21555</code></pre>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the global mean of the masked raster</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(rst_CropCenter_Disagg, <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          mean
-lyr.1 47.76703</code></pre>
+<pre><code>                 mean
+RandomValues 47.76703</code></pre>
 </div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
@@ -696,14 +696,14 @@ lyr.1 47.76703</code></pre>
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Only the parts of 'vct_Random' that overlap with 'vct_Region[2]' are kept</span></span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>vct_Random_Poly2 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">intersect</span>(vct_Random, vct_Region[<span class="dv">2</span>])</span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'lyr.1' in the first intersected polygon</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 'lyr.1' comes from the original raster values when it was converted to polygons</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Random_Poly1<span class="sc">$</span>lyr<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'RandomValues' in the first intersected polygon</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 'RandomValues' comes from the original raster values when it was converted to polygons</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Random_Poly1<span class="sc">$</span>RandomValues)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 49.77778</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'lyr.1' in the second intersected polygon</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Random_Poly2<span class="sc">$</span>lyr<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'RandomValues' in the second intersected polygon</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Random_Poly2<span class="sc">$</span>RandomValues)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 43.21053</code></pre>
 </div>
@@ -712,7 +712,7 @@ lyr.1 47.76703</code></pre>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gp_CropExact_Poly1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Random_Poly1, <span class="fu">aes</span>(<span class="at">fill =</span> lyr<span class="fl">.1</span>)) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Random_Poly1, <span class="fu">aes</span>(<span class="at">fill =</span> RandomValues)) <span class="sc">+</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Region[<span class="dv">1</span>], <span class="at">color =</span> color_TUD_pink, <span class="at">linewidth =</span> .<span class="dv">5</span>, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
@@ -723,7 +723,7 @@ lyr.1 47.76703</code></pre>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>))</span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>gp_CropExact_Poly2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Random_Poly2, <span class="fu">aes</span>(<span class="at">fill =</span> lyr<span class="fl">.1</span>)) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Random_Poly2, <span class="fu">aes</span>(<span class="at">fill =</span> RandomValues)) <span class="sc">+</span></span>
 <span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Region[<span class="dv">2</span>], <span class="at">color =</span> color_TUD_pink, <span class="at">linewidth =</span> .<span class="dv">5</span>, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
 <span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
@@ -800,10 +800,10 @@ lyr.1 47.76703</code></pre>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Only the parts of 'vct_Voronoi' that overlap with 'vct_Region[2]' are kept</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>vct_Voronoi_Poly2 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">intersect</span>(vct_Voronoi, vct_Region[<span class="dv">2</span>])</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'lyr.1' in the second intersected polygon</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Voronoi_Poly2<span class="sc">$</span>lyr<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'Values' in the second intersected polygon</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Voronoi_Poly2<span class="sc">$</span>Values)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] NA</code></pre>
+<pre><code>[1] 42.26673</code></pre>
 </div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
@@ -863,10 +863,10 @@ lyr.1 47.76703</code></pre>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Only points that fall inside 'vct_Region[2]' are kept</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>vct_Point_Poly2 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">intersect</span>(vct_Point, vct_Region[<span class="dv">2</span>])</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'lyr.1' in the second intersected polygon</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Point_Poly2<span class="sc">$</span>lyr<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean value of the attribute 'Values' in the second intersected polygon</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vct_Point_Poly2<span class="sc">$</span>Values)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] NA</code></pre>
+<pre><code>[1] 63.80587</code></pre>
 </div>
 </div>
 <div class="cell" data-fig-fullwidth="true">

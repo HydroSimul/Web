@@ -474,11 +474,11 @@ window.Quarto = {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyterra)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># DATEN</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>vct_Boundry_NRW <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Boundry_NRW.geojson"</span>) <span class="co"># |&gt; project("EPSG:25832")</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>vct_Station_NRW_S10 <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Station_NRW_S10.geojson"</span>) <span class="co"># |&gt; project("EPSG:25832")</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>vct_Station_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Station_NRW_S50.geojson"</span>) <span class="co"># |&gt; project("EPSG:25832")</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>vct_Segment_S10    <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Segment_S10.geojson"</span>) <span class="co"># |&gt; project("EPSG:25832")</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>vct_Point_Unknow   <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"../data_share/vct_Point_Unknow.geojson"</span>) <span class="co"># |&gt; project("EPSG:25832")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>vct_Boundry_NRW <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Boundry_NRW.geojson"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>vct_Station_NRW_S10 <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Station_NRW_S10.geojson"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>vct_Station_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Station_NRW_S50.geojson"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>vct_Segment_S10    <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Segment_S10.geojson"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>vct_Point_Unknow   <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Point_Unknow.geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold">
@@ -522,8 +522,12 @@ window.Quarto = {
 \lambda_i = \frac{1}{n} \quad \text{for all } i
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num_GlobalMean <span class="ot">&lt;-</span> vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>num_GlobalMean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean of the annual precipitation ('NiederschlagJahr') </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from the data frame or vector 'vct_Station_NRW_S10'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>num_GlobalMean <span class="ot">&lt;-</span> vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the calculated mean</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>num_GlobalMean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 928.1</code></pre>
 </div>
@@ -549,9 +553,16 @@ window.Quarto = {
 \end{cases}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>idx_Near1 <span class="ot">&lt;-</span> <span class="fu">order</span>(vct_Segment_S10<span class="sc">$</span>length_km)[<span class="dv">1</span>]</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>num_Near1 <span class="ot">&lt;-</span> vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr[idx_Near1]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>num_Near1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the index of the shortest segment in 'vct_Segment_S10' based on 'length_km'</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'order()' returns the indices of segments sorted in ascending order</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>idx_Near1 <span class="ot">&lt;-</span> <span class="fu">order</span>(vct_Segment_S10<span class="sc">$</span>length_km)[<span class="dv">1</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use this index to get the corresponding annual precipitation value</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># from 'vct_Station_NRW_S10'</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>num_Near1 <span class="ot">&lt;-</span> vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr[idx_Near1]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the precipitation value of the station nearest to the shortest segment</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>num_Near1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 778.9</code></pre>
 </div>
@@ -577,8 +588,19 @@ window.Quarto = {
 \end{cases}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>idx_Near5 <span class="ot">&lt;-</span> <span class="fu">order</span>(vct_Segment_S10<span class="sc">$</span>length_km)[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>num_Near5 <span class="ot">&lt;-</span> vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr[idx_Near5] <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the indices of the 4 shortest segments in 'vct_Segment_S10' based on 'length_km'</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'order()' sorts the lengths in ascending order and returns their indices</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>idx_Near5 <span class="ot">&lt;-</span> <span class="fu">order</span>(vct_Segment_S10<span class="sc">$</span>length_km)[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use these indices to select the corresponding annual precipitation values</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># from 'vct_Station_NRW_S10' and calculate their mean</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>num_Near5 <span class="ot">&lt;-</span> vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr[idx_Near5] <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the precipitation value of the station nearest 5 to the shortest segment</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>num_Near5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1005.175</code></pre>
+</div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -599,10 +621,18 @@ window.Quarto = {
 <p>where <span class="math inline">\(d_i\)</span> is the distance between the unmeasured location and observation <span class="math inline">\(i\)</span>, and <span class="math inline">\(p\)</span> is the distance weighting power, which controls how quickly weights decrease with distance.</p>
 <p><strong>Note:</strong> A larger value of <span class="math inline">\(p\)</span> assigns more weight to closer points. Typically, <span class="math inline">\(p = 1\)</span> is used.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>num_IDW_ID <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(vct_Segment_S10<span class="sc">$</span>length_km[idx_Near5])</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>num_IDW_Weight <span class="ot">&lt;-</span> <span class="fu">round</span>(num_IDW_ID <span class="sc">/</span> <span class="fu">sum</span>(num_IDW_ID), <span class="dv">3</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>num_IDW <span class="ot">&lt;-</span> <span class="fu">sum</span>(vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr[idx_Near5] <span class="sc">*</span> num_IDW_Weight)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>num_IDW</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate inverse distance weights for the 4 nearest segments</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Closer segments (shorter 'length_km') get higher weights</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>num_IDW_ID <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (vct_Segment_S10<span class="sc">$</span>length_km[idx_Near5])</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize the weights so they sum to 1 and round to 3 decimal places</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>num_IDW_Weight <span class="ot">&lt;-</span> <span class="fu">round</span>(num_IDW_ID <span class="sc">/</span> <span class="fu">sum</span>(num_IDW_ID), <span class="dv">3</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the weighted mean precipitation using the inverse distance weights</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>num_IDW <span class="ot">&lt;-</span> <span class="fu">sum</span>(vct_Station_NRW_S10<span class="sc">$</span>NiederschlagJahr[idx_Near5] <span class="sc">*</span> num_IDW_Weight)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the inverse distance weighted precipitation value</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>num_IDW</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 971.208</code></pre>
 </div>
@@ -834,14 +864,14 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="defining-the-interpolation-model-with-gstat"><span class="header-section-number">2.1.1</span> Defining the Interpolation Model with <code>gstat()</code></h3>
 <p>The <code>gstat()</code> function provides a unified framework for specifying interpolation models. It allows the user to define the variable to be interpolated, the spatial coordinates, and method-specific parameters controlling interpolation behavior.</p>
 <p><strong>General Syntax</strong></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model_Interpolate <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula   =</span> variable <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data      =</span> df_Data,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax      =</span> <span class="dv">10</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">set       =</span> <span class="fu">list</span>(<span class="at">idp =</span> <span class="dv">2</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model_Interpolate <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula   =</span> variable <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data      =</span> df_Data,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax      =</span> <span class="dv">10</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">set       =</span> <span class="fu">list</span>(<span class="at">idp =</span> <span class="dv">2</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Key Arguments</strong></p>
 <ul>
 <li><p><code>formula = variable ~ 1</code> Specifies the target variable for interpolation. The right-hand side <code>1</code> indicates that only a constant mean is assumed, i.e., no trend or covariates are considered.</p>
@@ -911,11 +941,11 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="applying-the-interpolation-model-with-interpolate"><span class="header-section-number">2.1.2</span> Applying the Interpolation Model with <code>interpolate()</code></h3>
 <p>After defining the model, the <code>interpolate()</code> function from the <strong>terra</strong> package is used to estimate values at unsampled locations, typically on a raster grid.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rst_Interpolate <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  rst_Template,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  model_Vario,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">debug.level =</span> <span class="dv">0</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rst_Interpolate <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  rst_Template,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  model_Vario,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">debug.level =</span> <span class="dv">0</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Main Parameters</p>
 <p>-<code>raster_template</code>: A <code>SpatRaster</code> object defining the spatial extent, resolution, and coordinate reference system for the interpolated output. -<code>model</code>: The interpolation model object created via <code>gstat()</code>. -<code>debug.level</code>: Controls the verbosity of output messages; commonly set to <code>0</code> (silent) or <code>1</code> (minimal information).</p>
@@ -928,18 +958,18 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Station_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr),</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Mean Annual Precipitation (1981–2010)'</span>) <span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Station_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Mean Annual Precipitation (1981–2010)'</span>) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -951,13 +981,24 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 </div>
 <p>In order to perform the interpolation, it is necessary to define a <strong>template raster</strong>, which specifies the locations where predictions should be made. The template raster allows the user to control the <strong>spatial resolution</strong> and the <strong>extent</strong> of the interpolation, ensuring that the resulting surface matches the desired research area and level of detail.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rst_Template_NRW <span class="ot">&lt;-</span> <span class="fu">rast</span>(vct_Boundry_NRW, <span class="at">res =</span> <span class="fl">0.01</span>) </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(rst_Template_NRW) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>rst_Template_NRW <span class="ot">&lt;-</span>  <span class="fu">mask</span>(rst_Template_NRW, vct_Boundry_NRW)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert station SpatVector to a data.frame with coordinates</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>df_Station_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">geom</span>(vct_Station_NRW_S50)[, <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)],</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">as.data.frame</span>(vct_Station_NRW_S50))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a template raster over the NRW boundary</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'rast(vct_Boundry_NRW, res = 0.01)' defines a raster with 0.01 degree resolution</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>rst_Template_NRW <span class="ot">&lt;-</span> <span class="fu">rast</span>(vct_Boundry_NRW, <span class="at">res =</span> <span class="fl">0.01</span>) </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign a default value of 1 to all raster cells</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(rst_Template_NRW) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Mask the raster using the NRW boundary</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># This sets all cells outside the boundary to NA</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>rst_Template_NRW <span class="ot">&lt;-</span> <span class="fu">mask</span>(rst_Template_NRW, vct_Boundry_NRW)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert station SpatVector to a data frame including coordinates</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 'geom(...)[, c("x", "y")]' extracts x and y coordinates</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 'as.data.frame(...)' extracts attribute data</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>df_Station_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom</span>(vct_Station_NRW_S50)[, <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)],</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(vct_Station_NRW_S50)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -967,17 +1008,24 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <section id="nearest-neighbor-1-nearest-1" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="nearest-neighbor-1-nearest-1"><span class="header-section-number">2.2.1</span> Nearest Neighbor (1-Nearest)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model_Near1 <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">1</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">set =</span> <span class="fu">list</span>(<span class="at">idp =</span> <span class="dv">0</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate on raster grid</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>rst_Near1 <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_Near1, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a gstat model for nearest neighbor interpolation</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'NiederschlagJahr ~ 1' models only the mean (no trend)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 'locations = ~x + y' specifies station coordinates</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 'nmax = 1' uses only the nearest station for each prediction</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 'set = list(idp = 0)' sets inverse distance power to 0, making it pure nearest neighbor</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>model_Near1 <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">1</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">set =</span> <span class="fu">list</span>(<span class="at">idp =</span> <span class="dv">0</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate the raster using the nearest neighbor model</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 'rst_Template_NRW' provides the grid where predictions are made</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 'mask(vct_Boundry_NRW)' ensures values outside NRW are set to NA</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>rst_Near1 <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_Near1, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="thiessen-polygons" class="level3" data-number="2.2.2">
@@ -998,7 +1046,13 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 </div>
 <p>In R, Thiessen polygons are implemented as <strong>Voronoi polygons</strong> using the <code>voronoi()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>vct_Voronoi_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">voronoi</span>(vct_Station_NRW_S50) <span class="sc">|&gt;</span> <span class="fu">crop</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Voronoi polygons from the station locations</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Each Voronoi cell contains all points closer to that station than to any other</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>vct_Voronoi_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">voronoi</span>(vct_Station_NRW_S50) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Crop the Voronoi polygons to the NRW boundary</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensures polygons do not extend beyond the study area</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This function generates the polygonal tessellation corresponding to the nearest neighbor regions of the input points.</p>
 </section>
@@ -1016,54 +1070,54 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gp_Near1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_Near1, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Nearest Neighbor (1-nearest)'</span>) <span class="sc">+</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>gp_Voronoi_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Voronoi_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr)) <span class="sc">+</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Thiessen Polygons'</span>) <span class="sc">+</span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>(gp_Near1 <span class="sc">|</span> gp_Voronoi_NRW_S50)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gp_Near1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_Near1, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Nearest Neighbor (1-nearest)'</span>) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>gp_Voronoi_NRW_S50 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Voronoi_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr)) <span class="sc">+</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Thiessen Polygons'</span>) <span class="sc">+</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>(gp_Near1 <span class="sc">|</span> gp_Voronoi_NRW_S50)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1078,49 +1132,56 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <section id="k-nearest-neighbors-k-nn" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="k-nearest-neighbors-k-nn"><span class="header-section-number">2.3</span> k-Nearest Neighbors (k-NN)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model_Near5 <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">5</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">set =</span> <span class="fu">list</span>(<span class="at">idp =</span> <span class="dv">0</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate on raster grid</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>rst_Near5 <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_Near5, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a gstat model for nearest neighbor interpolation using the 5 closest stations</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'NiederschlagJahr ~ 1' models only the mean (no trend)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 'locations = ~x + y' specifies station coordinates</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 'nmax = 5' uses the 5 nearest stations for each prediction</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 'set = list(idp = 0)' sets inverse distance power to 0, so all selected stations are equally weighted</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>model_Near5 <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">5</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">set =</span> <span class="fu">list</span>(<span class="at">idp =</span> <span class="dv">0</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate the raster using the nearest 5 neighbor model</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 'rst_Template_NRW' provides the grid for predictions</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 'mask(vct_Boundry_NRW)' ensures values outside NRW are set to NA</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>rst_Near5 <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_Near5, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compared to the 1-nearest method, the k-nearest approach still exhibits noticeable block-like boundaries. However, the resulting surface is already smoother, as each block incorporates information from multiple observation points rather than relying on a single nearest station. A remaining drawback is that, at some observation locations, the interpolated value may differ from the original measured value, leading to local inconsistencies.</p>
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>gp_Near5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_Near5, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Station_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr),</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"grey96"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'k-Nearest Neighbors'</span>) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>(gp_Near1 <span class="sc">|</span> gp_Near5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gp_Near5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_Near5, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Station_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"grey96"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'k-Nearest Neighbors'</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>(gp_Near1 <span class="sc">|</span> gp_Near5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1134,44 +1195,53 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <section id="inverse-distance-weighting-idw-1" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="inverse-distance-weighting-idw-1"><span class="header-section-number">2.4</span> Inverse Distance Weighting (IDW)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model_IDW <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">5</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>rst_IDW <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_IDW, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a gstat model for inverse distance weighted (IDW) interpolation</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'NiederschlagJahr ~ 1' models only the mean (no trend)</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 'locations = ~x + y' specifies station coordinates</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 'nmax = 5' uses the 5 nearest stations for each prediction</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Since 'idp' is not set, the default inverse distance weighting is applied</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>model_IDW <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">5</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate the raster using the IDW model</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 'rst_Template_NRW' provides the grid for predictions</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 'mask(vct_Boundry_NRW)' ensures values outside NRW are set to NA</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>rst_IDW <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_IDW, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compared to the k-nearest-neighbor method, the <strong>IDW</strong> approach exhibits only very subtle block-like boundaries. Within each block, the values already vary smoothly due to the distance-based weighting. Overall, the interpolated surface produced by IDW appears much smoother, as the influence of each observation point gradually decreases with distance, resulting in a more continuous spatial pattern. The phenomenon in which values appear mismatched or inconsistent within local regions has largely disappeared.</p>
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>gp_IDW <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_IDW, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Inverse Distance Weighting (IDW)'</span>) <span class="sc">+</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>(gp_Near5 <span class="sc">|</span> gp_IDW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gp_IDW <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_IDW, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Inverse Distance Weighting (IDW)'</span>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>(gp_Near5 <span class="sc">|</span> gp_IDW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1223,66 +1293,70 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 </table>
 <p>This demonstrates the trade-off between smoothing and sensitivity to local extremes when choosing <span class="math inline">\(k\)</span> and <span class="math inline">\(p\)</span> for k-NN or IDW interpolation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define combinations of neighbors (nmax) and power (idp)</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>lst_IDW_Params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">k5p1  =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">5</span>, <span class="at">idp =</span> <span class="dv">1</span>),</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k10p1 =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">10</span>, <span class="at">idp =</span> <span class="dv">1</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">k5p3  =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">5</span>, <span class="at">idp =</span> <span class="dv">3</span>),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">k10p3 =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">10</span>, <span class="at">idp =</span> <span class="dv">3</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to create IDW raster</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>create_idw <span class="ot">&lt;-</span> <span class="cf">function</span>(nmax, idp) {</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_Station_NRW_S50,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nmax =</span> nmax,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">set =</span> <span class="fu">list</span>(<span class="at">idp =</span> idp)</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">interpolate</span>(rst_Template_NRW, model, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> <span class="fu">mask</span>(vct_Boundry_NRW)</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate all four rasters</span></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>lst_rst_IDW <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lst_IDW_Params, \(p) <span class="fu">create_idw</span>(p<span class="sc">$</span>nmax, p<span class="sc">$</span>idp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define combinations of neighbors (nmax) and inverse distance powers (idp) for IDW</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Each element is a list with a specific nmax and idp value</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>lst_IDW_Params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k5p1  =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">5</span>, <span class="at">idp =</span> <span class="dv">1</span>),   <span class="co"># 5 nearest neighbors, idp = 1</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">k10p1 =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">10</span>, <span class="at">idp =</span> <span class="dv">1</span>),  <span class="co"># 10 nearest neighbors, idp = 1</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">k5p3  =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">5</span>, <span class="at">idp =</span> <span class="dv">3</span>),   <span class="co"># 5 nearest neighbors, idp = 3 (stronger weighting for closer stations)</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">k10p3 =</span> <span class="fu">list</span>(<span class="at">nmax =</span> <span class="dv">10</span>, <span class="at">idp =</span> <span class="dv">3</span>)   <span class="co"># 10 nearest neighbors, idp = 3</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to create an IDW raster given nmax and idp</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>create_idw <span class="ot">&lt;-</span> <span class="cf">function</span>(nmax, idp) {</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set up gstat model for IDW</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,       <span class="co"># model only the mean</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,                    <span class="co"># use station coordinates</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_Station_NRW_S50,            <span class="co"># station data</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">nmax =</span> nmax,                           <span class="co"># number of nearest neighbors</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">set =</span> <span class="fu">list</span>(<span class="at">idp =</span> idp)                  <span class="co"># inverse distance power</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Interpolate on the template raster and mask to NRW boundary</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">interpolate</span>(rst_Template_NRW, model, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mask</span>(vct_Boundry_NRW)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate IDW rasters for all parameter combinations</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Result is a list of raster layers, one for each combination</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>lst_rst_IDW <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lst_IDW_Params, \(p) <span class="fu">create_idw</span>(p<span class="sc">$</span>nmax, p<span class="sc">$</span>idp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rst_IDW_combined <span class="ot">&lt;-</span> <span class="fu">rast</span>(lst_rst_IDW)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>rst_IDW_combined <span class="ot">&lt;-</span> rst_IDW_combined[[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)]]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set layer names to match parameter combinations</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rst_IDW_combined) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"k=5, p=1"</span>, <span class="st">"k=10, p=1"</span>, <span class="st">"k=5, p=3"</span>, <span class="st">"k=10, p=3"</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create facet plot</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_IDW_combined) <span class="sc">+</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>lyr, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Inverse Distance Weighting (IDW) - Parameter Comparison"</span>) <span class="sc">+</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span>,</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rst_IDW_combined <span class="ot">&lt;-</span> <span class="fu">rast</span>(lst_rst_IDW)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rst_IDW_combined <span class="ot">&lt;-</span> rst_IDW_combined[[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)]]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set layer names to match parameter combinations</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rst_IDW_combined) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"k=5, p=1"</span>, <span class="st">"k=10, p=1"</span>, <span class="st">"k=5, p=3"</span>, <span class="st">"k=10, p=3"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create facet plot</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_IDW_combined) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>lyr, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Inverse Distance Weighting (IDW) - Parameter Comparison"</span>) <span class="sc">+</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1325,23 +1399,37 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 </ul>
 <p>Providing reasonable initial values for these parameters is crucial, as they ensure stable and accurate variogram fitting during model optimization.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model_Vario <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>vario_S50 <span class="ot">&lt;-</span> <span class="fu">variogram</span>(model_Vario, <span class="at">width =</span> <span class="fl">0.05</span>)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>name_VarioModel <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Exp"</span>, <span class="st">"Sph"</span>, <span class="st">"Cir"</span>, <span class="st">"Gau"</span>, <span class="st">"Lin"</span>, <span class="st">"Mat"</span>)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(name_VarioModel) <span class="ot">&lt;-</span> name_VarioModel</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>psill  <span class="ot">&lt;-</span> <span class="fl">6e4</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>range  <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>nugget <span class="ot">&lt;-</span> <span class="fl">3e3</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>lst_FitVario <span class="ot">&lt;-</span> <span class="fu">map</span>(name_VarioModel[<span class="sc">-</span><span class="dv">6</span>], \(m_Vario) <span class="fu">fit.variogram</span>(vario_S50, <span class="fu">vgm</span>(psill, m_Vario, range, nugget)))</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>lst_FitVario<span class="sc">$</span>Mat <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(vario_S50, <span class="fu">vgm</span>(psill, <span class="st">"Mat"</span>, range, nugget, <span class="at">kappa=</span>.<span class="dv">9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up a gstat model for variogram calculation</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'NiederschlagJahr ~ 1' models only the mean (no trend)</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 'locations = ~x + y' specifies the station coordinates</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>model_Vario <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station_NRW_S50</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the experimental variogram with a lag width of 0.05</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>vario_S50 <span class="ot">&lt;-</span> <span class="fu">variogram</span>(model_Vario, <span class="at">width =</span> <span class="fl">0.05</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Define names of theoretical variogram models to try</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>name_VarioModel <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Exp"</span>, <span class="st">"Sph"</span>, <span class="st">"Cir"</span>, <span class="st">"Gau"</span>, <span class="st">"Lin"</span>, <span class="st">"Mat"</span>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(name_VarioModel) <span class="ot">&lt;-</span> name_VarioModel  <span class="co"># set names for easier reference</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Set initial parameters for variogram fitting</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>num_psill  <span class="ot">&lt;-</span> <span class="fl">6e4</span>    <span class="co"># partial sill (variance explained by spatial structure)</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>num_range  <span class="ot">&lt;-</span> <span class="fl">0.5</span>    <span class="co"># range (distance beyond which points are uncorrelated)</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>num_nugget <span class="ot">&lt;-</span> <span class="fl">3e3</span>    <span class="co"># nugget effect (small-scale variability or measurement error)</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit variogram models (excluding 'Mat') to the experimental variogram</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>lst_FitVario <span class="ot">&lt;-</span> <span class="fu">map</span>(name_VarioModel[<span class="sc">-</span><span class="dv">6</span>], \(m_Vario) </span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit.variogram</span>(vario_S50, <span class="fu">vgm</span>(num_psill, m_Vario, num_range, num_nugget))</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the 'Matérn' variogram separately with kappa = 0.9</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>lst_FitVario<span class="sc">$</span>Mat <span class="ot">&lt;-</span> <span class="fu">fit.variogram</span>(</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  vario_S50, </span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">vgm</span>(num_psill, <span class="st">"Mat"</span>, num_range, num_nugget, <span class="at">kappa =</span> <span class="fl">0.9</span>)</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="comparison-of-variogram-models" class="level3" data-number="2.5.2">
@@ -1359,60 +1447,60 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lst_df_VarioLine <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_FitVario, variogramLine, <span class="at">maxdist =</span> <span class="fu">max</span>(vario_S50<span class="sc">$</span>dist))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df_VarioLine_All <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, lst_df_VarioLine)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>df_VarioLine_All<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Exponential"</span>, <span class="st">"Spherical"</span>, <span class="st">"Circular"</span>, <span class="st">"Gaussian"</span>, <span class="st">"Linear"</span>, <span class="st">"Matern"</span>), <span class="at">each =</span> <span class="dv">200</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create color palette for models</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>model_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Exponential"</span> <span class="ot">=</span> color_TUD_orange,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Spherical"</span> <span class="ot">=</span> color_RUB_blue,</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Circular"</span> <span class="ot">=</span> color_TUD_lightblue,</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Gaussian"</span> <span class="ot">=</span> color_RUB_green, </span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Linear"</span> <span class="ot">=</span> color_TUD_pink,</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Matern"</span> <span class="ot">=</span> color_TUD_redpurple</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the y-axis range from your data</span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>y_range <span class="ot">&lt;-</span> <span class="fu">range</span>(vario_S50<span class="sc">$</span>gamma, df_VarioLine_All<span class="sc">$</span>gamma, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>gp_Fit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> vario_S50, <span class="fu">aes</span>(<span class="at">x =</span> dist, <span class="at">y =</span> gamma), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">1</span>, <span class="at">color =</span> color_RUB_blue) <span class="sc">+</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> df_VarioLine_All, <span class="fu">aes</span>(<span class="at">x =</span> dist, <span class="at">y =</span> gamma, <span class="at">color =</span> model), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="st">"Model"</span>, <span class="at">values =</span> model_colors) <span class="sc">+</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Distance (°)"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span>  <span class="co"># Remove y-axis title</span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">y =</span> y_range) <span class="sc">+</span>  <span class="co"># Same y-axis range</span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),  <span class="co"># Remove y-axis text</span></span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(), <span class="co"># Remove y-axis ticks</span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>)</span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>gp_Scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> vario_S50, <span class="fu">aes</span>(<span class="at">x =</span> dist, <span class="at">y =</span> gamma, <span class="at">color =</span> dist), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="st">"Distance h (°)"</span>, <span class="at">colors =</span> color_DRESDEN) <span class="sc">+</span></span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Distance (°)"</span>, <span class="at">y =</span> <span class="st">"Semivariance"</span>) <span class="sc">+</span></span>
-<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">y =</span> y_range) <span class="sc">+</span></span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_colorbar</span>(<span class="at">barwidth =</span> <span class="dv">8</span>, <span class="at">barheight =</span> <span class="fl">0.6</span>)</span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the plots</span></span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>(gp_Scatter <span class="sc">|</span> gp_Fit) <span class="sc">+</span></span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Variogram Models Comparison"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lst_df_VarioLine <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_FitVario, variogramLine, <span class="at">maxdist =</span> <span class="fu">max</span>(vario_S50<span class="sc">$</span>dist))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df_VarioLine_All <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, lst_df_VarioLine)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>df_VarioLine_All<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Exponential"</span>, <span class="st">"Spherical"</span>, <span class="st">"Circular"</span>, <span class="st">"Gaussian"</span>, <span class="st">"Linear"</span>, <span class="st">"Matern"</span>), <span class="at">each =</span> <span class="dv">200</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create color palette for models</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>model_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Exponential"</span> <span class="ot">=</span> color_TUD_orange,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Spherical"</span> <span class="ot">=</span> color_RUB_blue,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Circular"</span> <span class="ot">=</span> color_TUD_lightblue,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Gaussian"</span> <span class="ot">=</span> color_RUB_green, </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Linear"</span> <span class="ot">=</span> color_TUD_pink,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Matern"</span> <span class="ot">=</span> color_TUD_redpurple</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the y-axis range from your data</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>y_range <span class="ot">&lt;-</span> <span class="fu">range</span>(vario_S50<span class="sc">$</span>gamma, df_VarioLine_All<span class="sc">$</span>gamma, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>gp_Fit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> vario_S50, <span class="fu">aes</span>(<span class="at">x =</span> dist, <span class="at">y =</span> gamma), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">1</span>, <span class="at">color =</span> color_RUB_blue) <span class="sc">+</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> df_VarioLine_All, <span class="fu">aes</span>(<span class="at">x =</span> dist, <span class="at">y =</span> gamma, <span class="at">color =</span> model), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="st">"Model"</span>, <span class="at">values =</span> model_colors) <span class="sc">+</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Distance (°)"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span>  <span class="co"># Remove y-axis title</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">y =</span> y_range) <span class="sc">+</span>  <span class="co"># Same y-axis range</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),  <span class="co"># Remove y-axis text</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(), <span class="co"># Remove y-axis ticks</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>gp_Scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> vario_S50, <span class="fu">aes</span>(<span class="at">x =</span> dist, <span class="at">y =</span> gamma, <span class="at">color =</span> dist), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="st">"Distance h (°)"</span>, <span class="at">colors =</span> color_DRESDEN) <span class="sc">+</span></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Distance (°)"</span>, <span class="at">y =</span> <span class="st">"Semivariance"</span>) <span class="sc">+</span></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">y =</span> y_range) <span class="sc">+</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_colorbar</span>(<span class="at">barwidth =</span> <span class="dv">8</span>, <span class="at">barheight =</span> <span class="fl">0.6</span>)</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the plots</span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>(gp_Scatter <span class="sc">|</span> gp_Fit) <span class="sc">+</span></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Variogram Models Comparison"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1428,15 +1516,31 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <p>To select the most appropriate interpolation method, <strong>cross-validation</strong> can be performed using the observed data. This approach evaluates how well each method predicts known values by temporarily withholding each observation and comparing the predicted value to the actual measurement.</p>
 <p>The following table summarizes the <strong>root mean square error (RMSE)</strong> for six variogram-based kriging models:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lst_RMSE_VarioFit <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_FitVario, \(m_Fit) {</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  cv_model <span class="ot">&lt;-</span>  <span class="fu">krige.cv</span>(NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>, <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y, <span class="at">data =</span> df_Station, <span class="at">model =</span> m_Fit)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  obs <span class="ot">&lt;-</span> cv_model<span class="sc">$</span>observed</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  pred <span class="ot">&lt;-</span> cv_model<span class="sc">$</span>var1.pred</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">mean</span>((obs <span class="sc">-</span> pred)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lst_RMSE_VarioFit <span class="sc">|&gt;</span> <span class="fu">unlist</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute RMSE for each fitted variogram model using cross-validation</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>lst_RMSE_VarioFit <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_FitVario, \(m_Fit) {</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Perform leave-one-out cross-validation using kriging</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 'NiederschlagJahr ~ 1' models only the mean</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 'locations = ~x + y' specifies station coordinates</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 'model = m_Fit' uses the fitted variogram model</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  cv_model <span class="ot">&lt;-</span> <span class="fu">krige.cv</span>(</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y, </span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_Station, </span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> m_Fit</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract observed and predicted values</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  obs  <span class="ot">&lt;-</span> cv_model<span class="sc">$</span>observed</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  pred <span class="ot">&lt;-</span> cv_model<span class="sc">$</span>var1.pred</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute Root Mean Squared Error (RMSE)</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 'na.rm = TRUE' ignores missing values</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">mean</span>((obs <span class="sc">-</span> pred)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the RMSE values for all variogram models</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lst_RMSE_VarioFit <span class="sc">|&gt;</span> <span class="fu">unlist</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     Exp      Sph      Cir      Gau      Lin      Mat 
 93.15135 87.70613 90.56338 96.44990 94.64919 92.29901 </code></pre>
@@ -1449,47 +1553,55 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 <p>The figure below presents the interpolation results obtained with <strong>ordinary kriging (OK)</strong> and <strong>inverse distance weighting (IDW)</strong> for the same dataset.</p>
 <p>There is no significant difference between the two methods in overall pattern. Ordinary kriging produces a <strong>slightly smoother surface</strong>, reducing abrupt changes observed in IDW or nearest neighbor methods. OK is <strong>less influenced by local extreme values</strong>, thanks to its use of spatial correlation weights derived from the variogram.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>model_OK <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> lst_FitVario<span class="sc">$</span>Sph,</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">5</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>rst_OK <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_OK, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an ordinary kriging (OK) model using the spherical variogram</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 'NiederschlagJahr ~ 1' models only the mean (no trend)</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 'locations = ~x + y' specifies the station coordinates</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 'model = lst_FitVario$Sph' uses the fitted spherical variogram</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 'nmax = 5' limits the number of nearest stations used for each prediction</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>model_OK <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> lst_FitVario<span class="sc">$</span>Sph,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">nmax =</span> <span class="dv">5</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate precipitation values on the raster grid using ordinary kriging</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 'rst_Template_NRW' provides the grid for prediction</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 'mask(vct_Boundry_NRW)' ensures results are limited to NRW boundary</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>rst_OK <span class="ot">&lt;-</span> <span class="fu">interpolate</span>(rst_Template_NRW, model_OK, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>gp_OK <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_OK, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Station_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr),</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"grey96"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Ordinary Kriging with Spherical Variogramm'</span>) <span class="sc">+</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>(gp_IDW <span class="sc">|</span> gp_OK)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>gp_OK <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_OK, <span class="fu">aes</span>(<span class="at">fill =</span> var1.pred)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Station_NRW_S50, <span class="fu">aes</span>(<span class="at">fill =</span> NiederschlagJahr),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"grey96"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Ordinary Kriging with Spherical Variogramm'</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">5</span>),</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>(gp_IDW <span class="sc">|</span> gp_OK)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1510,54 +1622,57 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 </ul>
 <p>This demonstrates that, for this dataset, ordinary kriging is robust to the selection of standard variogram models, and the key influence on the interpolation comes from the short-range spatial correlation captured in the variogram.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>lst_rst_OK_VarioModel <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_FitVario, \(m_OK) {</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  model_OK <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_Station,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> lst_FitVario<span class="sc">$</span>Sph</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">interpolate</span>(rst_Template_NRW, model_OK, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vct_Boundry_NRW)</span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate ordinary kriging rasters for all fitted variogram models</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>lst_rst_OK_VarioModel <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_FitVario, \(m_OK) {</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create ordinary kriging model using the fitted variogram</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  model_OK <span class="ot">&lt;-</span> <span class="fu">gstat</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> NiederschlagJahr <span class="sc">~</span> <span class="dv">1</span>,   <span class="co"># model only the mean</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="sc">~</span>x <span class="sc">+</span> y,                <span class="co"># use station coordinates</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_Station,                 <span class="co"># station data</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> m_OK                        <span class="co"># use the current variogram model from the list</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Interpolate the raster using the kriging model and mask to NRW boundary</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">interpolate</span>(rst_Template_NRW, model_OK, <span class="at">debug.level =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mask</span>(vct_Boundry_NRW)</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-fig-fullwidth="true">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rst_OK_combined <span class="ot">&lt;-</span> <span class="fu">rast</span>(lst_rst_OK_VarioModel)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>rst_OK_combined <span class="ot">&lt;-</span> rst_OK_combined[[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">11</span>)]]</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set layer names to match parameter combinations</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rst_OK_combined) <span class="ot">&lt;-</span> <span class="fu">names</span>(lst_rst_OK_VarioModel)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create facet plot</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_OK_combined[[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]]) <span class="sc">+</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>lyr, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ordinary Kriging (OK) - Variogram Comparison"</span>) <span class="sc">+</span></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span>,</span>
-<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
-<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rst_OK_combined <span class="ot">&lt;-</span> <span class="fu">rast</span>(lst_rst_OK_VarioModel)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>rst_OK_combined <span class="ot">&lt;-</span> rst_OK_combined[[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">11</span>)]]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set layer names to match parameter combinations</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rst_OK_combined) <span class="ot">&lt;-</span> <span class="fu">names</span>(lst_rst_OK_VarioModel)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create facet plot</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatraster</span>(<span class="at">data =</span> rst_OK_combined[[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]]) <span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> vct_Boundry_NRW, <span class="at">color =</span> color_TUD_pink, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>lyr, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="st">"Value"</span>, </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">colors =</span> color_DRESDEN, </span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"transparent"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">550</span>, <span class="dv">1500</span>)) <span class="sc">+</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ordinary Kriging (OK) - Variogram Comparison"</span>) <span class="sc">+</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.01</span>),</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="dv">8</span>,</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fl">0.6</span></span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>

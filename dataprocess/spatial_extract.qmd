@@ -54,12 +54,12 @@ For the exercises, we will use simple synthetic datasets with random locations a
 
 
 ```{r}
-rst_Random  <- rast("../data_share/rst_Extract_Random.asc")
-
-vct_Grid    <- vect("../data_share/vct_Extract_Grid.geojson")
-vct_Region    <- vect("../data_share/vct_Extract_Region.geojson")
-vct_Point   <- vect("../data_share/vct_Extract_Point.geojson")
-vct_Voronoi <- vect("../data_share/vct_Extract_Voronoi.geojson")
+rst_Random  <- rast("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/rst_Extract_Random.asc")
+names(rst_Random) <- "RandomValues"
+vct_Grid    <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Grid.geojson")
+vct_Region    <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Region.geojson")
+vct_Point   <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Point.geojson")
+vct_Voronoi <- vect("https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/vct_Extract_Voronoi.geojson")
 
 ```
 
@@ -301,12 +301,12 @@ vct_Random_Poly1 <- terra::intersect(vct_Random, vct_Region[1])
 # Only the parts of 'vct_Random' that overlap with 'vct_Region[2]' are kept
 vct_Random_Poly2 <- terra::intersect(vct_Random, vct_Region[2])
 
-# Calculate the mean value of the attribute 'lyr.1' in the first intersected polygon
-# 'lyr.1' comes from the original raster values when it was converted to polygons
-mean(vct_Random_Poly1$lyr.1)
+# Calculate the mean value of the attribute 'RandomValues' in the first intersected polygon
+# 'RandomValues' comes from the original raster values when it was converted to polygons
+mean(vct_Random_Poly1$RandomValues)
 
-# Calculate the mean value of the attribute 'lyr.1' in the second intersected polygon
-mean(vct_Random_Poly2$lyr.1)
+# Calculate the mean value of the attribute 'RandomValues' in the second intersected polygon
+mean(vct_Random_Poly2$RandomValues)
 
 ```
 
@@ -318,7 +318,7 @@ mean(vct_Random_Poly2$lyr.1)
 #| code-fold: true
 
 gp_CropExact_Poly1 <- ggplot() +
-  geom_spatvector(data = vct_Random_Poly1, aes(fill = lyr.1)) +
+  geom_spatvector(data = vct_Random_Poly1, aes(fill = RandomValues)) +
   geom_spatvector(data = vct_Region[1], color = color_TUD_pink, linewidth = .5, fill = NA) +
   scale_fill_gradientn("Value", 
                        colors = color_DRESDEN, 
@@ -329,7 +329,7 @@ gp_CropExact_Poly1 <- ggplot() +
   theme(axis.title = element_blank(),
         axis.text.y = element_text(angle = 90, hjust = .5))
 gp_CropExact_Poly2 <- ggplot() +
-  geom_spatvector(data = vct_Random_Poly2, aes(fill = lyr.1)) +
+  geom_spatvector(data = vct_Random_Poly2, aes(fill = RandomValues)) +
   geom_spatvector(data = vct_Region[2], color = color_TUD_pink, linewidth = .5, fill = NA) +
   scale_fill_gradientn("Value", 
                        colors = color_DRESDEN, 
@@ -417,8 +417,8 @@ When extracting a single attribute value, we can use the function `intersect()` 
 # Only the parts of 'vct_Voronoi' that overlap with 'vct_Region[2]' are kept
 vct_Voronoi_Poly2 <- terra::intersect(vct_Voronoi, vct_Region[2])
 
-# Calculate the mean value of the attribute 'lyr.1' in the second intersected polygon
-mean(vct_Voronoi_Poly2$lyr.1)
+# Calculate the mean value of the attribute 'Values' in the second intersected polygon
+mean(vct_Voronoi_Poly2$Values)
 
 ```
 
@@ -484,8 +484,8 @@ The simplest and most direct method is to calculate the **numerical mean** of al
 # Only points that fall inside 'vct_Region[2]' are kept
 vct_Point_Poly2 <- terra::intersect(vct_Point, vct_Region[2])
 
-# Calculate the mean value of the attribute 'lyr.1' in the second intersected polygon
-mean(vct_Point_Poly2$lyr.1)
+# Calculate the mean value of the attribute 'Values' in the second intersected polygon
+mean(vct_Point_Poly2$Values)
 
 ```
 
