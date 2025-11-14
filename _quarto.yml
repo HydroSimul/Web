@@ -32,7 +32,8 @@ website:
             - section: "Spatial Data"
               contents:
                 - dataprocess/spatial_data.qmd      
-                - dataprocess/extract_spatial.qmd
+                - dataprocess/spatial_interpolate.qmd
+                - dataprocess/spatial_extract.qmd
             - section: "Timeserises"
               contents:
                 - dataprocess/timeserises_process.qmd      
