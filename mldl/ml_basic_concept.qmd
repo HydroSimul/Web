@@ -1,0 +1,124 @@
+---
+title: Basic Concept of Machine Learning
+execute:
+  warning: false
+  error: false
+sidebar:
+  contents: auto
+number-sections: true
+---
+
+
+
+# Introduction to Machine Learning
+
+Machine learning (ML) is a discipline concerned with developing computational methods that learn patterns from data and make predictions or decisions without being explicitly programmed for each task. Contemporary ML includes both classical statistical learning approaches and deep learning methods based on multilayer neural networks. In this text, however, the focus is restricted to classical machine learning techniques, excluding deep learning.
+
+Before introducing specific algorithms or datasets, it is helpful to outline the overall workflow that characterizes most ML applications. Machine learning is fundamentally a data-driven approach to solving problems, and these problems are typically classified into two broad categories.  
+Supervised learning addresses situations in which labeled data are available, meaning that both input variables and associated target values are observed. 
+Unsupervised learning, by contrast, deals with unlabeled data and seeks to identify latent structures or patterns without reference to explicit target values.
+
+
+## Supervised learning
+
+Supervised learning relies on datasets that contain input–output pairs. The objective is to approximate a function that captures the relationship between inputs and the corresponding outputs. Supervised learning tasks generally fall into two groups.  
+Classification refers to predicting categorical outcomes, whereas regression involves predicting continuous numerical values. Both problem types require the model to learn patterns that meaningfully relate features to targets.
+
+
+## Unsupervised learning
+
+Unsupervised learning is applied when no target variable is provided. The goal is to uncover underlying structure, regularities, or groupings within the data. One widely used unsupervised approach is clustering, which groups observations such that items within the same cluster are more similar to each other than to those in other clusters.
+
+
+# Modelling process
+
+The modelling process describes the sequence of steps undertaken to construct, evaluate, and refine a machine learning model. Although specific details depend on the problem and algorithm, the overall structure of the workflow is broadly consistent across ML applications. These steps ensure that the model identifies meaningful patterns and performs reliably when applied to new data.
+
+
+## Data splitting
+
+Prior to model development, the dataset is typically divided into separate subsets.  
+The primary purpose of this division is to train the model on one subset while reserving another for evaluation, thereby assessing how well the model generalizes beyond the data it has seen. Commonly used subsets include a training set for parameter estimation, a validation set for tuning and early stopping, and a test set for final performance assessment. A central principle is that the performance of a model should never be evaluated solely on data used during training.
+
+
+## Resampling
+
+Resampling techniques provide tools for estimating model performance more reliably, particularly when the available data are limited.  
+They help reduce the dependence on a single train–test split and yield more stable performance estimates. Standard introductory approaches include cross-validation, which repeatedly partitions the data into training and validation subsets, and bootstrapping, which draws samples with replacement to estimate variability. The overarching idea is that resampling reduces the risk of evaluations being overly sensitive to one particular dataset split.
+
+
+## Model creation
+
+Model creation involves selecting an appropriate algorithm and training it using the training data. This stage includes identifying suitable features, specifying the model structure, and allowing the model to adjust its internal parameters in response to the data.  
+Important considerations include the quality of features, the interpretability and complexity of the chosen model, and the need to guard against overfitting. The aim is to produce an initial model that can subsequently be evaluated and improved.
+
+
+## Model evaluation
+
+Once a model has been trained, its performance must be assessed using data that were not part of the training process.  
+Evaluation provides insight into how well the model generalizes, facilitates comparisons among alternative models, and helps identify potential issues such as insufficient feature quality or overfitting. Appropriate performance metrics depend on the problem type, and evaluation should also consider aspects such as error distribution, robustness, and consistency across datasets.
+
+
+## Model training
+
+Model training is the phase in which the algorithm learns from the training dataset by iteratively adjusting internal parameters.  
+Through repeated exposure to input–output examples, the model seeks to minimize the discrepancy between predictions and true values. Training must strike a balance: excessive training may cause overfitting, whereas insufficient training may lead to underfitting, where the model fails to capture essential patterns.
+
+
+## Model tuning
+
+Model tuning, or hyperparameter tuning, concerns adjusting the external settings of the algorithm—parameters that are fixed prior to training and that influence how the model learns. Examples include model complexity constraints, regularization strength, and algorithm-specific hyperparameters such as the number of trees in an ensemble or the number of neighbors in a k-nearest neighbors classifier.  
+Tuning is crucial because hyperparameters strongly affect model performance. Validation data or cross-validation are typically used to guide the selection of optimal configurations.
+
+
+## Model selection
+
+Model selection refers to choosing the most suitable model from a set of candidates.  
+Candidates may differ in algorithmic approach, hyperparameter configuration, or applied feature transformations. Selection relies on comparative evaluation using consistent metrics and validation procedures. The preferred model is the one demonstrating strong and stable generalization performance rather than the one that fits the training data most closely.
+
+
+# Feature and Target Engineering
+
+Feature and target engineering concerns preparing data so that machine learning models can learn effectively. Well-designed features often have a greater impact on model performance than the specific choice of algorithm. The goal is to construct accurate, informative, and well-structured representations of both the inputs and the target variable.
+
+
+## Target engineering
+
+Target??
+
+Target engineering focuses on preparing the variable to be predicted.  
+Targets may exhibit noise, missing values, or extreme outliers, all of which can hinder model performance. Typical operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical formulations when appropriate. A well-defined target provides a clear and meaningful objective for the learning process.
+
+
+## Feature filtering
+
+Feature filtering removes variables that are uninformative, redundant, or detrimental to model performance.  
+Features with very low variance, high proportions of missing values, or strong collinearity may offer little useful information. Eliminating such features simplifies the modelling process, reduces noise, and often improves performance. In many cases, a smaller set of relevant features is preferable to a high-dimensional set containing noisy or irrelevant variables.
+
+
+### Numeric feature engineering
+
+Numeric features frequently differ in scale or distribution, which can negatively affect model training.  
+Standardization techniques, such as scaling to zero mean and unit variance or applying min–max normalization, help ensure that features contribute comparably to the learning process. Transformations such as logarithms can mitigate skewed distributions. Well-scaled numeric features support more stable learning and faster optimization.
+
+
+### Categorical feature engineering
+
+Categorical variables must be converted into numeric form before most models can utilize them. Several strategies exist, each with advantages under specific conditions.
+
+Lumping combines rare or similar categories to reduce sparsity and improve robustness.  
+One-hot or dummy encoding creates binary indicator variables for each category, providing explicit separation between categories.  
+Label encoding assigns integer codes to categories and is generally suitable for models that do not impose an ordinal interpretation on numeric values, such as tree-based methods.  
+Selecting an appropriate encoding method helps preserve the meaning of categorical distinctions.
+
+
+## Dimension reduction
+
+Dimension reduction techniques reduce the number of features while retaining essential information.  
+These methods can simplify high-dimensional data, reduce noise, and improve both computational efficiency and predictive performance. The conceptual aim is to identify the most informative directions or structures within the data and discard features that contribute little to explaining the variation. Reducing dimensionality often results in models that are more interpretable and less sensitive to noise.
+
+
+
+
+
+

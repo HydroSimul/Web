@@ -641,6 +641,14 @@ Where:
 - $\nu$ = Matern smoothness parameter  
 - $K_\nu$ = modified Bessel function of the second kind
 
+![from wikipedia/Variogram](../images/Schematic_variogram.svg.png)
+
+- **psill (partial sill)**: Represents the portion of the total variance that is spatially structured. It corresponds to the difference between the sill and the nugget and determines the overall height of the variogram curve (excluding measurement error or microscale variability).
+
+- **range**: Defines the distance at which spatial correlation becomes negligible. Beyond this distance, observations no longer influence each other, and the variogram reaches its sill. The range therefore indicates the spatial extent of dependence in the data.
+
+- **nugget**: Captures the variance at infinitesimally small distances. It reflects measurement error, microscale variability, or unresolved spatial heterogeneity. A non-zero nugget results in a jump of the variogram at the origin.
+
 
 ```{r}
 #| fig-fullwidth: true
@@ -1327,11 +1335,6 @@ The variogram is a key tool in kriging, representing the relationship between **
 
 The variogram fitting process requires plausible initial estimates for the following parameters, as they guide the optimization toward a meaningful solution. These initial values can typically be inferred from the empirical variogram scatter plot.
 
-- **psill (partial sill)**: Represents the portion of the total variance that is spatially structured. It corresponds to the difference between the sill and the nugget and determines the overall height of the variogram curve (excluding measurement error or microscale variability).
-
-- **range**: Defines the distance at which spatial correlation becomes negligible. Beyond this distance, observations no longer influence each other, and the variogram reaches its sill. The range therefore indicates the spatial extent of dependence in the data.
-
-- **nugget**: Captures the variance at infinitesimally small distances. It reflects measurement error, microscale variability, or unresolved spatial heterogeneity. A non-zero nugget results in a jump of the variogram at the origin.
 
 Providing reasonable initial values for these parameters is crucial, as they ensure stable and accurate variogram fitting during model optimization.
 

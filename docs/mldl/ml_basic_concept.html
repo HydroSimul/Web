@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Basic Concept of Machine Learning – HydroSimul</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Kan.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4fdaf0600e1712c666c3ca78a995a661.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">HydroSimul</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../dataprocess/index.html"> 
+<span class="menu-text">Dataprocess</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../modelling/index.html"> 
+<span class="menu-text">Modelling</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-to-machine-learning" id="toc-introduction-to-machine-learning" class="nav-link active" data-scroll-target="#introduction-to-machine-learning"><span class="header-section-number">1</span> Introduction to Machine Learning</a>
+  <ul class="collapse">
+  <li><a href="#supervised-learning" id="toc-supervised-learning" class="nav-link" data-scroll-target="#supervised-learning"><span class="header-section-number">1.1</span> Supervised learning</a></li>
+  <li><a href="#unsupervised-learning" id="toc-unsupervised-learning" class="nav-link" data-scroll-target="#unsupervised-learning"><span class="header-section-number">1.2</span> Unsupervised learning</a></li>
+  </ul></li>
+  <li><a href="#modelling-process" id="toc-modelling-process" class="nav-link" data-scroll-target="#modelling-process"><span class="header-section-number">2</span> Modelling process</a>
+  <ul class="collapse">
+  <li><a href="#data-splitting" id="toc-data-splitting" class="nav-link" data-scroll-target="#data-splitting"><span class="header-section-number">2.1</span> Data splitting</a></li>
+  <li><a href="#resampling" id="toc-resampling" class="nav-link" data-scroll-target="#resampling"><span class="header-section-number">2.2</span> Resampling</a></li>
+  <li><a href="#model-creation" id="toc-model-creation" class="nav-link" data-scroll-target="#model-creation"><span class="header-section-number">2.3</span> Model creation</a></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation"><span class="header-section-number">2.4</span> Model evaluation</a></li>
+  <li><a href="#model-training" id="toc-model-training" class="nav-link" data-scroll-target="#model-training"><span class="header-section-number">2.5</span> Model training</a></li>
+  <li><a href="#model-tuning" id="toc-model-tuning" class="nav-link" data-scroll-target="#model-tuning"><span class="header-section-number">2.6</span> Model tuning</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">2.7</span> Model selection</a></li>
+  </ul></li>
+  <li><a href="#feature-and-target-engineering" id="toc-feature-and-target-engineering" class="nav-link" data-scroll-target="#feature-and-target-engineering"><span class="header-section-number">3</span> Feature and Target Engineering</a>
+  <ul class="collapse">
+  <li><a href="#target-engineering" id="toc-target-engineering" class="nav-link" data-scroll-target="#target-engineering"><span class="header-section-number">3.1</span> Target engineering</a></li>
+  <li><a href="#feature-filtering" id="toc-feature-filtering" class="nav-link" data-scroll-target="#feature-filtering"><span class="header-section-number">3.2</span> Feature filtering</a>
+  <ul class="collapse">
+  <li><a href="#numeric-feature-engineering" id="toc-numeric-feature-engineering" class="nav-link" data-scroll-target="#numeric-feature-engineering"><span class="header-section-number">3.2.1</span> Numeric feature engineering</a></li>
+  <li><a href="#categorical-feature-engineering" id="toc-categorical-feature-engineering" class="nav-link" data-scroll-target="#categorical-feature-engineering"><span class="header-section-number">3.2.2</span> Categorical feature engineering</a></li>
+  </ul></li>
+  <li><a href="#dimension-reduction" id="toc-dimension-reduction" class="nav-link" data-scroll-target="#dimension-reduction"><span class="header-section-number">3.3</span> Dimension reduction</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Basic Concept of Machine Learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction-to-machine-learning" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction to Machine Learning</h1>
+<p>Machine learning (ML) is a discipline concerned with developing computational methods that learn patterns from data and make predictions or decisions without being explicitly programmed for each task. Contemporary ML includes both classical statistical learning approaches and deep learning methods based on multilayer neural networks. In this text, however, the focus is restricted to classical machine learning techniques, excluding deep learning.</p>
+<p>Before introducing specific algorithms or datasets, it is helpful to outline the overall workflow that characterizes most ML applications. Machine learning is fundamentally a data-driven approach to solving problems, and these problems are typically classified into two broad categories.<br>
+Supervised learning addresses situations in which labeled data are available, meaning that both input variables and associated target values are observed. Unsupervised learning, by contrast, deals with unlabeled data and seeks to identify latent structures or patterns without reference to explicit target values.</p>
+<section id="supervised-learning" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="supervised-learning"><span class="header-section-number">1.1</span> Supervised learning</h2>
+<p>Supervised learning relies on datasets that contain input–output pairs. The objective is to approximate a function that captures the relationship between inputs and the corresponding outputs. Supervised learning tasks generally fall into two groups.<br>
+Classification refers to predicting categorical outcomes, whereas regression involves predicting continuous numerical values. Both problem types require the model to learn patterns that meaningfully relate features to targets.</p>
+</section>
+<section id="unsupervised-learning" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="unsupervised-learning"><span class="header-section-number">1.2</span> Unsupervised learning</h2>
+<p>Unsupervised learning is applied when no target variable is provided. The goal is to uncover underlying structure, regularities, or groupings within the data. One widely used unsupervised approach is clustering, which groups observations such that items within the same cluster are more similar to each other than to those in other clusters.</p>
+</section>
+</section>
+<section id="modelling-process" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Modelling process</h1>
+<p>The modelling process describes the sequence of steps undertaken to construct, evaluate, and refine a machine learning model. Although specific details depend on the problem and algorithm, the overall structure of the workflow is broadly consistent across ML applications. These steps ensure that the model identifies meaningful patterns and performs reliably when applied to new data.</p>
+<section id="data-splitting" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="data-splitting"><span class="header-section-number">2.1</span> Data splitting</h2>
+<p>Prior to model development, the dataset is typically divided into separate subsets.<br>
+The primary purpose of this division is to train the model on one subset while reserving another for evaluation, thereby assessing how well the model generalizes beyond the data it has seen. Commonly used subsets include a training set for parameter estimation, a validation set for tuning and early stopping, and a test set for final performance assessment. A central principle is that the performance of a model should never be evaluated solely on data used during training.</p>
+</section>
+<section id="resampling" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="resampling"><span class="header-section-number">2.2</span> Resampling</h2>
+<p>Resampling techniques provide tools for estimating model performance more reliably, particularly when the available data are limited.<br>
+They help reduce the dependence on a single train–test split and yield more stable performance estimates. Standard introductory approaches include cross-validation, which repeatedly partitions the data into training and validation subsets, and bootstrapping, which draws samples with replacement to estimate variability. The overarching idea is that resampling reduces the risk of evaluations being overly sensitive to one particular dataset split.</p>
+</section>
+<section id="model-creation" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="model-creation"><span class="header-section-number">2.3</span> Model creation</h2>
+<p>Model creation involves selecting an appropriate algorithm and training it using the training data. This stage includes identifying suitable features, specifying the model structure, and allowing the model to adjust its internal parameters in response to the data.<br>
+Important considerations include the quality of features, the interpretability and complexity of the chosen model, and the need to guard against overfitting. The aim is to produce an initial model that can subsequently be evaluated and improved.</p>
+</section>
+<section id="model-evaluation" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">2.4</span> Model evaluation</h2>
+<p>Once a model has been trained, its performance must be assessed using data that were not part of the training process.<br>
+Evaluation provides insight into how well the model generalizes, facilitates comparisons among alternative models, and helps identify potential issues such as insufficient feature quality or overfitting. Appropriate performance metrics depend on the problem type, and evaluation should also consider aspects such as error distribution, robustness, and consistency across datasets.</p>
+</section>
+<section id="model-training" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="model-training"><span class="header-section-number">2.5</span> Model training</h2>
+<p>Model training is the phase in which the algorithm learns from the training dataset by iteratively adjusting internal parameters.<br>
+Through repeated exposure to input–output examples, the model seeks to minimize the discrepancy between predictions and true values. Training must strike a balance: excessive training may cause overfitting, whereas insufficient training may lead to underfitting, where the model fails to capture essential patterns.</p>
+</section>
+<section id="model-tuning" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="model-tuning"><span class="header-section-number">2.6</span> Model tuning</h2>
+<p>Model tuning, or hyperparameter tuning, concerns adjusting the external settings of the algorithm—parameters that are fixed prior to training and that influence how the model learns. Examples include model complexity constraints, regularization strength, and algorithm-specific hyperparameters such as the number of trees in an ensemble or the number of neighbors in a k-nearest neighbors classifier.<br>
+Tuning is crucial because hyperparameters strongly affect model performance. Validation data or cross-validation are typically used to guide the selection of optimal configurations.</p>
+</section>
+<section id="model-selection" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">2.7</span> Model selection</h2>
+<p>Model selection refers to choosing the most suitable model from a set of candidates.<br>
+Candidates may differ in algorithmic approach, hyperparameter configuration, or applied feature transformations. Selection relies on comparative evaluation using consistent metrics and validation procedures. The preferred model is the one demonstrating strong and stable generalization performance rather than the one that fits the training data most closely.</p>
+</section>
+</section>
+<section id="feature-and-target-engineering" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Feature and Target Engineering</h1>
+<p>Feature and target engineering concerns preparing data so that machine learning models can learn effectively. Well-designed features often have a greater impact on model performance than the specific choice of algorithm. The goal is to construct accurate, informative, and well-structured representations of both the inputs and the target variable.</p>
+<section id="target-engineering" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="target-engineering"><span class="header-section-number">3.1</span> Target engineering</h2>
+<p>Target??</p>
+<p>Target engineering focuses on preparing the variable to be predicted.<br>
+Targets may exhibit noise, missing values, or extreme outliers, all of which can hinder model performance. Typical operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical formulations when appropriate. A well-defined target provides a clear and meaningful objective for the learning process.</p>
+</section>
+<section id="feature-filtering" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="feature-filtering"><span class="header-section-number">3.2</span> Feature filtering</h2>
+<p>Feature filtering removes variables that are uninformative, redundant, or detrimental to model performance.<br>
+Features with very low variance, high proportions of missing values, or strong collinearity may offer little useful information. Eliminating such features simplifies the modelling process, reduces noise, and often improves performance. In many cases, a smaller set of relevant features is preferable to a high-dimensional set containing noisy or irrelevant variables.</p>
+<section id="numeric-feature-engineering" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="numeric-feature-engineering"><span class="header-section-number">3.2.1</span> Numeric feature engineering</h3>
+<p>Numeric features frequently differ in scale or distribution, which can negatively affect model training.<br>
+Standardization techniques, such as scaling to zero mean and unit variance or applying min–max normalization, help ensure that features contribute comparably to the learning process. Transformations such as logarithms can mitigate skewed distributions. Well-scaled numeric features support more stable learning and faster optimization.</p>
+</section>
+<section id="categorical-feature-engineering" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="categorical-feature-engineering"><span class="header-section-number">3.2.2</span> Categorical feature engineering</h3>
+<p>Categorical variables must be converted into numeric form before most models can utilize them. Several strategies exist, each with advantages under specific conditions.</p>
+<p>Lumping combines rare or similar categories to reduce sparsity and improve robustness.<br>
+One-hot or dummy encoding creates binary indicator variables for each category, providing explicit separation between categories.<br>
+Label encoding assigns integer codes to categories and is generally suitable for models that do not impose an ordinal interpretation on numeric values, such as tree-based methods.<br>
+Selecting an appropriate encoding method helps preserve the meaning of categorical distinctions.</p>
+</section>
+</section>
+<section id="dimension-reduction" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="dimension-reduction"><span class="header-section-number">3.3</span> Dimension reduction</h2>
+<p>Dimension reduction techniques reduce the number of features while retaining essential information.<br>
+These methods can simplify high-dimensional data, reduce noise, and improve both computational efficiency and predictive performance. The conceptual aim is to identify the most informative directions or structures within the data and discard features that contribute little to explaining the variation. Reducing dimensionality often results in models that are more interpretable and less sensitive to noise.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
