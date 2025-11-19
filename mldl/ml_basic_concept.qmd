@@ -1,5 +1,5 @@
 ---
-title: Basic Concept of Machine Learning
+title: Basic Concept
 execute:
   warning: false
   error: false

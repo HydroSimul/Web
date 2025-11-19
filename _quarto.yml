@@ -13,6 +13,8 @@ website:
         href: dataprocess/index.qmd
       - text: "Modelling"
         href: modelling/index.qmd
+      - text: "ML / DL"
+        href: mldl/index.qmd
         
   
   sidebar:
@@ -64,6 +66,7 @@ website:
         - section: "ML / DL"
           href: mldl/index.qmd
           contents: 
+            - mldl/ml_basic_concept.qmd      
             - mldl/ml_tidymodels_basic.qmd      
 
 format:
