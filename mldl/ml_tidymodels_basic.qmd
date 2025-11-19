@@ -1,5 +1,5 @@
 ---
-title: Workflow with tidymodels
+title: ML Workflow with tidymodels
 execute:
   warning: false
   error: false
@@ -9,121 +9,145 @@ number-sections: true
 ---
 
 
-# Library and Data
 
-In this article we will use `tidymodels` to walk through the complete machine learning workflow step by step in a tidy and ecological way.
+# Libraries
 
-The entire article is based on the case study from:
-[https://www.tidymodels.org/start/case-study/](https://www.tidymodels.org/start/case-study/)
-All exercises will use the data included in that example.
+In this article we use the `tidymodels` ecosystem to illustrate a complete machine learning workflow in a tidy, coherent, and reproducible manner.  
+Throughout the article, we revisit the fundamental components of the ML workflow:
+
+Data split → Feature engineering → Model specification → Model fitting → Model prediction → Model evaluation
+
+We begin with the most basic workflow and later extend it using the `recipe` framework for more advanced preprocessing.
+
+The material in this article is based on the case study provided at: [https://www.tidymodels.org/start/case-study/](https://www.tidymodels.org/start/case-study/).  All exercises use the dataset included in that example.
+
+The following packages are required:
 
 ```{r}
 library(tidyverse)
 theme_set(theme_bw())
 
-library(tidymodels)  # parsnip + all other tidymodels packages
+library(tidymodels)  # parsnip + other tidymodels packages
 
 # Helper packages
 library(readr)       # for importing data
-library(broom.mixed) # for converting Bayesian models to tidy tibbles
+library(broom.mixed) # for tidying Bayesian model output
 library(dotwhisker)  # for visualizing regression results
-
-library(skimr)           # for variable summaries
-
+library(skimr)       # for variable summaries
 ```
+
+
 
 
 # Basic Model Building and Fitting
 
+In this first chapter we focus on three steps:
+
+1. exploring the data
+2. specifying a model
+3. fitting the model to the data
+
 ## Data
 
-```{r}
-## data import ----------
-df_Urchins <-
-  read_csv("https://tidymodels.org/start/models/urchins.csv") |>  
-  setNames(c("food_regime", "initial_volume", "width")) |> 
-  mutate(food_regime = factor(food_regime, levels = c("Initial", "Low", "High")))
+In this exercise we explore the relationship between:
 
-## explore the relationship --------------
-ggplot(df_Urchins,
-       aes(x = initial_volume, 
-           y = width, 
-           group = food_regime, 
-           col = food_regime)) + 
-  geom_point() + 
-  geom_smooth(method = lm, se = FALSE) +
-  scale_color_viridis_d(option = "plasma", end = .7)
-```
+* the outcome variable: **sea urchin width**
+* feature 1: **initial volume** (continuous)
+* feature 2: **food regime** (categorical)
 
-In this exercise we explore the relationship between sea urchin width (target), initial volume (feature 1), and food regime (feature 2).
-The variable *initial volume* is continuous, while *food regime* is categorical.
-A basic model description can be written as:
+A basic model for these variables can be written as:
 
 ```r
 width ~ initial_volume * food_regime
 ```
 
+```{r}
+## Data import ----------
+df_Urchins <-
+  read_csv("https://tidymodels.org/start/models/urchins.csv") |>
+  setNames(c("food_regime", "initial_volume", "width")) |>
+  mutate(food_regime = factor(food_regime, levels = c("Initial", "Low", "High")))
 
-## Build the model
+## Explore the relationships ----------
+ggplot(df_Urchins,
+       aes(x = initial_volume,
+           y = width,
+           group = food_regime,
+           col = food_regime)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  scale_color_viridis_d(option = "plasma", end = .7)
+```
+
+
+
+## Building the Model
 
 We start with a simple linear regression model using `linear_reg()`.
-`tidymodels` is a meta-package that collects several modeling tools; `parsnip` allows us to choose the computational engine we prefer.
-You can find all available engines here:
+The `tidymodels` ecosystem separates *model specification* (what model we want) from the *computational engine* (how it is estimated).
+The `parsnip` package handles this abstraction.
+
+Available engines for `linear_reg()` are listed here:
 [https://parsnip.tidymodels.org/reference/linear_reg.html](https://parsnip.tidymodels.org/reference/linear_reg.html)
 
-1. choose the method
+1. Choose the model type:
 
 ```{r}
 linear_reg()
 ```
 
-2. choose an engine
+2. Choose the engine:
 
 ```{r}
-linear_reg() |> 
+linear_reg() |>
   set_engine("lm")
 ```
 
-3. build the model specification
+3. Save the model specification:
 
 ```{r}
 mdl_Linear <- linear_reg()
 ```
 
-## Train (fit) the model
 
-After specifying the model, we can train (fit) it to our data.
-The `fit()` function requires:
 
-1. the model object
+## Training (Fitting) the Model
+
+To train the model, we use the `fit()` function, which requires:
+
+1. the model specification
 2. a formula
-3. the dataset
+3. the training dataset
 
 ```{r}
-fit_Linear <- 
-  mdl_Linear |> 
+fit_Linear <-
+  mdl_Linear |>
   fit(width ~ initial_volume * food_regime, data = df_Urchins)
 
 fit_Linear
 ```
 
+We can inspect the fitted model coefficients:
+
 ```{r}
 tidy(fit_Linear)
 ```
 
-## Predict with the fitted model
 
-After fitting, we can already use the model to make predictions.
-To predict we need:
 
-1. a dataset containing the feature variables with the same names as in the training data
-2. the fitted model
+## Predicting with the Fitted Model
+
+Once a model is fitted, we can use it for prediction.
+To make predictions we need:
+
+1. a dataset containing the feature variables (with matching names)
+2. the fitted model object
 
 By default, `predict()` returns the mean prediction:
 
 ```{r}
 df_NewData <- expand.grid(
-  initial_volume = 20, 
+  initial_volume = 20,
   food_regime = c("Initial", "Low", "High")
 )
 
@@ -135,8 +159,8 @@ We can also request confidence intervals using `type = "conf_int"`:
 
 ```{r}
 pred_Conf <- predict(
-  fit_Linear, 
-  new_data = df_NewData, 
+  fit_Linear,
+  new_data = df_NewData,
   type = "conf_int"
 )
 pred_Conf
@@ -144,66 +168,467 @@ pred_Conf
 
 
 
-# data process with `recipes`
+Below is a polished, academic, and clearly structured version of your entire section.
+I improved grammar, readability, terminology, explanations, and formatting.
+All original meaning is preserved, but now it reads like high-quality lecture notes.
 
-`recipes` is a other package to make the workflow more convinice, which focus on zhe data process.
+Returned in **markdown** as requested.
+
+# Data Processing with `recipes`
+
+The `recipes` package provides a structured and extensible framework for data preprocessing and feature engineering within the `tidymodels` ecosystem.  
+It allows us to define all preprocessing steps in a reproducible, model-agnostic workflow before model fitting.
+
+
 
 ## Data
 
+In this example we work with flight information from the United States (package `nycflights13`).  
+Our goal is to predict whether an arriving flight is **late** (arrival delay ≥ 30 minutes) or **on time**.
+
+The modeling relationship can be summarized as:
+
+```r
+arr_delay ~ (date, airport, distance, ...)
+```
+
 ```{r}
-library(nycflights13)    # for flight data
+library(nycflights13)
 set.seed(123)
-# Data set ---------
+
 df_Flight <- 
   flights |> 
   mutate(
-    # Convert the arrival delay to a factor
     arr_delay = ifelse(arr_delay >= 30, "late", "on_time"),
     arr_delay = factor(arr_delay),
-    # We will use the date (not date-time) in the recipe below
     date = lubridate::as_date(time_hour)
   ) |> 
-  # Include the weather data
   inner_join(weather, by = c("origin", "time_hour")) |> 
-  # Only retain the specific columns we will use
-  select(dep_time, flight, origin, dest, air_time, distance, 
+  select(dep_time, flight, origin, dest, air_time, distance,
          carrier, date, arr_delay, time_hour) |> 
-  # Exclude missing data
   na.omit() |> 
-  # For creating models, it is better to have qualitative columns
-  # encoded as factors (instead of character strings)
   mutate_if(is.character, as.factor)
 
 df_Flight |> 
-  skimr::skim(dest, carrier) 
-
+  skimr::skim(dest, carrier)
 ```
 
 
 
-## Data split
+## Data Split
 
-In the radiationall experience we need prepare two group for traning and validate. 
+As usual, we divide the dataset into **training** and **validation** sets.
+This allows us to fit the model on one portion of the data and evaluate performance on unseen observations.
 
+Under the `tidymodels` framework:
 
-Under the framewerk the data will 
-
-1. first use `initial_split()` to split ane 
-
-2. then use `training` and `testing` to get the data
+1. `initial_split()` performs the random split.
+2. `training()` and `testing()` extract the corresponding sets.
 
 ```{r}
-# Fix the random numbers by setting the seed 
-# This enables the analysis to be reproducible when random numbers are used 
 set.seed(222)
-# Put 3/4 of the data into the training set 
-df_FlightSplit <- initial_split(df_Flight, prop = 3/4)
+split_Flight <- initial_split(df_Flight, prop = 3/4)
 
-# Create data frames for the two sets:
-df_Train <- training(df_FlightSplit)
-df_Validate  <- testing(df_FlightSplit)
+df_Train <- training(split_Flight)
+df_Validate <- testing(split_Flight)
+```
+
+
+
+## Creating a Recipe
+
+
+
+### Basical Recipe
+
+A **recipe** in `tidymodels` is a structured, pre-defined plan for **data preprocessing and feature engineering**.  
+It allows us to declare, in advance, all the steps needed to transform raw data into model-ready features.
+
+When creating a recipe, two fundamental components must be specified:
+
+1. **Formula (`~`)**:  
+   The variable on the left-hand side is the **target/outcome**, and the variables on the right-hand side are the **predictors/features**.
+
+2. **Data**:  
+   The dataset is used to identify variable names and types. At this stage, no transformations are applied.
+
+```{r}
+# Create a basic recipe
+rcp_Flight <- recipe(arr_delay ~ ., data = df_Train)
+```
+
+Using `.` on the right-hand side indicates that **all remaining variables** in the dataset should be used as predictors.
+
+
+
+
+### Roles
+
+In addition to the standard roles (**outcome** and **predictor**), `recipes` allows defining custom roles using `update_role()`.
+
+Common roles include:
+
+* `predictor`: variables used to predict the outcome
+* `outcome`: target variable
+* `ID`: identifiers not used for modeling
+* `case_weights`: observation weights
+* `datetime`, `latitude`, `longitude`: for temporal or spatial feature engineering
+
+```{r}
+rcp_Flight <- 
+  recipe(arr_delay ~ ., data = df_Train) |> 
+  update_role(flight, time_hour, new_role = "ID")
+
+summary(rcp_Flight)
+```
+
+
+
+## Feature Engineering with `step_*`
+
+### Date Features
+
+Feature engineering transforms raw data into model-ready variables.
+`recipes` expresses each transformation as a `step_*()` function.
+
+Below, we extract:
+
+* **day of week** (`dow`)
+* **month**
+* **holiday indicators** (using U.S. holidays)
+
+```{r}
+rcp_Flight <- 
+  recipe(arr_delay ~ ., data = df_Train) |> 
+  update_role(flight, time_hour, new_role = "ID") |> 
+  step_date(date, features = c("dow", "month")) |>               
+  step_holiday(
+    date,
+    holidays = timeDate::listHolidays("US"),
+    keep_original_cols = FALSE
+  )
+```
+
+This replaces the original date with engineered calendar features.
+
+
+
+### Categorical Variables (Dummy Encoding)
+
+Most models require converting categorical variables into **dummy/one-hot encoded** predictors.
+`recipes` provides:
+
+* `step_novel()`: handles unseen factor levels at prediction time
+* `step_dummy()`: converts categorical predictors into numerical dummy variables
+
+```{r}
+rcp_Flight <- 
+  recipe(arr_delay ~ ., data = df_Train) |> 
+  update_role(flight, time_hour, new_role = "ID") |> 
+  step_date(date, features = c("dow", "month")) |>               
+  step_holiday(
+    date, 
+    holidays = timeDate::listHolidays("US"), 
+    keep_original_cols = FALSE
+  ) |> 
+  step_novel(all_nominal_predictors()) |>  
+  step_dummy(all_nominal_predictors())
+```
+
+
+
+### Removing Zero-Variance Predictors
+
+Predictors with constant values provide no information and may cause issues in some algorithms.
+We remove them using `step_zv()`:
+
+```{r}
+rcp_Flight <- 
+  recipe(arr_delay ~ ., data = df_Train) |> 
+  update_role(flight, time_hour, new_role = "ID") |> 
+  step_date(date, features = c("dow", "month")) |>               
+  step_holiday(
+    date, 
+    holidays = timeDate::listHolidays("US"), 
+    keep_original_cols = FALSE
+  ) |> 
+  step_novel(all_nominal_predictors()) |>  
+  step_dummy(all_nominal_predictors()) |> 
+  step_zv(all_predictors())
+```
+
+
+
+## Combining the Recipe with a Model
+
+### Workflow Definition
+
+A `workflow` allows bundling:
+
+1. the **recipe** (preprocessing)
+2. the **model** (statistical/ML algorithm)
+
+```{r}
+mdl_LogReg <- 
+  logistic_reg() |> 
+  set_engine("glm")
+
+wflow_Flight <- 
+  workflow() |> 
+  add_model(mdl_LogReg) |> 
+  add_recipe(rcp_Flight)
+```
+
+
+
+## Model Fitting
+
+We can now train the full preprocessing + modeling pipeline using `fit()`:
+
+```{r}
+fit_Flight <- 
+  wflow_Flight |> 
+  fit(data = df_Train)
+```
+
+Inspect model coefficients:
+
+```{r}
+fit_Flight |> 
+  extract_fit_parsnip() |> 
+  tidy()
+```
+
+
+
+## Prediction
+
+Once fitted, the workflow can be used to generate predictions:
+
+```{r}
+pred_Flight <- predict(fit_Flight, df_Validate)
+```
+
+For evaluation we need both class predictions and class probabilities:
+
+```{r}
+pred_Flight <- 
+  predict(fit_Flight, df_Validate, type = "prob") |> 
+  bind_cols(predict(fit_Flight, df_Validate, type = "class")) |> 
+  bind_cols(df_Validate |> select(arr_delay))
+```
+
+
+
+## Evaluation
+
+```{r}
+pred_Flight |> 
+  roc_auc(truth = arr_delay, .pred_late)
+
+pred_Flight |> 
+  accuracy(truth = arr_delay, .pred_class)
+
+aug_Flight <- augment(fit_Flight, df_Validate)
+
+aug_Flight |> 
+  roc_curve(truth = arr_delay, .pred_late) |> 
+  autoplot()
+```
+
+
+
+## Clean Version of the Code
+
+```{r}
+set.seed(222)  # Set seed for reproducibility
+
+# Split the data into 75% training and 25% validation
+split_Flight <- initial_split(df_Flight, prop = 3/4)
+df_Train <- training(split_Flight)      # Extract training set
+df_Validate <- testing(split_Flight)    # Extract validation set
+
+# -------------------------------
+# Create a preprocessing recipe
+# -------------------------------
+rcp_Flight <- 
+  recipe(arr_delay ~ ., data = df_Train) |>    # Define target and predictors
+  update_role(flight, time_hour, new_role = "ID") |>  # Assign ID role to identifier columns
+  step_date(date, features = c("dow", "month")) |>    # Extract day of week & month from date
+  step_holiday(
+    date, 
+    holidays = timeDate::listHolidays("US"), 
+    keep_original_cols = FALSE
+  ) |>                                             # Add holiday indicator features
+  step_novel(all_nominal_predictors()) |>         # Handle new factor levels in prediction
+  step_dummy(all_nominal_predictors()) |>         # Convert categorical predictors to dummy variables
+  step_zv(all_predictors())                       # Remove predictors with zero variance
+
+# -------------------------------
+# Define the logistic regression model
+# -------------------------------
+mdl_LogReg <- 
+  logistic_reg() |> 
+  set_engine("glm")  # Use generalized linear model as backend
+
+# -------------------------------
+# Combine recipe and model into a workflow
+# -------------------------------
+wflow_Flight <- 
+  workflow() |> 
+  add_model(mdl_LogReg) |> 
+  add_recipe(rcp_Flight)
+
+# -------------------------------
+# Fit the workflow on the training data
+# -------------------------------
+fit_Flight <- 
+  wflow_Flight |> 
+  fit(data = df_Train)
+
+# -------------------------------
+# Predict on the validation set (class labels)
+# -------------------------------
+pred_Flight <- predict(fit_Flight, df_Validate)
+
+# -------------------------------
+# Predict on validation set (probabilities and class labels)
+# -------------------------------
+pred_Flight <- 
+  predict(fit_Flight, df_Validate, type = "prob") |>   # Predicted probabilities
+  bind_cols(predict(fit_Flight, df_Validate, type = "class")) |>  # Predicted classes
+  bind_cols(df_Validate |> select(arr_delay))          # Add true labels for evaluation
+
+# -------------------------------
+# Evaluate model performance
+# -------------------------------
+pred_Flight |> 
+  roc_auc(truth = arr_delay, .pred_late)   # ROC AUC for "late" class
+
+pred_Flight |> 
+  accuracy(truth = arr_delay, .pred_class) # Classification accuracy
+
+# -------------------------------
+# Visualize ROC curve
+# -------------------------------
+aug_Flight <- augment(fit_Flight, df_Validate)  # Add predictions and residuals to dataset
+
+aug_Flight |> 
+  roc_curve(truth = arr_delay, .pred_late) |>  # Compute ROC curve
+  autoplot()                                   # Plot ROC curve
 
 ```
+
+
+
+
+
+# Evaluate model with resamples
+
+
+## Evalute both trning- and validate- dataset
+
+the fited model can run for both datset, after predict we canlaos use the functon `roc_auc` or `accuracy` to test the model perfomence, for the both indictaors, bigger values means the better perfomence:
+
+```{r}
+library(modeldata) 
+
+# Dataset ---------
+## split -----------
+set.seed(123)
+split_Cell <- initial_split(modeldata::cells |> select(-case), 
+                            strata = class)
+df_Train_Cell <- training(split_Cell)
+df_Validate_Cell  <- testing(split_Cell)
+
+# Model ------------
+## build -----------
+
+mdl_RandomForest <- 
+  rand_forest(trees = 1000) |> 
+  set_engine("ranger") |> 
+  set_mode("classification")
+
+## fit --------
+set.seed(234)
+fit_RandomForest <- 
+  mdl_RandomForest |> 
+  fit(class ~ ., data = df_Train_Cell)
+fit_RandomForest
+
+## predict -------
+pred_Train_Cell <- 
+  predict(fit_RandomForest, df_Train_Cell) |> 
+  bind_cols(predict(fit_RandomForest, df_Train_Cell, type = "prob")) |> 
+  # Add the true outcome data back in
+  bind_cols(df_Train_Cell |> 
+              select(class))
+
+pred_Validate_Cell <- 
+  predict(fit_RandomForest, df_Validate_Cell) |> 
+  bind_cols(predict(fit_RandomForest, df_Validate_Cell, type = "prob")) |> 
+  bind_cols(df_Validate_Cell |> select(class))
+
+## performence --------
+
+pred_Train_Cell |>                # training set predictions
+  roc_auc(truth = class, .pred_PS)
+pred_Train_Cell |>                # training set predictions
+  accuracy(truth = class, .pred_class)
+
+
+pred_Validate_Cell |>                   # test set predictions
+  roc_auc(truth = class, .pred_PS)
+pred_Validate_Cell |>                   # test set predictions
+  accuracy(truth = class, .pred_class)
+
+
+```
+
+
+
+The nomal split-method show the stong differnec btewen tring dataset and the validate dataset. This is a nomal phonome by the data-foring model, it will "overfit" the trning data but not good  perfomence in new dataset. this is aslo the resone, we ned some stragy to avoid the splingting method.
+
+
+
+## resampling
+
+
+
+the cross-validation method will split trning datset into several resamplr group (fold), adn th subgroup will continue split into traning-part and testing-part (assessment).
+
+
+```{r}
+set.seed(345)
+folds_Cell <- vfold_cv(df_Train_Cell, v = 10)
+
+wflow_CrossValidate <- 
+  workflow() |>
+  add_model(mdl_RandomForest) |>
+  add_formula(class ~ .)
+
+set.seed(456)
+fit_CrossValidate <- 
+  wflow_CrossValidate |> 
+  fit_resamples(folds_Cell)
+collect_metrics(fit_CrossValidate)
+
+```
+
+
+
+
+compare to the nomal firtng, there si a spcail `fit_resamples()` function for the resampling methos.
+
+
+
+
+
+
+
+
+
+
 
 
 

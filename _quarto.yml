@@ -58,6 +58,13 @@ website:
             - modelling/model_linearReservoir.qmd      
             - modelling/model_caliLinearReser.qmd      
 
+    - id: mldl
+      collapse-level: 1
+      contents:
+        - section: "ML / DL"
+          href: mldl/index.qmd
+          contents: 
+            - mldl/ml_tidymodels_basic.qmd      
 
 format:
   html:

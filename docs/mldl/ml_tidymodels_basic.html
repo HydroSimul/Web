@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Workflow with tidymodels – HydroSimul</title>
+<title>ML Workflow with tidymodels – HydroSimul</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../mldl/index.html" rel="prev">
 <link href="../Kan.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -105,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -140,22 +141,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../mldl/index.html">ML / DL</a></li><li class="breadcrumb-item"><a href="../mldl/ml_tidymodels_basic.html">ML Workflow with tidymodels</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../mldl/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML / DL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../mldl/ml_tidymodels_basic.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">ML Workflow with tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#library-and-data" id="toc-library-and-data" class="nav-link active" data-scroll-target="#library-and-data"><span class="header-section-number">1</span> Library and Data</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link active" data-scroll-target="#libraries"><span class="header-section-number">1</span> Libraries</a></li>
   <li><a href="#basic-model-building-and-fitting" id="toc-basic-model-building-and-fitting" class="nav-link" data-scroll-target="#basic-model-building-and-fitting"><span class="header-section-number">2</span> Basic Model Building and Fitting</a>
   <ul class="collapse">
-  <li><a href="#build-the-model" id="toc-build-the-model" class="nav-link" data-scroll-target="#build-the-model"><span class="header-section-number">2.1</span> Build the model</a></li>
-  <li><a href="#train-fit-the-model" id="toc-train-fit-the-model" class="nav-link" data-scroll-target="#train-fit-the-model"><span class="header-section-number">2.2</span> Train (fit) the model</a></li>
-  <li><a href="#predict-with-the-fitted-model" id="toc-predict-with-the-fitted-model" class="nav-link" data-scroll-target="#predict-with-the-fitted-model"><span class="header-section-number">2.3</span> Predict with the fitted model</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">2.1</span> Data</a></li>
+  <li><a href="#building-the-model" id="toc-building-the-model" class="nav-link" data-scroll-target="#building-the-model"><span class="header-section-number">2.2</span> Building the Model</a></li>
+  <li><a href="#training-fitting-the-model" id="toc-training-fitting-the-model" class="nav-link" data-scroll-target="#training-fitting-the-model"><span class="header-section-number">2.3</span> Training (Fitting) the Model</a></li>
+  <li><a href="#predicting-with-the-fitted-model" id="toc-predicting-with-the-fitted-model" class="nav-link" data-scroll-target="#predicting-with-the-fitted-model"><span class="header-section-number">2.4</span> Predicting with the Fitted Model</a></li>
+  </ul></li>
+  <li><a href="#data-processing-with-recipes" id="toc-data-processing-with-recipes" class="nav-link" data-scroll-target="#data-processing-with-recipes"><span class="header-section-number">3</span> Data Processing with <code>recipes</code></a>
+  <ul class="collapse">
+  <li><a href="#data-1" id="toc-data-1" class="nav-link" data-scroll-target="#data-1"><span class="header-section-number">3.1</span> Data</a></li>
+  <li><a href="#data-split" id="toc-data-split" class="nav-link" data-scroll-target="#data-split"><span class="header-section-number">3.2</span> Data Split</a></li>
+  <li><a href="#creating-a-recipe" id="toc-creating-a-recipe" class="nav-link" data-scroll-target="#creating-a-recipe"><span class="header-section-number">3.3</span> Creating a Recipe</a>
+  <ul class="collapse">
+  <li><a href="#basical-recipe" id="toc-basical-recipe" class="nav-link" data-scroll-target="#basical-recipe"><span class="header-section-number">3.3.1</span> Basical Recipe</a></li>
+  <li><a href="#roles" id="toc-roles" class="nav-link" data-scroll-target="#roles"><span class="header-section-number">3.3.2</span> Roles</a></li>
+  </ul></li>
+  <li><a href="#feature-engineering-with-step_" id="toc-feature-engineering-with-step_" class="nav-link" data-scroll-target="#feature-engineering-with-step_"><span class="header-section-number">3.4</span> Feature Engineering with <code>step_*</code></a>
+  <ul class="collapse">
+  <li><a href="#date-features" id="toc-date-features" class="nav-link" data-scroll-target="#date-features"><span class="header-section-number">3.4.1</span> Date Features</a></li>
+  <li><a href="#categorical-variables-dummy-encoding" id="toc-categorical-variables-dummy-encoding" class="nav-link" data-scroll-target="#categorical-variables-dummy-encoding"><span class="header-section-number">3.4.2</span> Categorical Variables (Dummy Encoding)</a></li>
+  <li><a href="#removing-zero-variance-predictors" id="toc-removing-zero-variance-predictors" class="nav-link" data-scroll-target="#removing-zero-variance-predictors"><span class="header-section-number">3.4.3</span> Removing Zero-Variance Predictors</a></li>
+  </ul></li>
+  <li><a href="#combining-the-recipe-with-a-model" id="toc-combining-the-recipe-with-a-model" class="nav-link" data-scroll-target="#combining-the-recipe-with-a-model"><span class="header-section-number">3.5</span> Combining the Recipe with a Model</a>
+  <ul class="collapse">
+  <li><a href="#workflow-definition" id="toc-workflow-definition" class="nav-link" data-scroll-target="#workflow-definition"><span class="header-section-number">3.5.1</span> Workflow Definition</a></li>
+  </ul></li>
+  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting"><span class="header-section-number">3.6</span> Model Fitting</a></li>
+  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction"><span class="header-section-number">3.7</span> Prediction</a></li>
+  <li><a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation"><span class="header-section-number">3.8</span> Evaluation</a></li>
+  <li><a href="#clean-version-of-the-code" id="toc-clean-version-of-the-code" class="nav-link" data-scroll-target="#clean-version-of-the-code"><span class="header-section-number">3.9</span> Clean Version of the Code</a></li>
+  </ul></li>
+  <li><a href="#evaluate-model-with-resamples" id="toc-evaluate-model-with-resamples" class="nav-link" data-scroll-target="#evaluate-model-with-resamples"><span class="header-section-number">4</span> Evaluate model with resamples</a>
+  <ul class="collapse">
+  <li><a href="#evalute-both-trning--and-validate--dataset" id="toc-evalute-both-trning--and-validate--dataset" class="nav-link" data-scroll-target="#evalute-both-trning--and-validate--dataset"><span class="header-section-number">4.1</span> Evalute both trning- and validate- dataset</a></li>
+  <li><a href="#resampling" id="toc-resampling" class="nav-link" data-scroll-target="#resampling"><span class="header-section-number">4.2</span> resampling</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -163,9 +228,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../mldl/index.html">ML / DL</a></li><li class="breadcrumb-item"><a href="../mldl/ml_tidymodels_basic.html">ML Workflow with tidymodels</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Workflow with tidymodels</h1>
+<h1 class="title">ML Workflow with tidymodels</h1>
 </div>
 
 
@@ -182,37 +247,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="library-and-data" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Library and Data</h1>
-<p>In this article we will use <code>tidymodels</code> to walk through the complete machine learning workflow step by step in a tidy and ecological way.</p>
-<p>The entire article is based on the case study from: <a href="https://www.tidymodels.org/start/case-study/">https://www.tidymodels.org/start/case-study/</a> All exercises will use the data included in that example.</p>
+<section id="libraries" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Libraries</h1>
+<p>In this article we use the <code>tidymodels</code> ecosystem to illustrate a complete machine learning workflow in a tidy, coherent, and reproducible manner.<br>
+Throughout the article, we revisit the fundamental components of the ML workflow:</p>
+<p>Data split → Feature engineering → Model specification → Model fitting → Model prediction → Model evaluation</p>
+<p>We begin with the most basic workflow and later extend it using the <code>recipe</code> framework for more advanced preprocessing.</p>
+<p>The material in this article is based on the case study provided at: <a href="https://www.tidymodels.org/start/case-study/">https://www.tidymodels.org/start/case-study/</a>. All exercises use the dataset included in that example.</p>
+<p>The following packages are required:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)  <span class="co"># parsnip + all other tidymodels packages</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)  <span class="co"># parsnip + other tidymodels packages</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper packages</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)       <span class="co"># for importing data</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom.mixed) <span class="co"># for converting Bayesian models to tidy tibbles</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dotwhisker)  <span class="co"># for visualizing regression results</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom.mixed) <span class="co"># for tidying Bayesian model output</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dotwhisker)  <span class="co"># for visualizing regression results</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)       <span class="co"># for variable summaries</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="basic-model-building-and-fitting" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Basic Model Building and Fitting</h1>
+<p>In this first chapter we focus on three steps:</p>
+<ol type="1">
+<li>exploring the data</li>
+<li>specifying a model</li>
+<li>fitting the model to the data</li>
+</ol>
+<section id="data" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="data"><span class="header-section-number">2.1</span> Data</h2>
+<p>In this exercise we explore the relationship between:</p>
+<ul>
+<li>the outcome variable: <strong>sea urchin width</strong></li>
+<li>feature 1: <strong>initial volume</strong> (continuous)</li>
+<li>feature 2: <strong>food regime</strong> (categorical)</li>
+</ul>
+<p>A basic model for these variables can be written as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>width <span class="sc">~</span> initial_volume <span class="sc">*</span> food_regime</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## data import ----------</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_Urchins <span class="ot">&lt;-</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="st">"https://tidymodels.org/start/models/urchins.csv"</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"food_regime"</span>, <span class="st">"initial_volume"</span>, <span class="st">"width"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">food_regime =</span> <span class="fu">factor</span>(food_regime, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Initial"</span>, <span class="st">"Low"</span>, <span class="st">"High"</span>)))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">## explore the relationship --------------</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_Urchins,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> initial_volume, </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> width, </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">group =</span> food_regime, </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">col =</span> food_regime)) <span class="sc">+</span> </span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> .<span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Data import ----------</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_Urchins <span class="ot">&lt;-</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="st">"https://tidymodels.org/start/models/urchins.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"food_regime"</span>, <span class="st">"initial_volume"</span>, <span class="st">"width"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">food_regime =</span> <span class="fu">factor</span>(food_regime, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Initial"</span>, <span class="st">"Low"</span>, <span class="st">"High"</span>)))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Explore the relationships ----------</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_Urchins,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> initial_volume,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> width,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">group =</span> food_regime,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">col =</span> food_regime)) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> .<span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -221,16 +310,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>In this exercise we explore the relationship between sea urchin width (target), initial volume (feature 1), and food regime (feature 2). The variable <em>initial volume</em> is continuous, while <em>food regime</em> is categorical. A basic model description can be written as:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>width <span class="sc">~</span> initial_volume <span class="sc">*</span> food_regime</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="basic-model-building-and-fitting" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Basic Model Building and Fitting</h1>
-<section id="build-the-model" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="build-the-model"><span class="header-section-number">2.1</span> Build the model</h2>
-<p>We start with a simple linear regression model using <code>linear_reg()</code>. <code>tidymodels</code> is a meta-package that collects several modeling tools; <code>parsnip</code> allows us to choose the computational engine we prefer. You can find all available engines here: <a href="https://parsnip.tidymodels.org/reference/linear_reg.html">https://parsnip.tidymodels.org/reference/linear_reg.html</a></p>
+<section id="building-the-model" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="building-the-model"><span class="header-section-number">2.2</span> Building the Model</h2>
+<p>We start with a simple linear regression model using <code>linear_reg()</code>. The <code>tidymodels</code> ecosystem separates <em>model specification</em> (what model we want) from the <em>computational engine</em> (how it is estimated). The <code>parsnip</code> package handles this abstraction.</p>
+<p>Available engines for <code>linear_reg()</code> are listed here: <a href="https://parsnip.tidymodels.org/reference/linear_reg.html">https://parsnip.tidymodels.org/reference/linear_reg.html</a></p>
 <ol type="1">
-<li>choose the method</li>
+<li>Choose the model type:</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -241,10 +327,10 @@ Computational engine: lm </code></pre>
 </div>
 </div>
 <ol start="2" type="1">
-<li>choose an engine</li>
+<li>Choose the engine:</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear Regression Model Specification (regression)
@@ -253,23 +339,23 @@ Computational engine: lm </code></pre>
 </div>
 </div>
 <ol start="3" type="1">
-<li>build the model specification</li>
+<li>Save the model specification:</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mdl_Linear <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="train-fit-the-model" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="train-fit-the-model"><span class="header-section-number">2.2</span> Train (fit) the model</h2>
-<p>After specifying the model, we can train (fit) it to our data. The <code>fit()</code> function requires:</p>
+<section id="training-fitting-the-model" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="training-fitting-the-model"><span class="header-section-number">2.3</span> Training (Fitting) the Model</h2>
+<p>To train the model, we use the <code>fit()</code> function, which requires:</p>
 <ol type="1">
-<li>the model object</li>
+<li>the model specification</li>
 <li>a formula</li>
-<li>the dataset</li>
+<li>the training dataset</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit_Linear <span class="ot">&lt;-</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  mdl_Linear <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit_Linear <span class="ot">&lt;-</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  mdl_Linear <span class="sc">|&gt;</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(width <span class="sc">~</span> initial_volume <span class="sc">*</span> food_regime, <span class="at">data =</span> df_Urchins)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fit_Linear</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -289,6 +375,7 @@ Coefficients:
                     -0.0012594                       0.0005254  </code></pre>
 </div>
 </div>
+<p>We can inspect the fitted model coefficients:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_Linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -304,17 +391,17 @@ Coefficients:
 </div>
 </div>
 </section>
-<section id="predict-with-the-fitted-model" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="predict-with-the-fitted-model"><span class="header-section-number">2.3</span> Predict with the fitted model</h2>
-<p>After fitting, we can already use the model to make predictions. To predict we need:</p>
+<section id="predicting-with-the-fitted-model" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="predicting-with-the-fitted-model"><span class="header-section-number">2.4</span> Predicting with the Fitted Model</h2>
+<p>Once a model is fitted, we can use it for prediction. To make predictions we need:</p>
 <ol type="1">
-<li>a dataset containing the feature variables with the same names as in the training data</li>
-<li>the fitted model</li>
+<li>a dataset containing the feature variables (with matching names)</li>
+<li>the fitted model object</li>
 </ol>
 <p>By default, <code>predict()</code> returns the mean prediction:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_NewData <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">initial_volume =</span> <span class="dv">20</span>, </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">initial_volume =</span> <span class="dv">20</span>,</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">food_regime =</span> <span class="fu">c</span>(<span class="st">"Initial"</span>, <span class="st">"Low"</span>, <span class="st">"High"</span>)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -332,8 +419,8 @@ Coefficients:
 <p>We can also request confidence intervals using <code>type = "conf_int"</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pred_Conf <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  fit_Linear, </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_data =</span> df_NewData, </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  fit_Linear,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_data =</span> df_NewData,</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"conf_int"</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>pred_Conf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -346,6 +433,575 @@ Coefficients:
 3      0.0870      0.105 </code></pre>
 </div>
 </div>
+<p>Below is a polished, academic, and clearly structured version of your entire section. I improved grammar, readability, terminology, explanations, and formatting. All original meaning is preserved, but now it reads like high-quality lecture notes.</p>
+<p>Returned in <strong>markdown</strong> as requested.</p>
+</section>
+</section>
+<section id="data-processing-with-recipes" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data Processing with <code>recipes</code></h1>
+<p>The <code>recipes</code> package provides a structured and extensible framework for data preprocessing and feature engineering within the <code>tidymodels</code> ecosystem.<br>
+It allows us to define all preprocessing steps in a reproducible, model-agnostic workflow before model fitting.</p>
+<section id="data-1" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-1"><span class="header-section-number">3.1</span> Data</h2>
+<p>In this example we work with flight information from the United States (package <code>nycflights13</code>).<br>
+Our goal is to predict whether an arriving flight is <strong>late</strong> (arrival delay ≥ 30 minutes) or <strong>on time</strong>.</p>
+<p>The modeling relationship can be summarized as:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>arr_delay <span class="sc">~</span> (date, airport, distance, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  flights <span class="sc">|&gt;</span> </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">arr_delay =</span> <span class="fu">ifelse</span>(arr_delay <span class="sc">&gt;=</span> <span class="dv">30</span>, <span class="st">"late"</span>, <span class="st">"on_time"</span>),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">arr_delay =</span> <span class="fu">factor</span>(arr_delay),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> lubridate<span class="sc">::</span><span class="fu">as_date</span>(time_hour)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(weather, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"origin"</span>, <span class="st">"time_hour"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dep_time, flight, origin, dest, air_time, distance,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>         carrier, date, arr_delay, time_hour) <span class="sc">|&gt;</span> </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.character, as.factor)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>df_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  skimr<span class="sc">::</span><span class="fu">skim</span>(dest, carrier)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">df_Flight</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">325819</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">ordered</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: left;">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">dest</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">104</td>
+<td style="text-align: left;">ATL: 16771, ORD: 16507, LAX: 15942, BOS: 14948</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">carrier</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">UA: 57489, B6: 53715, EV: 50868, DL: 47465</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="data-split" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="data-split"><span class="header-section-number">3.2</span> Data Split</h2>
+<p>As usual, we divide the dataset into <strong>training</strong> and <strong>validation</strong> sets. This allows us to fit the model on one portion of the data and evaluate performance on unseen observations.</p>
+<p>Under the <code>tidymodels</code> framework:</p>
+<ol type="1">
+<li><code>initial_split()</code> performs the random split.</li>
+<li><code>training()</code> and <code>testing()</code> extract the corresponding sets.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">222</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>split_Flight <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df_Flight, <span class="at">prop =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df_Train <span class="ot">&lt;-</span> <span class="fu">training</span>(split_Flight)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>df_Validate <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_Flight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-a-recipe" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="creating-a-recipe"><span class="header-section-number">3.3</span> Creating a Recipe</h2>
+<section id="basical-recipe" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="basical-recipe"><span class="header-section-number">3.3.1</span> Basical Recipe</h3>
+<p>A <strong>recipe</strong> in <code>tidymodels</code> is a structured, pre-defined plan for <strong>data preprocessing and feature engineering</strong>.<br>
+It allows us to declare, in advance, all the steps needed to transform raw data into model-ready features.</p>
+<p>When creating a recipe, two fundamental components must be specified:</p>
+<ol type="1">
+<li><p><strong>Formula (<code>~</code>)</strong>:<br>
+The variable on the left-hand side is the <strong>target/outcome</strong>, and the variables on the right-hand side are the <strong>predictors/features</strong>.</p></li>
+<li><p><strong>Data</strong>:<br>
+The dataset is used to identify variable names and types. At this stage, no transformations are applied.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a basic recipe</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rcp_Flight <span class="ot">&lt;-</span> <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> df_Train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using <code>.</code> on the right-hand side indicates that <strong>all remaining variables</strong> in the dataset should be used as predictors.</p>
+</section>
+<section id="roles" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="roles"><span class="header-section-number">3.3.2</span> Roles</h3>
+<p>In addition to the standard roles (<strong>outcome</strong> and <strong>predictor</strong>), <code>recipes</code> allows defining custom roles using <code>update_role()</code>.</p>
+<p>Common roles include:</p>
+<ul>
+<li><code>predictor</code>: variables used to predict the outcome</li>
+<li><code>outcome</code>: target variable</li>
+<li><code>ID</code>: identifiers not used for modeling</li>
+<li><code>case_weights</code>: observation weights</li>
+<li><code>datetime</code>, <code>latitude</code>, <code>longitude</code>: for temporal or spatial feature engineering</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rcp_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> df_Train) <span class="sc">|&gt;</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rcp_Flight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+   variable  type      role      source  
+   &lt;chr&gt;     &lt;list&gt;    &lt;chr&gt;     &lt;chr&gt;   
+ 1 dep_time  &lt;chr [2]&gt; predictor original
+ 2 flight    &lt;chr [2]&gt; ID        original
+ 3 origin    &lt;chr [3]&gt; predictor original
+ 4 dest      &lt;chr [3]&gt; predictor original
+ 5 air_time  &lt;chr [2]&gt; predictor original
+ 6 distance  &lt;chr [2]&gt; predictor original
+ 7 carrier   &lt;chr [3]&gt; predictor original
+ 8 date      &lt;chr [1]&gt; predictor original
+ 9 time_hour &lt;chr [1]&gt; ID        original
+10 arr_delay &lt;chr [3]&gt; outcome   original</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="feature-engineering-with-step_" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="feature-engineering-with-step_"><span class="header-section-number">3.4</span> Feature Engineering with <code>step_*</code></h2>
+<section id="date-features" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="date-features"><span class="header-section-number">3.4.1</span> Date Features</h3>
+<p>Feature engineering transforms raw data into model-ready variables. <code>recipes</code> expresses each transformation as a <code>step_*()</code> function.</p>
+<p>Below, we extract:</p>
+<ul>
+<li><strong>day of week</strong> (<code>dow</code>)</li>
+<li><strong>month</strong></li>
+<li><strong>holiday indicators</strong> (using U.S. holidays)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rcp_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> df_Train) <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span>               </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    date,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>),</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This replaces the original date with engineered calendar features.</p>
+</section>
+<section id="categorical-variables-dummy-encoding" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="categorical-variables-dummy-encoding"><span class="header-section-number">3.4.2</span> Categorical Variables (Dummy Encoding)</h3>
+<p>Most models require converting categorical variables into <strong>dummy/one-hot encoded</strong> predictors. <code>recipes</code> provides:</p>
+<ul>
+<li><code>step_novel()</code>: handles unseen factor levels at prediction time</li>
+<li><code>step_dummy()</code>: converts categorical predictors into numerical dummy variables</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rcp_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> df_Train) <span class="sc">|&gt;</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span>               </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    date, </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>), </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_novel</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span>  </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="removing-zero-variance-predictors" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="removing-zero-variance-predictors"><span class="header-section-number">3.4.3</span> Removing Zero-Variance Predictors</h3>
+<p>Predictors with constant values provide no information and may cause issues in some algorithms. We remove them using <code>step_zv()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rcp_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> df_Train) <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span>               </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    date, </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>), </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_novel</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span>  </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="combining-the-recipe-with-a-model" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="combining-the-recipe-with-a-model"><span class="header-section-number">3.5</span> Combining the Recipe with a Model</h2>
+<section id="workflow-definition" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="workflow-definition"><span class="header-section-number">3.5.1</span> Workflow Definition</h3>
+<p>A <code>workflow</code> allows bundling:</p>
+<ol type="1">
+<li>the <strong>recipe</strong> (preprocessing)</li>
+<li>the <strong>model</strong> (statistical/ML algorithm)</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mdl_LogReg <span class="ot">&lt;-</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>wflow_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(mdl_LogReg) <span class="sc">|&gt;</span> </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rcp_Flight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="model-fitting" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="model-fitting"><span class="header-section-number">3.6</span> Model Fitting</h2>
+<p>We can now train the full preprocessing + modeling pipeline using <code>fit()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  wflow_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> df_Train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Inspect model coefficients:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fit_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 157 × 5
+   term                         estimate std.error statistic  p.value
+   &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1 (Intercept)                   7.28    2.73           2.67 7.64e- 3
+ 2 dep_time                     -0.00166 0.0000141   -118.   0       
+ 3 air_time                     -0.0440  0.000563     -78.2  0       
+ 4 distance                      0.00507 0.00150        3.38 7.32e- 4
+ 5 date_USChristmasDay           1.33    0.177          7.49 6.93e-14
+ 6 date_USColumbusDay            0.724   0.170          4.25 2.13e- 5
+ 7 date_USCPulaskisBirthday      0.807   0.139          5.80 6.57e- 9
+ 8 date_USDecorationMemorialDay  0.585   0.117          4.98 6.32e- 7
+ 9 date_USElectionDay            0.948   0.190          4.98 6.25e- 7
+10 date_USGoodFriday             1.25    0.167          7.45 9.40e-14
+# ℹ 147 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="prediction" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="prediction"><span class="header-section-number">3.7</span> Prediction</h2>
+<p>Once fitted, the workflow can be used to generate predictions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_Flight, df_Validate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For evaluation we need both class predictions and class probabilities:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(fit_Flight, df_Validate, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_Flight, df_Validate, <span class="at">type =</span> <span class="st">"class"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_Validate <span class="sc">|&gt;</span> <span class="fu">select</span>(arr_delay))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="evaluation" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="evaluation"><span class="header-section-number">3.8</span> Evaluation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> arr_delay, .pred_late)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.764</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> arr_delay, .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.849</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>aug_Flight <span class="ot">&lt;-</span> <span class="fu">augment</span>(fit_Flight, df_Validate)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>aug_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_curve</span>(<span class="at">truth =</span> arr_delay, .pred_late) <span class="sc">|&gt;</span> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ml_tidymodels_basic_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="clean-version-of-the-code" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="clean-version-of-the-code"><span class="header-section-number">3.9</span> Clean Version of the Code</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">222</span>)  <span class="co"># Set seed for reproducibility</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into 75% training and 25% validation</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>split_Flight <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df_Flight, <span class="at">prop =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>df_Train <span class="ot">&lt;-</span> <span class="fu">training</span>(split_Flight)      <span class="co"># Extract training set</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>df_Validate <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_Flight)    <span class="co"># Extract validation set</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a preprocessing recipe</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>rcp_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> df_Train) <span class="sc">|&gt;</span>    <span class="co"># Define target and predictors</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">|&gt;</span>  <span class="co"># Assign ID role to identifier columns</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span>    <span class="co"># Extract day of week &amp; month from date</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>    date, </span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>), </span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span>                                             <span class="co"># Add holiday indicator features</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_novel</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span>         <span class="co"># Handle new factor levels in prediction</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span>         <span class="co"># Convert categorical predictors to dummy variables</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())                       <span class="co"># Remove predictors with zero variance</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the logistic regression model</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>mdl_LogReg <span class="ot">&lt;-</span> </span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)  <span class="co"># Use generalized linear model as backend</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine recipe and model into a workflow</span></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>wflow_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(mdl_LogReg) <span class="sc">|&gt;</span> </span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rcp_Flight)</span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the workflow on the training data</span></span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>fit_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>  wflow_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> df_Train)</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict on the validation set (class labels)</span></span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_Flight, df_Validate)</span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict on validation set (probabilities and class labels)</span></span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="ot">&lt;-</span> </span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(fit_Flight, df_Validate, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span>   <span class="co"># Predicted probabilities</span></span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_Flight, df_Validate, <span class="at">type =</span> <span class="st">"class"</span>)) <span class="sc">|&gt;</span>  <span class="co"># Predicted classes</span></span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_Validate <span class="sc">|&gt;</span> <span class="fu">select</span>(arr_delay))          <span class="co"># Add true labels for evaluation</span></span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model performance</span></span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> arr_delay, .pred_late)   <span class="co"># ROC AUC for "late" class</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.764</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pred_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> arr_delay, .pred_class) <span class="co"># Classification accuracy</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.849</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize ROC curve</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>aug_Flight <span class="ot">&lt;-</span> <span class="fu">augment</span>(fit_Flight, df_Validate)  <span class="co"># Add predictions and residuals to dataset</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>aug_Flight <span class="sc">|&gt;</span> </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_curve</span>(<span class="at">truth =</span> arr_delay, .pred_late) <span class="sc">|&gt;</span>  <span class="co"># Compute ROC curve</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()                                   <span class="co"># Plot ROC curve</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ml_tidymodels_basic_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="evaluate-model-with-resamples" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Evaluate model with resamples</h1>
+<section id="evalute-both-trning--and-validate--dataset" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="evalute-both-trning--and-validate--dataset"><span class="header-section-number">4.1</span> Evalute both trning- and validate- dataset</h2>
+<p>the fited model can run for both datset, after predict we canlaos use the functon <code>roc_auc</code> or <code>accuracy</code> to test the model perfomence, for the both indictaors, bigger values means the better perfomence:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata) </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Dataset ---------</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="do">## split -----------</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>split_Cell <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(modeldata<span class="sc">::</span>cells <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>case), </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">strata =</span> class)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>df_Train_Cell <span class="ot">&lt;-</span> <span class="fu">training</span>(split_Cell)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>df_Validate_Cell  <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_Cell)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Model ------------</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="do">## build -----------</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>mdl_RandomForest <span class="ot">&lt;-</span> </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rand_forest</span>(<span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="do">## fit --------</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">234</span>)</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>fit_RandomForest <span class="ot">&lt;-</span> </span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  mdl_RandomForest <span class="sc">|&gt;</span> </span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(class <span class="sc">~</span> ., <span class="at">data =</span> df_Train_Cell)</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>fit_RandomForest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, num.trees = ~1000,      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) 
+
+Type:                             Probability estimation 
+Number of trees:                  1000 
+Sample size:                      1514 
+Number of independent variables:  56 
+Mtry:                             7 
+Target node size:                 10 
+Variable importance mode:         none 
+Splitrule:                        gini 
+OOB prediction error (Brier s.):  0.1187479 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="do">## predict -------</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>pred_Train_Cell <span class="ot">&lt;-</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(fit_RandomForest, df_Train_Cell) <span class="sc">|&gt;</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_RandomForest, df_Train_Cell, <span class="at">type =</span> <span class="st">"prob"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the true outcome data back in</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_Train_Cell <span class="sc">|&gt;</span> </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(class))</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>pred_Validate_Cell <span class="ot">&lt;-</span> </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(fit_RandomForest, df_Validate_Cell) <span class="sc">|&gt;</span> </span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_RandomForest, df_Validate_Cell, <span class="at">type =</span> <span class="st">"prob"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_Validate_Cell <span class="sc">|&gt;</span> <span class="fu">select</span>(class))</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a><span class="do">## performence --------</span></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>pred_Train_Cell <span class="sc">|&gt;</span>                <span class="co"># training set predictions</span></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> class, .pred_PS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         1.000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pred_Train_Cell <span class="sc">|&gt;</span>                <span class="co"># training set predictions</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> class, .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.990</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>pred_Validate_Cell <span class="sc">|&gt;</span>                   <span class="co"># test set predictions</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> class, .pred_PS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.891</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>pred_Validate_Cell <span class="sc">|&gt;</span>                   <span class="co"># test set predictions</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> class, .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.814</code></pre>
+</div>
+</div>
+<p>The nomal split-method show the stong differnec btewen tring dataset and the validate dataset. This is a nomal phonome by the data-foring model, it will “overfit” the trning data but not good perfomence in new dataset. this is aslo the resone, we ned some stragy to avoid the splingting method.</p>
+</section>
+<section id="resampling" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="resampling"><span class="header-section-number">4.2</span> resampling</h2>
+<p>the cross-validation method will split trning datset into several resamplr group (fold), adn th subgroup will continue split into traning-part and testing-part (assessment).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">345</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>folds_Cell <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_Train_Cell, <span class="at">v =</span> <span class="dv">10</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>wflow_CrossValidate <span class="ot">&lt;-</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(mdl_RandomForest) <span class="sc">|&gt;</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(class <span class="sc">~</span> .)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>fit_CrossValidate <span class="ot">&lt;-</span> </span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  wflow_CrossValidate <span class="sc">|&gt;</span> </span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_resamples</span>(folds_Cell)</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(fit_CrossValidate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  .metric     .estimator  mean     n std_err .config             
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 accuracy    binary     0.833    10 0.00876 Preprocessor1_Model1
+2 brier_class binary     0.120    10 0.00406 Preprocessor1_Model1
+3 roc_auc     binary     0.905    10 0.00627 Preprocessor1_Model1</code></pre>
+</div>
+</div>
+<p>compare to the nomal firtng, there si a spcail <code>fit_resamples()</code> function for the resampling methos.</p>
 
 
 </section>
@@ -769,6 +1425,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../mldl/index.html" class="pagination-link" aria-label="ML / DL">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">ML / DL</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Basic Concept of Machine Learning – HydroSimul</title>
+<title>ML / DL – HydroSimul</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,6 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../mldl/ml_tidymodels_basic.html" rel="next">
 <link href="../Kan.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -71,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -106,56 +107,54 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../mldl/index.html">ML / DL</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#introduction-to-machine-learning" id="toc-introduction-to-machine-learning" class="nav-link active" data-scroll-target="#introduction-to-machine-learning"><span class="header-section-number">1</span> Introduction to Machine Learning</a>
-  <ul class="collapse">
-  <li><a href="#supervised-learning" id="toc-supervised-learning" class="nav-link" data-scroll-target="#supervised-learning"><span class="header-section-number">1.1</span> Supervised learning</a></li>
-  <li><a href="#unsupervised-learning" id="toc-unsupervised-learning" class="nav-link" data-scroll-target="#unsupervised-learning"><span class="header-section-number">1.2</span> Unsupervised learning</a></li>
-  </ul></li>
-  <li><a href="#modelling-process" id="toc-modelling-process" class="nav-link" data-scroll-target="#modelling-process"><span class="header-section-number">2</span> Modelling process</a>
-  <ul class="collapse">
-  <li><a href="#data-splitting" id="toc-data-splitting" class="nav-link" data-scroll-target="#data-splitting"><span class="header-section-number">2.1</span> Data splitting</a></li>
-  <li><a href="#resampling" id="toc-resampling" class="nav-link" data-scroll-target="#resampling"><span class="header-section-number">2.2</span> Resampling</a></li>
-  <li><a href="#model-creation" id="toc-model-creation" class="nav-link" data-scroll-target="#model-creation"><span class="header-section-number">2.3</span> Model creation</a></li>
-  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation"><span class="header-section-number">2.4</span> Model evaluation</a></li>
-  <li><a href="#model-training" id="toc-model-training" class="nav-link" data-scroll-target="#model-training"><span class="header-section-number">2.5</span> Model training</a></li>
-  <li><a href="#model-tuning" id="toc-model-tuning" class="nav-link" data-scroll-target="#model-tuning"><span class="header-section-number">2.6</span> Model tuning</a></li>
-  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">2.7</span> Model selection</a></li>
-  </ul></li>
-  <li><a href="#feature-target-engineering" id="toc-feature-target-engineering" class="nav-link" data-scroll-target="#feature-target-engineering"><span class="header-section-number">3</span> Feature &amp; Target Engineering</a>
-  <ul class="collapse">
-  <li><a href="#target-engineering" id="toc-target-engineering" class="nav-link" data-scroll-target="#target-engineering"><span class="header-section-number">3.1</span> Target engineering</a></li>
-  <li><a href="#feature-filtering" id="toc-feature-filtering" class="nav-link" data-scroll-target="#feature-filtering"><span class="header-section-number">3.2</span> Feature filtering</a></li>
-  <li><a href="#numeric-feature-engineering" id="toc-numeric-feature-engineering" class="nav-link" data-scroll-target="#numeric-feature-engineering"><span class="header-section-number">3.3</span> Numeric feature engineering</a>
-  <ul class="collapse">
-  <li><a href="#standardization" id="toc-standardization" class="nav-link" data-scroll-target="#standardization"><span class="header-section-number">3.3.1</span> Standardization</a></li>
-  </ul></li>
-  <li><a href="#categorical-feature-engineering" id="toc-categorical-feature-engineering" class="nav-link" data-scroll-target="#categorical-feature-engineering"><span class="header-section-number">3.4</span> Categorical feature engineering</a>
-  <ul class="collapse">
-  <li><a href="#lumping" id="toc-lumping" class="nav-link" data-scroll-target="#lumping"><span class="header-section-number">3.4.1</span> Lumping</a></li>
-  <li><a href="#one-hot-and-dummy-encoding" id="toc-one-hot-and-dummy-encoding" class="nav-link" data-scroll-target="#one-hot-and-dummy-encoding"><span class="header-section-number">3.4.2</span> One-hot and dummy encoding</a></li>
-  <li><a href="#label-encoding" id="toc-label-encoding" class="nav-link" data-scroll-target="#label-encoding"><span class="header-section-number">3.4.3</span> Label encoding</a></li>
-  </ul></li>
-  <li><a href="#dimension-reduction" id="toc-dimension-reduction" class="nav-link" data-scroll-target="#dimension-reduction"><span class="header-section-number">3.5</span> Dimension reduction</a></li>
-  </ul></li>
-  </ul>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../mldl/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">ML / DL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../mldl/ml_tidymodels_basic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML Workflow with tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Basic Concept of Machine Learning</h1>
+<h1 class="title">ML / DL</h1>
 </div>
 
 
@@ -172,131 +171,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction-to-machine-learning" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Introduction to Machine Learning</h1>
-<p>Machine Learning (ML) is a field of study that gives computers the ability to learn patterns from data and make predictions or decisions without being explicitly programmed. Modern ML includes both classical statistical learning methods and deep learning (DL), which uses neural networks with many layers. But in this artical we will just talk about the clssical ML without Deep-learning.</p>
-<p>In this artical we will still not start woith data and the ML-methid, we will just explain the basci concept of whole workflow of ML.</p>
-<p>ML is a data-foring method in order to solve some problem. Genaraslly the problems could be dividede in two catogries, Supervised learning: with lablded or obseved data to mesure the target simulatio and Unsupervised learning: no labeld or obsevvation data to evaluate.</p>
-<section id="supervised-learning" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="supervised-learning"><span class="header-section-number">1.1</span> Supervised learning</h2>
-<p>Supervised learning uses labeled data (input–output pairs). The goal is to learn a function that maps inputs to outputs patters. typically it can also into two categorei: Classification: predict discrete categories and Regression: predict continuous values</p>
-</section>
-<section id="unsupervised-learning" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="unsupervised-learning"><span class="header-section-number">1.2</span> Unsupervised learning</h2>
-<p>Unsupervised learning works with unlabeled data. The goal is to discover structure or patterns. mainly with Clustering: grouping similar data points</p>
-</section>
-</section>
-<section id="modelling-process" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Modelling process</h1>
-<p>The modelling process describes the steps we follow to build, test, and improve a machine learning model. These steps are similar across almost all ML workflows and help ensure that the model learns meaningful patterns and performs reliably on new data.</p>
-<section id="data-splitting" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="data-splitting"><span class="header-section-number">2.1</span> Data splitting</h2>
-<p>Before building a model, we divide the available data into separate parts.</p>
-<p>Purpose • To train the model on one portion of the data • To evaluate it on data it has never seen • To check how well it generalizes to new situations</p>
-<p>Typical splits • Training set: used to fit the model • Validation set: used to tune settings and avoid overfitting • Test set: used only at the end to measure final performance</p>
-<p>Key idea Never evaluate a model on the same data it was trained on.</p>
-</section>
-<section id="resampling" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="resampling"><span class="header-section-number">2.2</span> Resampling</h2>
-<p>Resampling techniques help estimate how well a model will perform on unseen data and make better use of limited data.</p>
-<p>Why resampling is needed • Small datasets require careful reuse of data • We want a more stable and reliable estimate of model performance</p>
-<p>Common resampling ideas (introductory level) • Cross-validation: repeatedly splitting data into training and validation folds • Bootstrapping: sampling with replacement to estimate variability</p>
-<p>Intuition Resampling reduces the chance that our evaluation depends too much on one particular split of the data.</p>
-</section>
-<section id="model-creation" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="model-creation"><span class="header-section-number">2.3</span> Model creation</h2>
-<p>This step involves selecting an algorithm and training it on the training data.</p>
-<p>What happens during model creation • Choose an appropriate model based on the problem • Provide the model with features and target values • Allow the model to learn patterns by adjusting internal parameters</p>
-<p>Important considerations • Good features often matter more than the algorithm • Simpler models are usually preferred at the beginning • Keep an eye on overfitting during training</p>
-<p>At this stage, the goal is to produce a candidate model that can later be tested and refined.</p>
-</section>
-<section id="model-evaluation" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">2.4</span> Model evaluation</h2>
-<p>After training the model, we assess its performance using unseen data.</p>
-<p>Purpose • To understand how well the model generalizes • To compare different models or settings • To identify issues like overfitting or poor feature selection</p>
-<p>Key evaluation ideas • Use metrics appropriate to the problem type (classification vs regression) • Compare performance on training vs validation/test data • Consider not only accuracy but also error distribution, reliability, and robustness</p>
-<p>Evaluation provides feedback that guides the next round of improvements.</p>
-</section>
-<section id="model-training" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="model-training"><span class="header-section-number">2.5</span> Model training</h2>
-<p>Model training is the process where the algorithm learns from the training data.</p>
-<p>What happens during training • The model sees many examples with known outcomes. • It adjusts internal parameters (like weights, thresholds, or rules). • The goal is to reduce the difference between predicted and true values.</p>
-<p>Key ideas • Training is about <em>finding patterns</em> in the data. • Too much training can lead to overfitting (memorizing instead of learning). • Too little training can lead to underfitting (model is too simple to learn patterns).</p>
-</section>
-<section id="model-tuning" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="model-tuning"><span class="header-section-number">2.6</span> Model tuning</h2>
-<p>Model tuning (also called hyperparameter tuning) focuses on adjusting the external settings of the model – the parts we set <em>before</em> training.</p>
-<p>Examples of what tuning adjusts (concept only) • How complex the model is allowed to be • How strongly the model is regularized • How many neighbors, trees, or iterations a model uses (depending on the method)</p>
-<p>Why tuning is important • The same model can perform very differently with different settings. • Tuning helps balance underfitting and overfitting. • Validation data or cross-validation is used to compare settings.</p>
-<p>Key idea We do not change the training examples; we change <em>how</em> the model learns.</p>
-</section>
-<section id="model-selection" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">2.7</span> Model selection</h2>
-<p>Model selection is choosing the best model among several candidates.</p>
-<p>What we compare • Different algorithms (e.g., linear model vs.&nbsp;tree-based model) • Different versions of the same algorithm with different tuning • Models trained on different features or preprocessing steps</p>
-<p>How we select a model • Evaluate all candidates on validation or resampled results • Compare metrics appropriate for the task • Consider stability, generalization ability, and simplicity</p>
-<p>Key idea The “best” model is not the one that fits the training data best, but the one that performs well on unseen data.</p>
-</section>
-</section>
-<section id="feature-target-engineering" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Feature &amp; Target Engineering</h1>
-<p>Feature and target engineering is the process of preparing data so that machine learning models can learn effectively. Good engineering often has a bigger impact on performance than the choice of algorithm. The goal is to create clean, informative, and well-structured data for the model.</p>
-<section id="target-engineering" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="target-engineering"><span class="header-section-number">3.1</span> Target engineering</h2>
-<p>Target engineering focuses on preparing the variable we want the model to predict.</p>
-<p>Why target engineering matters • Targets may contain noise, missing values, or extreme outliers. • Targets sometimes need to be transformed to make learning easier.</p>
-<p>Typical target engineering ideas • Correcting errors or unrealistic values • Smoothing or aggregating targets (e.g., average over time) • Transforming skewed targets (e.g., using log transform for prices) • Converting continuous targets into categories when appropriate (or vice versa)</p>
-<p>Key idea A clean and meaningful target gives the model a clear learning objective.</p>
-</section>
-<section id="feature-filtering" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="feature-filtering"><span class="header-section-number">3.2</span> Feature filtering</h2>
-<p>Feature filtering helps remove features that are unhelpful or harmful.</p>
-<p>Reasons to filter features • Some features carry almost no information. • Some features are highly redundant or correlated. • Noisy or irrelevant features can reduce model performance.</p>
-<p>Common filtering logic • Remove features with almost no variation • Remove features with too many missing values • Remove duplicate or highly correlated features • Keep only features that are meaningful for the problem</p>
-<p>Key idea Better to have a few good features than many noisy ones.</p>
-</section>
-<section id="numeric-feature-engineering" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="numeric-feature-engineering"><span class="header-section-number">3.3</span> Numeric feature engineering</h2>
-<p>Numeric features often come in different scales or units, which can affect model training.</p>
-<section id="standardization" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="standardization"><span class="header-section-number">3.3.1</span> Standardization</h3>
-<p>Standardization transforms numeric features so they have similar scales.</p>
-<p>Why this matters • Many models work better when features are on comparable scales. • Prevents one large-scale variable from dominating the learning process. • Helps optimization algorithms converge more easily.</p>
-<p>Typical transformations • Standardization (mean 0, standard deviation 1) • Min–max scaling • Log or square-root transforms for skewed distributions</p>
-<p>Key idea Models learn patterns more reliably when numeric features are well-scaled.</p>
-</section>
-</section>
-<section id="categorical-feature-engineering" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="categorical-feature-engineering"><span class="header-section-number">3.4</span> Categorical feature engineering</h2>
-<p>Categorical features represent categories or groups rather than numbers. Models cannot use them directly, so we convert them into numeric representations.</p>
-<section id="lumping" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="lumping"><span class="header-section-number">3.4.1</span> Lumping</h3>
-<p>Lumping reduces the number of categories by combining rare or similar categories.</p>
-<p>Why lumping helps • Rare categories can create instability. • Too many categories can lead to overfitting. • Grouping small categories improves robustness.</p>
-</section>
-<section id="one-hot-and-dummy-encoding" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="one-hot-and-dummy-encoding"><span class="header-section-number">3.4.2</span> One-hot and dummy encoding</h3>
-<p>One-hot encoding • Creates a separate binary feature for each category. • Works well for models that need explicit category separation.</p>
-<p>Dummy encoding • Similar to one-hot but drops one category to avoid redundancy.</p>
-<p>Why this is useful • Converts categories into numeric form • Helps models compare categories without imposing an order</p>
-</section>
-<section id="label-encoding" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="label-encoding"><span class="header-section-number">3.4.3</span> Label encoding</h3>
-<p>Label encoding • Assigns an integer to each category. • Simple and compact.</p>
-<p>When to use carefully • Some models may incorrectly interpret numeric labels as having an order • Works best for tree-based models that do not assume numeric magnitude</p>
-<p>Key idea Choose an encoding that preserves the meaning of the categories.</p>
-</section>
-</section>
-<section id="dimension-reduction" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="dimension-reduction"><span class="header-section-number">3.5</span> Dimension reduction</h2>
-<p>Dimension reduction simplifies the feature space by reducing the number of features while keeping important information.</p>
-<p>Why dimension reduction is useful • Helps visualization of high-dimensional data • Reduces noise and redundant information • Can improve model performance and training speed • Makes models simpler and easier to interpret</p>
-<p>Conceptual examples • Combine many similar features into a smaller number of abstract ones • Find directions of greatest variation in the data • Remove features that do not contribute much to explaining the structure</p>
-<p>Key idea Less can be more: reducing dimensions helps models focus on essential patterns.</p>
+<p>Hydrological modeling is a scientific approach aimed at simulating and comprehending the dynamics of the Earth’s water cycle. On this page, we will compile information on hydrological models, as well as the processes involved in their application. This includes running the model, evaluating its performance, calibrating and conducting sensitivity analyses, and ultimately validating the model’s results. Through this comprehensive exploration, we aim to provide valuable insights into the world of hydrological modeling.</p>
 
 
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -716,6 +593,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../mldl/ml_tidymodels_basic.html" class="pagination-link" aria-label="ML Workflow with tidymodels">
+        <span class="nav-page-text">ML Workflow with tidymodels</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

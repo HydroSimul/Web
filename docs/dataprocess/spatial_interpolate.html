@@ -748,6 +748,11 @@ c_0 + c \left( 1 - \frac{1}{2^{\nu-1} \Gamma(\nu)} \left( \frac{2 \sqrt{\nu} h}{
 <figcaption>from wikipedia/Variogram</figcaption>
 </figure>
 </div>
+<ul>
+<li><p><strong>psill (partial sill)</strong>: Represents the portion of the total variance that is spatially structured. It corresponds to the difference between the sill and the nugget and determines the overall height of the variogram curve (excluding measurement error or microscale variability).</p></li>
+<li><p><strong>range</strong>: Defines the distance at which spatial correlation becomes negligible. Beyond this distance, observations no longer influence each other, and the variogram reaches its sill. The range therefore indicates the spatial extent of dependence in the data.</p></li>
+<li><p><strong>nugget</strong>: Captures the variance at infinitesimally small distances. It reflects measurement error, microscale variability, or unresolved spatial heterogeneity. A non-zero nugget results in a jump of the variogram at the origin.</p></li>
+</ul>
 <div class="cell" data-fig-fullwidth="true">
 <div class="cell-output-display">
 <div>
@@ -1398,11 +1403,6 @@ L(\lambda_1, \dots, \lambda_n, \mu) = \sigma_K^2 + \mu \left( \sum_{i=1}^{n} \la
 </ul></li>
 </ol>
 <p>The variogram fitting process requires plausible initial estimates for the following parameters, as they guide the optimization toward a meaningful solution. These initial values can typically be inferred from the empirical variogram scatter plot.</p>
-<ul>
-<li><p><strong>psill (partial sill)</strong>: Represents the portion of the total variance that is spatially structured. It corresponds to the difference between the sill and the nugget and determines the overall height of the variogram curve (excluding measurement error or microscale variability).</p></li>
-<li><p><strong>range</strong>: Defines the distance at which spatial correlation becomes negligible. Beyond this distance, observations no longer influence each other, and the variogram reaches its sill. The range therefore indicates the spatial extent of dependence in the data.</p></li>
-<li><p><strong>nugget</strong>: Captures the variance at infinitesimally small distances. It reflects measurement error, microscale variability, or unresolved spatial heterogeneity. A non-zero nugget results in a jump of the variogram at the origin.</p></li>
-</ul>
 <p>Providing reasonable initial values for these parameters is crucial, as they ensure stable and accurate variogram fitting during model optimization.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up a gstat model for variogram calculation</span></span>

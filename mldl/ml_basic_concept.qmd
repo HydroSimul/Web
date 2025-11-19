@@ -86,11 +86,15 @@ Feature and target engineering concerns preparing data so that machine learning 
 
 Target??
 
+Output / outcome
+
 Target engineering focuses on preparing the variable to be predicted.  
 Targets may exhibit noise, missing values, or extreme outliers, all of which can hinder model performance. Typical operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical formulations when appropriate. A well-defined target provides a clear and meaningful objective for the learning process.
 
 
 ## Feature filtering
+
+Input, predictor
 
 Feature filtering removes variables that are uninformative, redundant, or detrimental to model performance.  
 Features with very low variance, high proportions of missing values, or strong collinearity may offer little useful information. Eliminating such features simplifies the modelling process, reduces noise, and often improves performance. In many cases, a smaller set of relevant features is preferable to a high-dimensional set containing noisy or irrelevant variables.
