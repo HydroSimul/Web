@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -147,7 +176,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../mldl/ml_tidymodels_basic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">ML Workflow with tidymodels</span></a>
+ <span class="menu-text">ML Workflow with <code>tidymodels</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../mldl/ml_feature_engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Feature Engineering and Selection</span></a>
   </div>
 </li>
       </ul>
@@ -167,25 +202,31 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#supervised-learning" id="toc-supervised-learning" class="nav-link" data-scroll-target="#supervised-learning"><span class="header-section-number">1.1</span> Supervised learning</a></li>
   <li><a href="#unsupervised-learning" id="toc-unsupervised-learning" class="nav-link" data-scroll-target="#unsupervised-learning"><span class="header-section-number">1.2</span> Unsupervised learning</a></li>
   </ul></li>
-  <li><a href="#modelling-process" id="toc-modelling-process" class="nav-link" data-scroll-target="#modelling-process"><span class="header-section-number">2</span> Modelling process</a>
+  <li><a href="#feature-and-target-engineering" id="toc-feature-and-target-engineering" class="nav-link" data-scroll-target="#feature-and-target-engineering"><span class="header-section-number">2</span> Feature and Target Engineering</a>
   <ul class="collapse">
-  <li><a href="#data-splitting" id="toc-data-splitting" class="nav-link" data-scroll-target="#data-splitting"><span class="header-section-number">2.1</span> Data splitting</a></li>
-  <li><a href="#resampling" id="toc-resampling" class="nav-link" data-scroll-target="#resampling"><span class="header-section-number">2.2</span> Resampling</a></li>
-  <li><a href="#model-creation" id="toc-model-creation" class="nav-link" data-scroll-target="#model-creation"><span class="header-section-number">2.3</span> Model creation</a></li>
-  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation"><span class="header-section-number">2.4</span> Model evaluation</a></li>
-  <li><a href="#model-training" id="toc-model-training" class="nav-link" data-scroll-target="#model-training"><span class="header-section-number">2.5</span> Model training</a></li>
-  <li><a href="#model-tuning" id="toc-model-tuning" class="nav-link" data-scroll-target="#model-tuning"><span class="header-section-number">2.6</span> Model tuning</a></li>
-  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">2.7</span> Model selection</a></li>
+  <li><a href="#target-engineering" id="toc-target-engineering" class="nav-link" data-scroll-target="#target-engineering"><span class="header-section-number">2.1</span> Target engineering</a></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering"><span class="header-section-number">2.2</span> Feature engineering</a>
+  <ul class="collapse">
+  <li><a href="#numeric-feature-engineering" id="toc-numeric-feature-engineering" class="nav-link" data-scroll-target="#numeric-feature-engineering"><span class="header-section-number">2.2.1</span> Numeric feature engineering</a></li>
+  <li><a href="#categorical-feature-engineering" id="toc-categorical-feature-engineering" class="nav-link" data-scroll-target="#categorical-feature-engineering"><span class="header-section-number">2.2.2</span> Categorical feature engineering</a></li>
   </ul></li>
-  <li><a href="#feature-and-target-engineering" id="toc-feature-and-target-engineering" class="nav-link" data-scroll-target="#feature-and-target-engineering"><span class="header-section-number">3</span> Feature and Target Engineering</a>
-  <ul class="collapse">
-  <li><a href="#target-engineering" id="toc-target-engineering" class="nav-link" data-scroll-target="#target-engineering"><span class="header-section-number">3.1</span> Target engineering</a></li>
-  <li><a href="#feature-filtering" id="toc-feature-filtering" class="nav-link" data-scroll-target="#feature-filtering"><span class="header-section-number">3.2</span> Feature filtering</a>
-  <ul class="collapse">
-  <li><a href="#numeric-feature-engineering" id="toc-numeric-feature-engineering" class="nav-link" data-scroll-target="#numeric-feature-engineering"><span class="header-section-number">3.2.1</span> Numeric feature engineering</a></li>
-  <li><a href="#categorical-feature-engineering" id="toc-categorical-feature-engineering" class="nav-link" data-scroll-target="#categorical-feature-engineering"><span class="header-section-number">3.2.2</span> Categorical feature engineering</a></li>
+  <li><a href="#feature-filtering-and-dimension-reduction" id="toc-feature-filtering-and-dimension-reduction" class="nav-link" data-scroll-target="#feature-filtering-and-dimension-reduction"><span class="header-section-number">2.3</span> Feature filtering and dimension reduction</a></li>
   </ul></li>
-  <li><a href="#dimension-reduction" id="toc-dimension-reduction" class="nav-link" data-scroll-target="#dimension-reduction"><span class="header-section-number">3.3</span> Dimension reduction</a></li>
+  <li><a href="#modelling-process" id="toc-modelling-process" class="nav-link" data-scroll-target="#modelling-process"><span class="header-section-number">3</span> Modelling process</a>
+  <ul class="collapse">
+  <li><a href="#data-splitting-and-resampling" id="toc-data-splitting-and-resampling" class="nav-link" data-scroll-target="#data-splitting-and-resampling"><span class="header-section-number">3.1</span> Data splitting and resampling</a></li>
+  <li><a href="#model-creation" id="toc-model-creation" class="nav-link" data-scroll-target="#model-creation"><span class="header-section-number">3.2</span> Model creation</a></li>
+  <li><a href="#model-training" id="toc-model-training" class="nav-link" data-scroll-target="#model-training"><span class="header-section-number">3.3</span> Model training</a></li>
+  <li><a href="#model-tuning" id="toc-model-tuning" class="nav-link" data-scroll-target="#model-tuning"><span class="header-section-number">3.4</span> Model tuning</a></li>
+  <li><a href="#model-performance-assessment" id="toc-model-performance-assessment" class="nav-link" data-scroll-target="#model-performance-assessment"><span class="header-section-number">3.5</span> Model Performance Assessment</a>
+  <ul class="collapse">
+  <li><a href="#classification-metrics" id="toc-classification-metrics" class="nav-link" data-scroll-target="#classification-metrics"><span class="header-section-number">3.5.1</span> Classification Metrics</a></li>
+  <li><a href="#regression-metrics" id="toc-regression-metrics" class="nav-link" data-scroll-target="#regression-metrics"><span class="header-section-number">3.5.2</span> Regression Metrics</a></li>
+  </ul></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation"><span class="header-section-number">3.6</span> Model Evaluation</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">3.7</span> Model selection</a></li>
+  <li><a href="#modelling-workflow" id="toc-modelling-workflow" class="nav-link" data-scroll-target="#modelling-workflow"><span class="header-section-number">3.8</span> Modelling workflow</a></li>
+  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting"><span class="header-section-number">3.9</span> Overfitting</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -214,91 +255,204 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction-to-machine-learning" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction to Machine Learning</h1>
-<p>Machine learning (ML) is a discipline concerned with developing computational methods that learn patterns from data and make predictions or decisions without being explicitly programmed for each task. Contemporary ML includes both classical statistical learning approaches and deep learning methods based on multilayer neural networks. In this text, however, the focus is restricted to classical machine learning techniques, excluding deep learning.</p>
-<p>Before introducing specific algorithms or datasets, it is helpful to outline the overall workflow that characterizes most ML applications. Machine learning is fundamentally a data-driven approach to solving problems, and these problems are typically classified into two broad categories.<br>
-Supervised learning addresses situations in which labeled data are available, meaning that both input variables and associated target values are observed. Unsupervised learning, by contrast, deals with unlabeled data and seeks to identify latent structures or patterns without reference to explicit target values.</p>
+<p>Machine learning (ML) is a discipline concerned with developing computational methods that identify patterns in data and generate predictions or decisions without the need for task-specific programming. Modern ML comprises a wide range of approaches, from classical statistical learning techniques to contemporary deep learning methods based on multilayer neural networks. This text focuses exclusively on classical machine learning techniques and does not address deep learning.</p>
+<p>Before examining specific algorithms or datasets, it is useful to outline the general workflow that characterizes most ML applications. Because machine learning is fundamentally data-driven, its problems are commonly divided into two primary categories:</p>
+<ul>
+<li><strong>supervised learning</strong>, which uses datasets containing labeled observations with known input features and corresponding target values;</li>
+<li><strong>unsupervised learning</strong>, which addresses unlabeled datasets and aims to identify latent structures or patterns without predefined target information.</li>
+</ul>
 <section id="supervised-learning" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="supervised-learning"><span class="header-section-number">1.1</span> Supervised learning</h2>
-<p>Supervised learning relies on datasets that contain input–output pairs. The objective is to approximate a function that captures the relationship between inputs and the corresponding outputs. Supervised learning tasks generally fall into two groups.<br>
-Classification refers to predicting categorical outcomes, whereas regression involves predicting continuous numerical values. Both problem types require the model to learn patterns that meaningfully relate features to targets.</p>
+<p>Supervised learning methods rely on datasets composed of input–output pairs. The objective is to approximate a function that captures the relationship between the inputs and their associated outputs. Supervised learning tasks are typically grouped into two types:</p>
+<ul>
+<li><strong>classification</strong>, which concerns the prediction of <strong>categorical</strong> outcomes;</li>
+<li><strong>regression</strong>, which focuses on predicting <strong>continuous numerical</strong> values.</li>
+</ul>
+<p>In both cases, the model must learn systematic relationships that meaningfully link input features to their corresponding targets.</p>
 </section>
 <section id="unsupervised-learning" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="unsupervised-learning"><span class="header-section-number">1.2</span> Unsupervised learning</h2>
-<p>Unsupervised learning is applied when no target variable is provided. The goal is to uncover underlying structure, regularities, or groupings within the data. One widely used unsupervised approach is clustering, which groups observations such that items within the same cluster are more similar to each other than to those in other clusters.</p>
+<p>Unsupervised learning is applied when no target variable is provided. Its purpose is to uncover underlying structures, regularities, or groupings within the data.</p>
+<p>A widely used unsupervised approach is <strong>clustering</strong>, which partitions observations into groups such that items within the same cluster exhibit greater similarity to one another than to items in different clusters.</p>
 </section>
 </section>
-<section id="modelling-process" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Modelling process</h1>
-<p>The modelling process describes the sequence of steps undertaken to construct, evaluate, and refine a machine learning model. Although specific details depend on the problem and algorithm, the overall structure of the workflow is broadly consistent across ML applications. These steps ensure that the model identifies meaningful patterns and performs reliably when applied to new data.</p>
-<section id="data-splitting" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="data-splitting"><span class="header-section-number">2.1</span> Data splitting</h2>
-<p>Prior to model development, the dataset is typically divided into separate subsets.<br>
-The primary purpose of this division is to train the model on one subset while reserving another for evaluation, thereby assessing how well the model generalizes beyond the data it has seen. Commonly used subsets include a training set for parameter estimation, a validation set for tuning and early stopping, and a test set for final performance assessment. A central principle is that the performance of a model should never be evaluated solely on data used during training.</p>
+<section id="feature-and-target-engineering" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Feature and Target Engineering</h1>
+<p>Feature and target engineering concerns the <strong>preparation and transformation</strong> of data in ways that enable machine learning models to learn effectively. Well-designed features often exert a stronger influence on model performance than the choice of algorithm itself. The objective is to construct accurate, informative, and well-structured representations of both the <strong>input variables</strong> (<strong>features</strong>) and the <strong>target</strong> variable.</p>
+<p>Terminology varies across the sources: the target may also be called the <strong>outcome</strong> or <strong>output</strong>, while features may be referred to as <strong>inputs</strong> or <strong>predictors</strong>.</p>
+<section id="target-engineering" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="target-engineering"><span class="header-section-number">2.1</span> Target engineering</h2>
+<p>The target is the variable treated as the outcome of the model, the quantity the model aims to predict. Target values in training datasets may contain noise, missing entries, or extreme outliers, any of which can impair model performance.</p>
+<p>Common target-engineering operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical forms when appropriate. A clearly defined and well-processed target provides a meaningful objective for the learning procedure.</p>
 </section>
-<section id="resampling" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="resampling"><span class="header-section-number">2.2</span> Resampling</h2>
-<p>Resampling techniques provide tools for estimating model performance more reliably, particularly when the available data are limited.<br>
-They help reduce the dependence on a single train–test split and yield more stable performance estimates. Standard introductory approaches include cross-validation, which repeatedly partitions the data into training and validation subsets, and bootstrapping, which draws samples with replacement to estimate variability. The overarching idea is that resampling reduces the risk of evaluations being overly sensitive to one particular dataset split.</p>
+<section id="feature-engineering" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="feature-engineering"><span class="header-section-number">2.2</span> Feature engineering</h2>
+<p>Features supply the information that the model uses to generate predictions. Effective feature engineering enhances the model’s ability to capture relevant structure in the data.</p>
+<section id="numeric-feature-engineering" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="numeric-feature-engineering"><span class="header-section-number">2.2.1</span> Numeric feature engineering</h3>
+<p>Numeric features often differ in both their <strong>distribution</strong> and their <strong>scale</strong>, and these issues require distinct preprocessing strategies. Transformations modify the shape of an individual feature’s distribution, while normalization (or standardization) adjust the scales of multiple features to make them comparable.</p>
+<ul>
+<li><strong>Transformations</strong> (distribution shaping)<br>
+Transformations are applied to single features to alter their distribution. They can reduce skewness, stabilize variance, or help satisfy model assumptions. Examples include
+<ul>
+<li>logarithmic,</li>
+<li>square-root,</li>
+<li>reciprocal, and</li>
+<li>Box–Cox transformations. These operations reshape a feature’s distribution but do not make different features comparable in scale.</li>
+</ul></li>
+<li><strong>Normalization</strong> and <strong>standardization</strong> (scale adjustment)<br>
+Normalization and standardization rescale features so they share <strong>similar or identical</strong> ranges, preventing any single feature from dominating the learning process due to its magnitude.
+<ul>
+<li>Standardization rescales a feature to <strong>zero mean and unit variance</strong>.<br>
+</li>
+<li>Normalization, such as min–max scaling, maps a feature to a <strong>fixed interval</strong>, typically [0, 1].<br>
+These methods do not change distributional shape but ensure comparability in scale, which is important for <strong>distance-based models or gradient-based</strong> optimization.</li>
+</ul></li>
+</ul>
 </section>
-<section id="model-creation" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="model-creation"><span class="header-section-number">2.3</span> Model creation</h2>
-<p>Model creation involves selecting an appropriate algorithm and training it using the training data. This stage includes identifying suitable features, specifying the model structure, and allowing the model to adjust its internal parameters in response to the data.<br>
-Important considerations include the quality of features, the interpretability and complexity of the chosen model, and the need to guard against overfitting. The aim is to produce an initial model that can subsequently be evaluated and improved.</p>
-</section>
-<section id="model-evaluation" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">2.4</span> Model evaluation</h2>
-<p>Once a model has been trained, its performance must be assessed using data that were not part of the training process.<br>
-Evaluation provides insight into how well the model generalizes, facilitates comparisons among alternative models, and helps identify potential issues such as insufficient feature quality or overfitting. Appropriate performance metrics depend on the problem type, and evaluation should also consider aspects such as error distribution, robustness, and consistency across datasets.</p>
-</section>
-<section id="model-training" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="model-training"><span class="header-section-number">2.5</span> Model training</h2>
-<p>Model training is the phase in which the algorithm learns from the training dataset by iteratively adjusting internal parameters.<br>
-Through repeated exposure to input–output examples, the model seeks to minimize the discrepancy between predictions and true values. Training must strike a balance: excessive training may cause overfitting, whereas insufficient training may lead to underfitting, where the model fails to capture essential patterns.</p>
-</section>
-<section id="model-tuning" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="model-tuning"><span class="header-section-number">2.6</span> Model tuning</h2>
-<p>Model tuning, or hyperparameter tuning, concerns adjusting the external settings of the algorithm—parameters that are fixed prior to training and that influence how the model learns. Examples include model complexity constraints, regularization strength, and algorithm-specific hyperparameters such as the number of trees in an ensemble or the number of neighbors in a k-nearest neighbors classifier.<br>
-Tuning is crucial because hyperparameters strongly affect model performance. Validation data or cross-validation are typically used to guide the selection of optimal configurations.</p>
-</section>
-<section id="model-selection" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">2.7</span> Model selection</h2>
-<p>Model selection refers to choosing the most suitable model from a set of candidates.<br>
-Candidates may differ in algorithmic approach, hyperparameter configuration, or applied feature transformations. Selection relies on comparative evaluation using consistent metrics and validation procedures. The preferred model is the one demonstrating strong and stable generalization performance rather than the one that fits the training data most closely.</p>
-</section>
-</section>
-<section id="feature-and-target-engineering" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Feature and Target Engineering</h1>
-<p>Feature and target engineering concerns preparing data so that machine learning models can learn effectively. Well-designed features often have a greater impact on model performance than the specific choice of algorithm. The goal is to construct accurate, informative, and well-structured representations of both the inputs and the target variable.</p>
-<section id="target-engineering" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="target-engineering"><span class="header-section-number">3.1</span> Target engineering</h2>
-<p>Target??</p>
-<p>Output / outcome</p>
-<p>Target engineering focuses on preparing the variable to be predicted.<br>
-Targets may exhibit noise, missing values, or extreme outliers, all of which can hinder model performance. Typical operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical formulations when appropriate. A well-defined target provides a clear and meaningful objective for the learning process.</p>
-</section>
-<section id="feature-filtering" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="feature-filtering"><span class="header-section-number">3.2</span> Feature filtering</h2>
-<p>Input, predictor</p>
-<p>Feature filtering removes variables that are uninformative, redundant, or detrimental to model performance.<br>
-Features with very low variance, high proportions of missing values, or strong collinearity may offer little useful information. Eliminating such features simplifies the modelling process, reduces noise, and often improves performance. In many cases, a smaller set of relevant features is preferable to a high-dimensional set containing noisy or irrelevant variables.</p>
-<section id="numeric-feature-engineering" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="numeric-feature-engineering"><span class="header-section-number">3.2.1</span> Numeric feature engineering</h3>
-<p>Numeric features frequently differ in scale or distribution, which can negatively affect model training.<br>
-Standardization techniques, such as scaling to zero mean and unit variance or applying min–max normalization, help ensure that features contribute comparably to the learning process. Transformations such as logarithms can mitigate skewed distributions. Well-scaled numeric features support more stable learning and faster optimization.</p>
-</section>
-<section id="categorical-feature-engineering" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="categorical-feature-engineering"><span class="header-section-number">3.2.2</span> Categorical feature engineering</h3>
-<p>Categorical variables must be converted into numeric form before most models can utilize them. Several strategies exist, each with advantages under specific conditions.</p>
-<p>Lumping combines rare or similar categories to reduce sparsity and improve robustness.<br>
-One-hot or dummy encoding creates binary indicator variables for each category, providing explicit separation between categories.<br>
-Label encoding assigns integer codes to categories and is generally suitable for models that do not impose an ordinal interpretation on numeric values, such as tree-based methods.<br>
-Selecting an appropriate encoding method helps preserve the meaning of categorical distinctions.</p>
+<section id="categorical-feature-engineering" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="categorical-feature-engineering"><span class="header-section-number">2.2.2</span> Categorical feature engineering</h3>
+<p>Categorical variables must be converted <strong>into numerical</strong> form, as most machine learning algorithms operate on numeric inputs. Unlike numeric features, categorical variables do not support distribution-shaping transformations. Consequently, categorical feature engineering focuses on <strong>encoding strategies</strong> that represent categories numerically while preserving their meaning.</p>
+<p>Common encoding methods include:</p>
+<ul>
+<li><strong>Lumping</strong>, which merges rare or conceptually similar categories to reduce sparsity and improve robustness.</li>
+<li><strong>One-hot encoding</strong>, which creates binary indicator variables for each category without imposing artificial ordering.</li>
+<li><strong>Label encoding</strong>, which assigns integer codes to categories and is suitable for models that do not interpret these codes as ordinals, such as tree-based methods.</li>
+</ul>
+<p>Some tree-based algorithms can handle categorical variables directly or interpret encoded integers in a non-ordinal way. Nonetheless, choosing an appropriate encoding method remains essential to ensure that the numerical representation aligns with model assumptions.</p>
 </section>
 </section>
-<section id="dimension-reduction" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="dimension-reduction"><span class="header-section-number">3.3</span> Dimension reduction</h2>
-<p>Dimension reduction techniques reduce the number of features while retaining essential information.<br>
-These methods can simplify high-dimensional data, reduce noise, and improve both computational efficiency and predictive performance. The conceptual aim is to identify the most informative directions or structures within the data and discard features that contribute little to explaining the variation. Reducing dimensionality often results in models that are more interpretable and less sensitive to noise.</p>
+<section id="feature-filtering-and-dimension-reduction" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="feature-filtering-and-dimension-reduction"><span class="header-section-number">2.3</span> Feature filtering and dimension reduction</h2>
+<p><strong>Feature filtering</strong> <strong>removes</strong> variables that provide little or no useful information for the learning task. Features with</p>
+<pre><code>- very low variance, 
+- high proportions of missing values, or 
+- strong multicollinearity </code></pre>
+<p>often contribute minimally to predictive performance.</p>
+<p>Eliminating such variables reduces noise, simplifies the modelling process, and can improve both accuracy and efficiency. Often, a smaller, more informative feature set is preferable to a high-dimensional collection of irrelevant or redundant variables.</p>
+<p><strong>Dimension reduction</strong> methods also decrease the number of features but take a different approach. Instead of discarding variables, they <strong>construct new, lower-dimensional</strong> representations that preserve essential information. These methods simplify high-dimensional data, reduce noise, and often improve computational efficiency and predictive performance. Conceptually, they identify the most informative directions or structures in the data while disregarding variation that contributes little to the modelling objective.</p>
+<p>Principal Component Analysis (PCA) creates new variables (principal components) that are linear combinations of the original features. These components are orthogonal and ranked according to the variance they explain. More flexible approaches, such as Generalized Low Rank Models (GLRM), extend this idea by allowing additional constraints or custom loss functions, making them adaptable to a wider range of data types and modelling requirements.</p>
+<p>In summary, feature filtering removes uninformative variables directly, whereas dimension reduction retains information by reorganizing it into new combined features.</p>
+</section>
+</section>
+<section id="modelling-process" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Modelling process</h1>
+<p>A machine learning (ML) model represents a system by capturing relationships present in the data <span class="citation" data-cites="MLR_Kuhn_2022">[@MLR_Kuhn_2022]</span>. This chapter outlines the modelling process, that is, the <strong>sequence of steps</strong> required to construct, evaluate, and refine such a model. Although the details vary by problem and algorithm, the overall workflow is broadly consistent across ML applications. A systematic process ensures that the model identifies meaningful patterns and performs reliably on new, unseen data.</p>
+<section id="data-splitting-and-resampling" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-splitting-and-resampling"><span class="header-section-number">3.1</span> Data splitting and resampling</h2>
+<p>Before model development begins, the dataset is usually divided into separate subsets. This division allows the model to be <strong>trained</strong> on one subset while another is reserved for <strong>evaluation</strong>, ensuring that performance reflects generalization rather than memorization.</p>
+<p>The basic approach uses two groups:</p>
+<ul>
+<li>training dataset: used to estimate model parameters<br>
+</li>
+<li>testing dataset: used for final performance assessment</li>
+</ul>
+<p>When more rigorous tuning is required, a third group is added:</p>
+<ul>
+<li>training dataset: used for parameter estimation<br>
+</li>
+<li>validation dataset: used for hyperparameter tuning, model selection, and early stopping<br>
+</li>
+<li>testing dataset: used exclusively for the final, unbiased assessment of model performance</li>
+</ul>
+<p>A key principle is that performance must not be evaluated solely on data used during training, as this can lead to overly optimistic results.</p>
+<p><strong>Resampling</strong> techniques provide more reliable estimates of model performance, particularly when data are limited. Instead of relying on a single train–test split, methods such as cross-validation repeatedly partition the data into training and validation sets, while bootstrapping generates samples with replacement to estimate variability. These techniques reduce sensitivity to any single split and yield more stable and trustworthy performance estimates.</p>
+</section>
+<section id="model-creation" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="model-creation"><span class="header-section-number">3.2</span> Model creation</h2>
+<p>Model creation involves selecting an <strong>appropriate algorithm</strong> and preparing it for training. This phase includes identifying relevant features, specifying the model structure, and configuring <strong>initial settings</strong>. The objective is to establish a suitable initial model that can be trained and refined.</p>
+</section>
+<section id="model-training" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="model-training"><span class="header-section-number">3.3</span> Model training</h2>
+<p>During model training, the algorithm learns from the training dataset by iteratively adjusting its <strong>internal parameters</strong>. Through repeated exposure to input–output examples, the model minimizes the discrepancy between predictions and observed values. Training must balance complexity and generalization: excessive training may lead to overfitting, whereas insufficient training may result in underfitting.</p>
+</section>
+<section id="model-tuning" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="model-tuning"><span class="header-section-number">3.4</span> Model tuning</h2>
+<p>Model tuning, or <strong>hyperparameter</strong> tuning, adjusts the <strong>external settings</strong> of the algorithm—parameters that are fixed before training and determine how the model learns.</p>
+<p>Examples include regularization strength, learning rates, tree depth, and the number of neighbors in k-nearest neighbors. Because hyperparameters have a substantial influence on performance, tuning is typically guided by validation data or cross-validation to identify configurations that yield optimal generalization.</p>
+</section>
+<section id="model-performance-assessment" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="model-performance-assessment"><span class="header-section-number">3.5</span> Model Performance Assessment</h2>
+<p>During training and tuning, it is essential to monitor and compare model performance. Performance metrics provide quantitative indicators of a model’s predictive quality and guide decisions related to training, hyperparameter optimization, and model selection.</p>
+<p>While the model is being trained, metrics are computed on both the training and validation sets to track learning progress, identify overfitting, and adjust hyperparameters. After training, the model is evaluated on a separate testing set to obtain an unbiased estimate of its generalization ability, ensuring that performance reflects real-world applicability rather than memorization of the training data.</p>
+<section id="classification-metrics" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="classification-metrics"><span class="header-section-number">3.5.1</span> Classification Metrics</h3>
+<p>For classification tasks, common metrics include <strong>accuracy</strong>, <strong>Brier score</strong>, and <strong>ROC AUC</strong>, each capturing different aspects of model performance:</p>
+<ul>
+<li><strong>Accuracy:</strong> Measures the proportion of correct predictions relative to all predictions:</li>
+</ul>
+<p><span class="math display">\[
+\text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
+\]</span></p>
+<p>Values range from 0 to 1, with higher values indicating better performance. Accuracy is intuitive but can be misleading for imbalanced datasets, where a model predicting only the majority class may appear highly accurate yet be uninformative.</p>
+<ul>
+<li><strong>Brier Score:</strong> Evaluates the accuracy of probabilistic predictions. For a binary outcome:</li>
+</ul>
+<p><span class="math display">\[
+BS = (p - o)^2
+\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the predicted probability and <span class="math inline">\(o\)</span> the actual outcome (1 or 0). The mean Brier score across the dataset ranges from 0 to 1, with lower values indicating better calibration. Unlike accuracy, it accounts for both confidence and correctness of predictions.</p>
+<ul>
+<li><strong>ROC AUC:</strong> Measures a classifier’s ability to discriminate between classes across all possible thresholds. The ROC curve plots:</li>
+</ul>
+<p><span class="math display">\[
+\text{TPR} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\qquad\text{against}\qquad
+\text{FPR} = \frac{\text{FP}}{\text{FP} + \text{TN}}
+\]</span></p>
+<p>The area under the curve (AUC) ranges from 0.5 (random guessing) to 1.0 (perfect separation). ROC AUC is threshold-independent and particularly useful for imbalanced datasets.</p>
+</section>
+<section id="regression-metrics" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="regression-metrics"><span class="header-section-number">3.5.2</span> Regression Metrics</h3>
+<p>For regression tasks, metrics quantify the deviation between predicted and observed values:</p>
+<ul>
+<li><strong>Root Mean Squared Error (RMSE):</strong> Measures the average magnitude of prediction errors, penalizing large deviations:</li>
+</ul>
+<p><span class="math display">\[
+\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}( \hat{y}_i - y_i )^2}
+\]</span></p>
+<ul>
+<li><strong>Mean Absolute Error (MAE):</strong> Computes the average absolute difference between predictions and observations, providing robustness to outliers:</li>
+</ul>
+<p><span class="math display">\[
+\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|\hat{y}_i - y_i|
+\]</span></p>
+<ul>
+<li><strong>Coefficient of Determination (R²):</strong> Indicates the proportion of variance in the observed data explained by the model:</li>
+</ul>
+<p><span class="math display">\[
+R^2 = 1 - \frac{\sum_{i=1}^{n}( \hat{y}_i - y_i )^2}{\sum_{i=1}^{n}( y_i - \bar{y} )^2}
+\]</span></p>
+<p>Where:</p>
+<ul>
+<li>$ _i $ is the predicted value for the <span class="math inline">\(i\)</span>-th observation<br>
+</li>
+<li>$ y_i $ is the observed (true) value for the <span class="math inline">\(i\)</span>-th observation<br>
+</li>
+<li>$ {y} $ is the mean of all observed values<br>
+</li>
+<li>$ n $ is the total number of observations<br>
+</li>
+<li>$ $ denotes summation over all observations from <span class="math inline">\(i = 1\)</span> to <span class="math inline">\(n\)</span></li>
+</ul>
+<p>By integrating performance metrics into both training and evaluation phases, practitioners can iteratively refine models, prevent overfitting, optimize hyperparameters, and select models that provide reliable predictions on unseen data. This combined approach of monitoring during training and assessing after training ensures that models are both accurate and generalizable.</p>
+</section>
+</section>
+<section id="model-evaluation" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">3.6</span> Model Evaluation</h2>
+<p>Model evaluation involves systematically measuring how well a trained model performs on data that were not used during training. This process ensures that the model generalizes effectively to unseen data, facilitates comparison among alternative models, and identifies potential issues such as overfitting, underfitting, or insufficient feature quality. Performance metrics serve as quantitative indicators of the model’s predictive quality and guide both training decisions and model selection.</p>
+</section>
+<section id="model-selection" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">3.7</span> Model selection</h2>
+<p>Model selection involves choosing the most appropriate model from a set of candidates, which may differ in algorithmic approach, hyperparameter settings, or feature engineering choices. Selection relies on fair comparison using consistent metrics and validation procedures. The preferred model is the one that demonstrates strong and stable generalization, not merely the best training performance.</p>
+</section>
+<section id="modelling-workflow" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="modelling-workflow"><span class="header-section-number">3.8</span> Modelling workflow</h2>
+<p>The development of an effective model is both iterative and heuristic. It is rarely clear in advance what a dataset requires, and it is common to evaluate and modify multiple approaches before finalizing a model.</p>
+</section>
+<section id="overfitting" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="overfitting"><span class="header-section-number">3.9</span> Overfitting</h2>
+<p>Overfitting occurs when a model captures patterns that are specific to the training data but do not generalize to new samples. This typically arises when the model is overly complex or when it learns from noise or idiosyncratic patterns in the training set. A well-designed modelling process incorporates safeguards—such as validation, regularization, and resampling—to reduce the risk of overfitting and promote generalizable performance.</p>
 
 
 </section>
@@ -729,8 +883,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../mldl/ml_tidymodels_basic.html" class="pagination-link" aria-label="ML Workflow with tidymodels">
-        <span class="nav-page-text">ML Workflow with tidymodels</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../mldl/ml_tidymodels_basic.html" class="pagination-link" aria-label="ML Workflow with `tidymodels`">
+        <span class="nav-page-text">ML Workflow with <code>tidymodels</code></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

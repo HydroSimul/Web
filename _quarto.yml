@@ -67,7 +67,8 @@ website:
           href: mldl/index.qmd
           contents: 
             - mldl/ml_basic_concept.qmd      
-            - mldl/ml_tidymodels_basic.qmd      
+            - mldl/ml_tidymodels_basic.qmd  
+            - mldl/ml_feature_engineering.qmd
 
 format:
   html:

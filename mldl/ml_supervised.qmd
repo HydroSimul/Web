@@ -1,0 +1,237 @@
+---
+title: Feature Engineering and Selection
+execute:
+  warning: false
+  error: false
+sidebar:
+  contents: auto
+number-sections: true
+---
+
+
+# Library and Data
+
+```{r}
+library(tidymodels)
+library(tidyverse)
+theme_set(theme_bw())
+
+```
+
+```{r}
+color_RUB_blue <- "#17365c"
+color_RUB_green <- "#8dae10"
+color_TUD_pink <- "#EC008D"
+
+color_DRESDEN <- c("#03305D", "#28618C", "#539DC5", "#84D1EE", "#009BA4", "#13A983", "#93C356", "#BCCF02")
+
+```
+
+
+```{r}
+df_Bochum_KL <- read_csv("../data_share/df_Bochum_KL.csv")
+# Train–test split (75% / 25%)
+split_Bochum <- initial_split(df_Bochum_KL, prop = 3/4)
+df_Train <- training(split_Bochum)
+df_Test  <- testing(split_Bochum)
+
+
+# Preprocessing recipe (normalize + PCA)
+
+rcp_Norm <- 
+  recipe(evapo_r ~ ., data = df_Train) |>
+  step_YeoJohnson(all_predictors()) |> 
+  step_normalize(all_predictors())
+
+```
+
+
+
+
+
+
+
+# Tuning Parameters
+
+As discussed in the previous article, the basic workflow for model fitting using the **tidymodels** framework consists of the following steps:
+
+1. Split the data into training and test sets.  
+2. Perform feature engineering using a recipe.  
+3. Specify the model.  
+4. Define the workflow by combining the recipe and the model specification.  
+5. Fit the model to the training data.  
+6. Generate predictions.  
+7. Validate the model.
+
+In standard model fitting, the hyperparameters of the modeling method remain fixed. However, these parameters can also be modified and optimized. This optimization process is referred to as *tuning* rather than *fitting*. When tuning is included, several steps in the workflow change:
+
+1. Split the data into resampled sets, typically using cross-validation.  
+2. Perform feature engineering using a recipe.  
+3. Specify the model, leaving the hyperparameters unset by using the `tune()` function so that they can be optimized.  
+4. Define a workflow designed for tuning.  
+5. Define the parameter ranges to be explored.  
+6. Specify the tuning search strategy, such as grid search or iterative search.  
+7. Conduct the tuning procedure.  
+8. Identify the best-performing parameter values.  
+9. Use the tuned parameters to construct the final model.  
+10. Fit the final model to the training data.  
+11. Generate predictions.  
+12. Validate the final model.
+
+Tuning methods include **grid search** and **iterative (sequential) search**.
+
+## Grid Search
+
+Grid search involves predefining a set of hyperparameter values to evaluate. The main considerations in grid search are how to construct the grid and how many parameter combinations to include. Although grid search is often criticized as inefficient due to the large number of evaluations required in high-dimensional parameter spaces, this inefficiency is most pronounced when the grid is not well optimized. Efficient strategies for grid construction are discussed in Chapter 13.
+
+## Iterative Search
+
+Iterative or sequential search methods identify promising parameter combinations step-by-step, guided by previous results. Many nonlinear optimization approaches are suitable for this purpose, though their efficiency varies. In some cases, an initial set of parameter combinations must be evaluated to initialize the search process. Iterative tuning strategies are discussed further in Chapter 14.
+
+
+# Linear regression
+
+Linear regression is a classical supervised learning method used to estimate the linear relationship between one or more predictors and a continuous outcome variable.  
+In practice, most applications involve several predictors, so the standard approach is the *multiple linear regression* model, where the response is modeled as a linear combination of all predictors.
+
+For predictors $x_1, x_2, ..., x_p$, the model is:
+
+$$
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+$$
+
+where  
+- $y$ is the outcome,  
+- $\beta_0$ is the intercept,  
+- $\beta_j$ are the coefficients showing the contribution of each predictor,  
+- $\varepsilon$ is the random error.
+
+The goal is to estimate the coefficients $\beta$ so that the model predicts $y$ as well as possible.
+
+
+
+```{r}
+# linear regression --------------
+
+mdl_Mlm <- 
+  linear_reg() |>
+  set_engine("lm")
+
+wflow_Norm_Mlm <- 
+  workflow() |>
+  add_recipe(rcp_Norm) |>
+  add_model(mdl_Mlm)
+
+fit_Norm_Mlm <- 
+  wflow_Norm_Mlm |>
+  fit(data = df_Train)
+
+pred_Mlm <- 
+  predict(fit_Norm_Mlm, df_Test) |>
+  bind_cols(df_Test |> select(evapo_r))
+
+metrics(pred_Mlm, truth = evapo_r, estimate = .pred)
+
+ggplot(pred_Mlm, aes(x = evapo_r, y = .pred)) +
+  geom_point(alpha = 0.6, color = color_RUB_blue) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = color_TUD_pink) +
+  labs(x = "Observed", y = "Predicted")
+```
+
+## Hyperparameter
+
+For ordinary linear regression (using the `lm` engine), there are no hyperparameters to tune.  
+However, when we introduce regularization (ridge, lasso, elastic net), the model includes an additional penalty term in the loss function to prevent overfitting.  
+Regularization requires the model to control *how strong* the penalty is and *what type* of penalty is used.  
+These controls are called **hyperparameters**, and two of them appear:
+
+- `penalty` (lambda): determines the overall strength of the regularization  
+- `mixture` (alpha): determines the type of regularization (0 = ridge, 1 = lasso, values in between = elastic net)
+
+Without regularization (ordinary linear regression), no hyperparameters are needed.
+
+These hyperparameters must usually be tuned using cross-validation.
+
+
+
+
+Different regression methods use different *loss functions* and *regularization strategies*.  
+The key difference is whether the model introduces **hyperparameters** (`penalty` and `mixture`) that control the amount and type of regularization.
+
+### Ordinary Least Squares (OLS)
+- No regularization → **no hyperparameters**.  
+- The solution is obtained analytically by minimizing the sum of squared residuals.
+
+$$
+\min_{\beta} \sum_{i=1}^n (y_i - \hat{y}_i)^2
+$$
+
+Because there is no penalty term, the model can overfit when predictors are highly correlated.
+
+### Ridge Regression (L2 penalty)
+- Introduces **one hyperparameter**:  
+  - `penalty` (lambda): strength of coefficient shrinkage  
+- `mixture` is fixed to **0**, meaning pure L2 regularization.
+
+$$
+\min_{\beta} \left(
+\sum_{i=1}^n (y_i - \hat{y}_i)^2
++ \lambda \sum_{j=1}^p \beta_j^2
+\right)
+$$
+
+Large lambda → strong shrinkage.  
+Coefficients approach zero but never become exactly zero.
+
+### Lasso Regression (L1 penalty)
+- Also uses **one hyperparameter**:  
+  - `penalty` (lambda): controls how strongly coefficients are pushed toward zero  
+- `mixture` is fixed to **1**, meaning pure L1 regularization.
+
+$$
+\min_{\beta} \left(
+\sum_{i=1}^n (y_i - \hat{y}_i)^2
++ \lambda \sum_{j=1}^p |\beta_j|
+\right)
+$$
+
+Large lambda → many coefficients become exactly zero → feature selection.
+
+### Elastic Net Regression (combined L1 + L2)
+- Uses **two hyperparameters**:
+  - `penalty` (lambda): global strength of shrinkage  
+  - `mixture` (alpha): balance between L1 and L2  
+    - alpha = 0 → ridge  
+    - alpha = 1 → lasso  
+    - 0 < alpha < 1 → mixture
+
+$$
+\min_{\beta} \left(
+\sum_{i=1}^n (y_i - \hat{y}_i)^2
++ \lambda \left[
+\alpha \sum_{j=1}^p |\beta_j|
++ (1-\alpha) \sum_{j=1}^p \beta_j^2
+\right]
+\right)
+$$
+
+Elastic Net is useful when predictors are correlated and when both shrinkage and feature selection are desired.
+
+### Summary of Hyperparameter Settings
+
+| Method        | penalty (lambda) | mixture (alpha) | Regularization |
+|---------------|------------------|------------------|----------------|
+| OLS           | not used         | not used         | none |
+| Ridge         | yes              | 0                | L2 |
+| Lasso         | yes              | 1                | L1 |
+| Elastic Net   | yes              | 0 < α < 1        | L1 + L2 |
+
+In practice, `penalty` and `mixture` are usually selected using **cross-validation**, since the optimal values depend on the dataset.
+
+
+# Decision Trees
+
+Tree-based models are a class of nonparametric algorithms that work by partitioning the feature space into a number of smaller (non-overlapping) regions with similar response values using a set of splitting rules. Predictions are obtained by fitting a simpler model (e.g., a constant like the average response value) in each region. Such divide-and-conquer methods can produce simple rules that are easy to interpret and visualize with tree diagrams. [@MLR_Boehmke_2019]
+
+
+
