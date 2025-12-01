@@ -91,10 +91,10 @@
     "href": "mldl/ml_tidymodels_basic.html",
     "title": "ML Workflow with tidymodels",
     "section": "",
-    "text": "In this article we use the tidymodels ecosystem to illustrate a complete machine learning workflow in a tidy, coherent, and reproducible manner.\nThroughout the article, we revisit the fundamental components of the ML workflow:\nData split → Feature engineering → Model specification → Model fitting → Model prediction → Model evaluation\nWe begin with the most basic workflow and later extend it using the recipe framework for more advanced preprocessing.\nThe material in this article is based on the case study provided at: https://www.tidymodels.org/start/case-study/. All exercises use the dataset included in that example.\nThe following packages are required:\n\nlibrary(tidyverse)\ntheme_set(theme_bw())\n\nlibrary(tidymodels)  # parsnip + other tidymodels packages\n\n# Helper packages\nlibrary(readr)       # for importing data\nlibrary(broom.mixed) # for tidying Bayesian model output\nlibrary(dotwhisker)  # for visualizing regression results\nlibrary(skimr)       # for variable summaries",
+    "text": "In this article we use the tidymodels ecosystem to illustrate a complete machine learning workflow in a tidy, coherent, and reproducible manner.\nThroughout the article, we revisit the fundamental components of the ML workflow:\n\nData split\nFeature engineering\n\nModel building\n\nModel fitting\nModel prediction\nModel evaluation\n\nWe begin with the most basic workflow and later extend it using the recipe framework for more advanced preprocessing.\nThe material in this article is based on the case study provided at: https://www.tidymodels.org/start/case-study/. All exercises use the dataset included in that example.\nThe following packages are required:\n\nlibrary(tidyverse)\ntheme_set(theme_bw())\n\nlibrary(tidymodels)  # parsnip + other tidymodels packages\n\n# Helper packages\nlibrary(readr)       # for importing data\nlibrary(broom.mixed) # for tidying Bayesian model output\nlibrary(dotwhisker)  # for visualizing regression results\nlibrary(skimr)       # for variable summaries",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -105,7 +105,7 @@
     "text": "2.1 Data\nIn this exercise we explore the relationship between:\n\nthe outcome variable: sea urchin width\nfeature 1: initial volume (continuous)\nfeature 2: food regime (categorical)\n\nA basic model for these variables can be written as:\nwidth ~ initial_volume * food_regime\n\n## Data import ----------\ndf_Urchins &lt;-\n  read_csv(\"https://tidymodels.org/start/models/urchins.csv\") |&gt;\n  setNames(c(\"food_regime\", \"initial_volume\", \"width\")) |&gt;\n  mutate(food_regime = factor(food_regime, levels = c(\"Initial\", \"Low\", \"High\")))\n\n## Explore the relationships ----------\nggplot(df_Urchins,\n       aes(x = initial_volume,\n           y = width,\n           group = food_regime,\n           col = food_regime)) +\n  geom_point() +\n  geom_smooth(method = lm, se = FALSE) +\n  scale_color_viridis_d(option = \"plasma\", end = .7)",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -116,7 +116,7 @@
     "text": "2.2 Building the Model\nWe start with a simple linear regression model using linear_reg(). The tidymodels ecosystem separates model specification (what model we want) from the computational engine (how it is estimated). The parsnip package handles this abstraction.\nAvailable engines for linear_reg() are listed here: https://parsnip.tidymodels.org/reference/linear_reg.html\n\nChoose the model type:\n\n\nlinear_reg()\n\nLinear Regression Model Specification (regression)\n\nComputational engine: lm \n\n\n\nChoose the engine:\n\n\nlinear_reg() |&gt;\n  set_engine(\"lm\")\n\nLinear Regression Model Specification (regression)\n\nComputational engine: lm \n\n\n\nSave the model specification:\n\n\nmdl_Linear &lt;- linear_reg()",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -127,7 +127,7 @@
     "text": "2.3 Training (Fitting) the Model\nTo train the model, we use the fit() function, which requires:\n\nthe model specification\na formula\nthe training dataset\n\n\nfit_Linear &lt;-\n  mdl_Linear |&gt;\n  fit(width ~ initial_volume * food_regime, data = df_Urchins)\n\nfit_Linear\n\nparsnip model object\n\n\nCall:\nstats::lm(formula = width ~ initial_volume * food_regime, data = data)\n\nCoefficients:\n                   (Intercept)                  initial_volume  \n                     0.0331216                       0.0015546  \n                food_regimeLow                 food_regimeHigh  \n                     0.0197824                       0.0214111  \n initial_volume:food_regimeLow  initial_volume:food_regimeHigh  \n                    -0.0012594                       0.0005254  \n\n\nWe can inspect the fitted model coefficients:\n\ntidy(fit_Linear)\n\n# A tibble: 6 × 5\n  term                            estimate std.error statistic  p.value\n  &lt;chr&gt;                              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)                     0.0331    0.00962      3.44  0.00100 \n2 initial_volume                  0.00155   0.000398     3.91  0.000222\n3 food_regimeLow                  0.0198    0.0130       1.52  0.133   \n4 food_regimeHigh                 0.0214    0.0145       1.47  0.145   \n5 initial_volume:food_regimeLow  -0.00126   0.000510    -2.47  0.0162  \n6 initial_volume:food_regimeHigh  0.000525  0.000702     0.748 0.457",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -135,10 +135,10 @@
     "href": "mldl/ml_tidymodels_basic.html#predicting-with-the-fitted-model",
     "title": "ML Workflow with tidymodels",
     "section": "2.4 Predicting with the Fitted Model",
-    "text": "2.4 Predicting with the Fitted Model\nOnce a model is fitted, we can use it for prediction. To make predictions we need:\n\na dataset containing the feature variables (with matching names)\nthe fitted model object\n\nBy default, predict() returns the mean prediction:\n\ndf_NewData &lt;- expand.grid(\n  initial_volume = 20,\n  food_regime = c(\"Initial\", \"Low\", \"High\")\n)\n\npred_Mean &lt;- predict(fit_Linear, new_data = df_NewData)\npred_Mean\n\n# A tibble: 3 × 1\n   .pred\n   &lt;dbl&gt;\n1 0.0642\n2 0.0588\n3 0.0961\n\n\nWe can also request confidence intervals using type = \"conf_int\":\n\npred_Conf &lt;- predict(\n  fit_Linear,\n  new_data = df_NewData,\n  type = \"conf_int\"\n)\npred_Conf\n\n# A tibble: 3 × 2\n  .pred_lower .pred_upper\n        &lt;dbl&gt;       &lt;dbl&gt;\n1      0.0555      0.0729\n2      0.0499      0.0678\n3      0.0870      0.105 \n\n\nBelow is a polished, academic, and clearly structured version of your entire section. I improved grammar, readability, terminology, explanations, and formatting. All original meaning is preserved, but now it reads like high-quality lecture notes.\nReturned in markdown as requested.",
+    "text": "2.4 Predicting with the Fitted Model\nOnce a model is fitted, we can use it for prediction. To make predictions we need:\n\na dataset containing the feature variables (with matching names)\nthe fitted model object\n\nBy default, predict() returns the mean prediction:\n\ndf_NewData &lt;- expand.grid(\n  initial_volume = 20,\n  food_regime = c(\"Initial\", \"Low\", \"High\")\n)\n\npred_Mean &lt;- predict(fit_Linear, new_data = df_NewData)\npred_Mean\n\n# A tibble: 3 × 1\n   .pred\n   &lt;dbl&gt;\n1 0.0642\n2 0.0588\n3 0.0961\n\n\nWe can also request confidence intervals using type = \"conf_int\":\n\npred_Conf &lt;- predict(\n  fit_Linear,\n  new_data = df_NewData,\n  type = \"conf_int\"\n)\npred_Conf\n\n# A tibble: 3 × 2\n  .pred_lower .pred_upper\n        &lt;dbl&gt;       &lt;dbl&gt;\n1      0.0555      0.0729\n2      0.0499      0.0678\n3      0.0870      0.105",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -149,7 +149,7 @@
     "text": "3.1 Data\nIn this example we work with flight information from the United States (package nycflights13).\nOur goal is to predict whether an arriving flight is late (arrival delay ≥ 30 minutes) or on time.\nThe modeling relationship can be summarized as:\narr_delay ~ (date, airport, distance, ...)\n\nlibrary(nycflights13)\nset.seed(123)\n\ndf_Flight &lt;- \n  flights |&gt; \n  mutate(\n    arr_delay = ifelse(arr_delay &gt;= 30, \"late\", \"on_time\"),\n    arr_delay = factor(arr_delay),\n    date = lubridate::as_date(time_hour)\n  ) |&gt; \n  inner_join(weather, by = c(\"origin\", \"time_hour\")) |&gt; \n  select(dep_time, flight, origin, dest, air_time, distance,\n         carrier, date, arr_delay, time_hour) |&gt; \n  na.omit() |&gt; \n  mutate_if(is.character, as.factor)\n\ndf_Flight |&gt; \n  skimr::skim(dest, carrier)\n\n\nData summary\n\n\nName\ndf_Flight\n\n\nNumber of rows\n325819\n\n\nNumber of columns\n10\n\n\n_______________________\n\n\n\nColumn type frequency:\n\n\n\nfactor\n2\n\n\n________________________\n\n\n\nGroup variables\nNone\n\n\n\nVariable type: factor\n\n\n\n\n\n\n\n\n\n\n\nskim_variable\nn_missing\ncomplete_rate\nordered\nn_unique\ntop_counts\n\n\n\n\ndest\n0\n1\nFALSE\n104\nATL: 16771, ORD: 16507, LAX: 15942, BOS: 14948\n\n\ncarrier\n0\n1\nFALSE\n16\nUA: 57489, B6: 53715, EV: 50868, DL: 47465",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -160,7 +160,7 @@
     "text": "3.2 Data Split\nAs usual, we divide the dataset into training and validation sets. This allows us to fit the model on one portion of the data and evaluate performance on unseen observations.\nUnder the tidymodels framework:\n\ninitial_split() performs the random split.\ntraining() and testing() extract the corresponding sets.\n\n\nset.seed(222)\nsplit_Flight &lt;- initial_split(df_Flight, prop = 3/4)\n\ndf_Train &lt;- training(split_Flight)\ndf_Validate &lt;- testing(split_Flight)",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -171,7 +171,7 @@
     "text": "3.3 Creating a Recipe\n\n3.3.1 Basical Recipe\nA recipe in tidymodels is a structured, pre-defined plan for data preprocessing and feature engineering.\nIt allows us to declare, in advance, all the steps needed to transform raw data into model-ready features.\nWhen creating a recipe, two fundamental components must be specified:\n\nFormula (~):\nThe variable on the left-hand side is the target/outcome, and the variables on the right-hand side are the predictors/features.\nData:\nThe dataset is used to identify variable names and types. At this stage, no transformations are applied.\n\n\n# Create a basic recipe\nrcp_Flight &lt;- recipe(arr_delay ~ ., data = df_Train)\n\nUsing . on the right-hand side indicates that all remaining variables in the dataset should be used as predictors.\n\n\n3.3.2 Roles\nIn addition to the standard roles (outcome and predictor), recipes allows defining custom roles using update_role().\nCommon roles include:\n\npredictor: variables used to predict the outcome\noutcome: target variable\nID: identifiers not used for modeling\ncase_weights: observation weights\ndatetime, latitude, longitude: for temporal or spatial feature engineering\n\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Train) |&gt; \n  update_role(flight, time_hour, new_role = \"ID\")\n\nsummary(rcp_Flight)\n\n# A tibble: 10 × 4\n   variable  type      role      source  \n   &lt;chr&gt;     &lt;list&gt;    &lt;chr&gt;     &lt;chr&gt;   \n 1 dep_time  &lt;chr [2]&gt; predictor original\n 2 flight    &lt;chr [2]&gt; ID        original\n 3 origin    &lt;chr [3]&gt; predictor original\n 4 dest      &lt;chr [3]&gt; predictor original\n 5 air_time  &lt;chr [2]&gt; predictor original\n 6 distance  &lt;chr [2]&gt; predictor original\n 7 carrier   &lt;chr [3]&gt; predictor original\n 8 date      &lt;chr [1]&gt; predictor original\n 9 time_hour &lt;chr [1]&gt; ID        original\n10 arr_delay &lt;chr [3]&gt; outcome   original",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -182,7 +182,7 @@
     "text": "3.4 Feature Engineering with step_*\n\n3.4.1 Date Features\nFeature engineering transforms raw data into model-ready variables. recipes expresses each transformation as a step_*() function.\nBelow, we extract:\n\nday of week (dow)\nmonth\nholiday indicators (using U.S. holidays)\n\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Train) |&gt; \n  update_role(flight, time_hour, new_role = \"ID\") |&gt; \n  step_date(date, features = c(\"dow\", \"month\")) |&gt;               \n  step_holiday(\n    date,\n    holidays = timeDate::listHolidays(\"US\"),\n    keep_original_cols = FALSE\n  )\n\nThis replaces the original date with engineered calendar features.\n\n\n3.4.2 Categorical Variables (Dummy Encoding)\nMost models require converting categorical variables into dummy/one-hot encoded predictors. recipes provides:\n\nstep_novel(): handles unseen factor levels at prediction time\nstep_dummy(): converts categorical predictors into numerical dummy variables\n\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Train) |&gt; \n  update_role(flight, time_hour, new_role = \"ID\") |&gt; \n  step_date(date, features = c(\"dow\", \"month\")) |&gt;               \n  step_holiday(\n    date, \n    holidays = timeDate::listHolidays(\"US\"), \n    keep_original_cols = FALSE\n  ) |&gt; \n  step_novel(all_nominal_predictors()) |&gt;  \n  step_dummy(all_nominal_predictors())\n\n\n\n3.4.3 Removing Zero-Variance Predictors\nPredictors with constant values provide no information and may cause issues in some algorithms. We remove them using step_zv():\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Train) |&gt; \n  update_role(flight, time_hour, new_role = \"ID\") |&gt; \n  step_date(date, features = c(\"dow\", \"month\")) |&gt;               \n  step_holiday(\n    date, \n    holidays = timeDate::listHolidays(\"US\"), \n    keep_original_cols = FALSE\n  ) |&gt; \n  step_novel(all_nominal_predictors()) |&gt;  \n  step_dummy(all_nominal_predictors()) |&gt; \n  step_zv(all_predictors())",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -190,10 +190,10 @@
     "href": "mldl/ml_tidymodels_basic.html#combining-the-recipe-with-a-model",
     "title": "ML Workflow with tidymodels",
     "section": "3.5 Combining the Recipe with a Model",
-    "text": "3.5 Combining the Recipe with a Model\n\n3.5.1 Workflow Definition\nA workflow allows bundling:\n\nthe recipe (preprocessing)\nthe model (statistical/ML algorithm)\n\n\nmdl_LogReg &lt;- \n  logistic_reg() |&gt; \n  set_engine(\"glm\")\n\nwflow_Flight &lt;- \n  workflow() |&gt; \n  add_model(mdl_LogReg) |&gt; \n  add_recipe(rcp_Flight)",
+    "text": "3.5 Combining the Recipe with a Model\n\n3.5.1 Workflow Definition\nIn this section, we formalize the integration of data preprocessing and model specification by constructing a workflow. This approach ensures that all preprocessing operations defined in the recipe are applied consistently during model training and prediction, thereby maintaining a coherent pipeline.\nA workflow allows bundling:\n\nthe recipe (preprocessing)\nthe model (statistical/ML algorithm)\n\n\nmdl_LogReg &lt;- \n  logistic_reg() |&gt; \n  set_engine(\"glm\")\n\nwflow_Flight &lt;- \n  workflow() |&gt; \n  add_model(mdl_LogReg) |&gt; \n  add_recipe(rcp_Flight)",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -201,10 +201,10 @@
     "href": "mldl/ml_tidymodels_basic.html#model-fitting",
     "title": "ML Workflow with tidymodels",
     "section": "3.6 Model Fitting",
-    "text": "3.6 Model Fitting\nWe can now train the full preprocessing + modeling pipeline using fit():\n\nfit_Flight &lt;- \n  wflow_Flight |&gt; \n  fit(data = df_Train)\n\nInspect model coefficients:\n\nfit_Flight |&gt; \n  extract_fit_parsnip() |&gt; \n  tidy()\n\n# A tibble: 157 × 5\n   term                         estimate std.error statistic  p.value\n   &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n 1 (Intercept)                   7.28    2.73           2.67 7.64e- 3\n 2 dep_time                     -0.00166 0.0000141   -118.   0       \n 3 air_time                     -0.0440  0.000563     -78.2  0       \n 4 distance                      0.00507 0.00150        3.38 7.32e- 4\n 5 date_USChristmasDay           1.33    0.177          7.49 6.93e-14\n 6 date_USColumbusDay            0.724   0.170          4.25 2.13e- 5\n 7 date_USCPulaskisBirthday      0.807   0.139          5.80 6.57e- 9\n 8 date_USDecorationMemorialDay  0.585   0.117          4.98 6.32e- 7\n 9 date_USElectionDay            0.948   0.190          4.98 6.25e- 7\n10 date_USGoodFriday             1.25    0.167          7.45 9.40e-14\n# ℹ 147 more rows",
+    "text": "3.6 Model Fitting\nWe proceed by fitting the complete preprocessing and modeling pipeline to the training data using the fit() function.\n\nfit_Flight &lt;- \n  wflow_Flight |&gt; \n  fit(data = df_Train)\n\nInspect model coefficients:\n\nfit_Flight |&gt; \n  extract_fit_parsnip() |&gt; \n  tidy()\n\n# A tibble: 157 × 5\n   term                         estimate std.error statistic  p.value\n   &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n 1 (Intercept)                   7.28    2.73           2.67 7.64e- 3\n 2 dep_time                     -0.00166 0.0000141   -118.   0       \n 3 air_time                     -0.0440  0.000563     -78.2  0       \n 4 distance                      0.00507 0.00150        3.38 7.32e- 4\n 5 date_USChristmasDay           1.33    0.177          7.49 6.93e-14\n 6 date_USColumbusDay            0.724   0.170          4.25 2.13e- 5\n 7 date_USCPulaskisBirthday      0.807   0.139          5.80 6.57e- 9\n 8 date_USDecorationMemorialDay  0.585   0.117          4.98 6.32e- 7\n 9 date_USElectionDay            0.948   0.190          4.98 6.25e- 7\n10 date_USGoodFriday             1.25    0.167          7.45 9.40e-14\n# ℹ 147 more rows",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -212,10 +212,10 @@
     "href": "mldl/ml_tidymodels_basic.html#prediction",
     "title": "ML Workflow with tidymodels",
     "section": "3.7 Prediction",
-    "text": "3.7 Prediction\nOnce fitted, the workflow can be used to generate predictions:\n\npred_Flight &lt;- predict(fit_Flight, df_Validate)\n\nFor evaluation we need both class predictions and class probabilities:\n\npred_Flight &lt;- \n  predict(fit_Flight, df_Validate, type = \"prob\") |&gt; \n  bind_cols(predict(fit_Flight, df_Validate, type = \"class\")) |&gt; \n  bind_cols(df_Validate |&gt; select(arr_delay))",
+    "text": "3.7 Prediction\nUpon fitting, the workflow is employed to generate predictions on the validation dataset.\n\npred_Flight &lt;- predict(fit_Flight, df_Validate)\n\nFor evaluation we need both class predictions and class probabilities:\n\npred_Flight &lt;- \n  predict(fit_Flight, df_Validate, type = \"prob\") |&gt; \n  bind_cols(predict(fit_Flight, df_Validate, type = \"class\")) |&gt; \n  bind_cols(df_Validate |&gt; select(arr_delay))",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -223,10 +223,10 @@
     "href": "mldl/ml_tidymodels_basic.html#evaluation",
     "title": "ML Workflow with tidymodels",
     "section": "3.8 Evaluation",
-    "text": "3.8 Evaluation\n\npred_Flight |&gt; \n  roc_auc(truth = arr_delay, .pred_late)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         0.764\n\npred_Flight |&gt; \n  accuracy(truth = arr_delay, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.849\n\naug_Flight &lt;- augment(fit_Flight, df_Validate)\n\naug_Flight |&gt; \n  roc_curve(truth = arr_delay, .pred_late) |&gt; \n  autoplot()",
+    "text": "3.8 Evaluation\nThe predictive performance of the model is evaluated using appropriate metrics, including ROC AUC and accuracy. Additionally, visualization of the ROC curve facilitates an assessment of the classifier’s discriminative capability.\n\npred_Flight |&gt; \n  roc_auc(truth = arr_delay, .pred_late)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         0.764\n\npred_Flight |&gt; \n  accuracy(truth = arr_delay, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.849\n\naug_Flight &lt;- augment(fit_Flight, df_Validate)\n\naug_Flight |&gt; \n  roc_curve(truth = arr_delay, .pred_late) |&gt; \n  autoplot()",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
@@ -237,29 +237,205 @@
     "text": "3.9 Clean Version of the Code\n\nset.seed(222)  # Set seed for reproducibility\n\n# Split the data into 75% training and 25% validation\nsplit_Flight &lt;- initial_split(df_Flight, prop = 3/4)\ndf_Train &lt;- training(split_Flight)      # Extract training set\ndf_Validate &lt;- testing(split_Flight)    # Extract validation set\n\n# -------------------------------\n# Create a preprocessing recipe\n# -------------------------------\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Train) |&gt;    # Define target and predictors\n  update_role(flight, time_hour, new_role = \"ID\") |&gt;  # Assign ID role to identifier columns\n  step_date(date, features = c(\"dow\", \"month\")) |&gt;    # Extract day of week & month from date\n  step_holiday(\n    date, \n    holidays = timeDate::listHolidays(\"US\"), \n    keep_original_cols = FALSE\n  ) |&gt;                                             # Add holiday indicator features\n  step_novel(all_nominal_predictors()) |&gt;         # Handle new factor levels in prediction\n  step_dummy(all_nominal_predictors()) |&gt;         # Convert categorical predictors to dummy variables\n  step_zv(all_predictors())                       # Remove predictors with zero variance\n\n# -------------------------------\n# Define the logistic regression model\n# -------------------------------\nmdl_LogReg &lt;- \n  logistic_reg() |&gt; \n  set_engine(\"glm\")  # Use generalized linear model as backend\n\n# -------------------------------\n# Combine recipe and model into a workflow\n# -------------------------------\nwflow_Flight &lt;- \n  workflow() |&gt; \n  add_model(mdl_LogReg) |&gt; \n  add_recipe(rcp_Flight)\n\n# -------------------------------\n# Fit the workflow on the training data\n# -------------------------------\nfit_Flight &lt;- \n  wflow_Flight |&gt; \n  fit(data = df_Train)\n\n# -------------------------------\n# Predict on the validation set (class labels)\n# -------------------------------\npred_Flight &lt;- predict(fit_Flight, df_Validate)\n\n# -------------------------------\n# Predict on validation set (probabilities and class labels)\n# -------------------------------\npred_Flight &lt;- \n  predict(fit_Flight, df_Validate, type = \"prob\") |&gt;   # Predicted probabilities\n  bind_cols(predict(fit_Flight, df_Validate, type = \"class\")) |&gt;  # Predicted classes\n  bind_cols(df_Validate |&gt; select(arr_delay))          # Add true labels for evaluation\n\n# -------------------------------\n# Evaluate model performance\n# -------------------------------\npred_Flight |&gt; \n  roc_auc(truth = arr_delay, .pred_late)   # ROC AUC for \"late\" class\n\npred_Flight |&gt; \n  accuracy(truth = arr_delay, .pred_class) # Classification accuracy\n\n# -------------------------------\n# Visualize ROC curve\n# -------------------------------\naug_Flight &lt;- augment(fit_Flight, df_Validate)  # Add predictions and residuals to dataset\n\naug_Flight |&gt; \n  roc_curve(truth = arr_delay, .pred_late) |&gt;  # Compute ROC curve\n  autoplot()                                   # Plot ROC curve",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
-    "objectID": "mldl/ml_tidymodels_basic.html#evalute-both-trning--and-validate--dataset",
-    "href": "mldl/ml_tidymodels_basic.html#evalute-both-trning--and-validate--dataset",
+    "objectID": "mldl/ml_tidymodels_basic.html#evaluating-training-and-validation-sets",
+    "href": "mldl/ml_tidymodels_basic.html#evaluating-training-and-validation-sets",
     "title": "ML Workflow with tidymodels",
-    "section": "4.1 Evalute both trning- and validate- dataset",
-    "text": "4.1 Evalute both trning- and validate- dataset\nthe fited model can run for both datset, after predict we canlaos use the functon roc_auc or accuracy to test the model perfomence, for the both indictaors, bigger values means the better perfomence:\n\nlibrary(modeldata) \n\n# Dataset ---------\n## split -----------\nset.seed(123)\nsplit_Cell &lt;- initial_split(modeldata::cells |&gt; select(-case), \n                            strata = class)\ndf_Train_Cell &lt;- training(split_Cell)\ndf_Validate_Cell  &lt;- testing(split_Cell)\n\n# Model ------------\n## build -----------\n\nmdl_RandomForest &lt;- \n  rand_forest(trees = 1000) |&gt; \n  set_engine(\"ranger\") |&gt; \n  set_mode(\"classification\")\n\n## fit --------\nset.seed(234)\nfit_RandomForest &lt;- \n  mdl_RandomForest |&gt; \n  fit(class ~ ., data = df_Train_Cell)\nfit_RandomForest\n\nparsnip model object\n\nRanger result\n\nCall:\n ranger::ranger(x = maybe_data_frame(x), y = y, num.trees = ~1000,      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) \n\nType:                             Probability estimation \nNumber of trees:                  1000 \nSample size:                      1514 \nNumber of independent variables:  56 \nMtry:                             7 \nTarget node size:                 10 \nVariable importance mode:         none \nSplitrule:                        gini \nOOB prediction error (Brier s.):  0.1187479 \n\n## predict -------\npred_Train_Cell &lt;- \n  predict(fit_RandomForest, df_Train_Cell) |&gt; \n  bind_cols(predict(fit_RandomForest, df_Train_Cell, type = \"prob\")) |&gt; \n  # Add the true outcome data back in\n  bind_cols(df_Train_Cell |&gt; \n              select(class))\n\npred_Validate_Cell &lt;- \n  predict(fit_RandomForest, df_Validate_Cell) |&gt; \n  bind_cols(predict(fit_RandomForest, df_Validate_Cell, type = \"prob\")) |&gt; \n  bind_cols(df_Validate_Cell |&gt; select(class))\n\n## performence --------\n\npred_Train_Cell |&gt;                # training set predictions\n  roc_auc(truth = class, .pred_PS)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         1.000\n\npred_Train_Cell |&gt;                # training set predictions\n  accuracy(truth = class, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.990\n\npred_Validate_Cell |&gt;                   # test set predictions\n  roc_auc(truth = class, .pred_PS)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         0.891\n\npred_Validate_Cell |&gt;                   # test set predictions\n  accuracy(truth = class, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.814\n\n\nThe nomal split-method show the stong differnec btewen tring dataset and the validate dataset. This is a nomal phonome by the data-foring model, it will “overfit” the trning data but not good perfomence in new dataset. this is aslo the resone, we ned some stragy to avoid the splingting method.",
+    "section": "4.1 Evaluating Training and Validation Sets",
+    "text": "4.1 Evaluating Training and Validation Sets\nA fitted model can be evaluated on both the training dataset and the validation (test) dataset.\nAfter generating predictions, we can compute performance metrics such as roc_auc and accuracy.\nFor both metrics, higher values indicate better predictive performance.\n\nlibrary(modeldata) \n\n# ----------------------------------\n# Dataset\n# ----------------------------------\n\n## Split the data\nset.seed(123)\nsplit_Cell &lt;- initial_split(\n  modeldata::cells |&gt; select(-case), \n  strata = class\n)\n\ndf_Train_Cell &lt;- training(split_Cell)\ndf_Validate_Cell  &lt;- testing(split_Cell)\n\n# ----------------------------------\n# Model\n# ----------------------------------\n\n## Specify a random forest classifier\nmdl_RandomForest &lt;- \n  rand_forest(trees = 1000) |&gt; \n  set_engine(\"ranger\") |&gt; \n  set_mode(\"classification\")\n\n## Fit the model\nset.seed(234)\nfit_RandomForest &lt;- \n  mdl_RandomForest |&gt; \n  fit(class ~ ., data = df_Train_Cell)\nfit_RandomForest\n\nparsnip model object\n\nRanger result\n\nCall:\n ranger::ranger(x = maybe_data_frame(x), y = y, num.trees = ~1000,      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) \n\nType:                             Probability estimation \nNumber of trees:                  1000 \nSample size:                      1514 \nNumber of independent variables:  56 \nMtry:                             7 \nTarget node size:                 10 \nVariable importance mode:         none \nSplitrule:                        gini \nOOB prediction error (Brier s.):  0.1187479 \n\n# ----------------------------------\n# Predictions\n# ----------------------------------\n\n## Training set predictions\npred_Train_Cell &lt;- \n  predict(fit_RandomForest, df_Train_Cell) |&gt; \n  bind_cols(predict(fit_RandomForest, df_Train_Cell, type = \"prob\")) |&gt; \n  bind_cols(df_Train_Cell |&gt; select(class))\n\n## Validation set predictions\npred_Validate_Cell &lt;- \n  predict(fit_RandomForest, df_Validate_Cell) |&gt; \n  bind_cols(predict(fit_RandomForest, df_Validate_Cell, type = \"prob\")) |&gt; \n  bind_cols(df_Validate_Cell |&gt; select(class))\n\n# ----------------------------------\n# Performance\n# ----------------------------------\n\n## Training\npred_Train_Cell |&gt; roc_auc(truth = class, .pred_PS)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         1.000\n\npred_Train_Cell |&gt; accuracy(truth = class, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.990\n\n## Validation\npred_Validate_Cell |&gt; roc_auc(truth = class, .pred_PS)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         0.891\n\npred_Validate_Cell |&gt; accuracy(truth = class, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.814\n\n\nThe results typically show a large gap between training and validation performance. This is normal: the model tends to overfit the training data, leading to reduced predictive ability on new, unseen data. This is precisely why a simple train/test split is often insufficient. To obtain more reliable and stable performance estimates, we use resampling methods.",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
     ]
   },
   {
-    "objectID": "mldl/ml_tidymodels_basic.html#resampling",
-    "href": "mldl/ml_tidymodels_basic.html#resampling",
+    "objectID": "mldl/ml_tidymodels_basic.html#resampling-cross-validation",
+    "href": "mldl/ml_tidymodels_basic.html#resampling-cross-validation",
     "title": "ML Workflow with tidymodels",
-    "section": "4.2 resampling",
-    "text": "4.2 resampling\nthe cross-validation method will split trning datset into several resamplr group (fold), adn th subgroup will continue split into traning-part and testing-part (assessment).\n\nset.seed(345)\nfolds_Cell &lt;- vfold_cv(df_Train_Cell, v = 10)\n\nwflow_CrossValidate &lt;- \n  workflow() |&gt;\n  add_model(mdl_RandomForest) |&gt;\n  add_formula(class ~ .)\n\nset.seed(456)\nfit_CrossValidate &lt;- \n  wflow_CrossValidate |&gt; \n  fit_resamples(folds_Cell)\ncollect_metrics(fit_CrossValidate)\n\n# A tibble: 3 × 6\n  .metric     .estimator  mean     n std_err .config             \n  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               \n1 accuracy    binary     0.833    10 0.00876 Preprocessor1_Model1\n2 brier_class binary     0.120    10 0.00406 Preprocessor1_Model1\n3 roc_auc     binary     0.905    10 0.00627 Preprocessor1_Model1\n\n\ncompare to the nomal firtng, there si a spcail fit_resamples() function for the resampling methos.",
+    "section": "4.2 Resampling (Cross-Validation)",
+    "text": "4.2 Resampling (Cross-Validation)\nCross-validation improves model evaluation by repeatedly splitting the training data into several folds. Each fold is used once as an assessment (test) set, while the remaining folds form the analysis (training) set.\nThis process reduces the variance in performance estimation and helps detect overfitting.\n\nset.seed(345)\nfolds_Cell &lt;- vfold_cv(df_Train_Cell, v = 10)\n\nwflow_CrossValidate &lt;- \n  workflow() |&gt;\n  add_model(mdl_RandomForest) |&gt;\n  add_formula(class ~ .)\n\nset.seed(456)\nfit_CrossValidate &lt;- \n  wflow_CrossValidate |&gt; \n  fit_resamples(folds_Cell)\n\ncollect_metrics(fit_CrossValidate)\n\n# A tibble: 3 × 6\n  .metric     .estimator  mean     n std_err .config             \n  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               \n1 accuracy    binary     0.833    10 0.00876 Preprocessor1_Model1\n2 brier_class binary     0.120    10 0.00406 Preprocessor1_Model1\n3 roc_auc     binary     0.905    10 0.00627 Preprocessor1_Model1\n\n\nCompared with normal model fitting, resampling uses the specialized function:\n\nfit_resamples() which fits the model on each fold and aggregates the performance results.\n\nCross-validation therefore provides a more robust estimate of the model’s generalization ability and reduces the risk of overfitting, compared with a single train/test split.",
     "crumbs": [
       "ML / DL",
-      "ML Workflow with tidymodels"
+      "ML Workflow with `tidymodels`"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html",
+    "href": "mldl/ml_feature_engineering.html",
+    "title": "Feature Engineering and Selection",
+    "section": "",
+    "text": "library(tidyverse)\ntheme_set(theme_bw())\n\nlibrary(tidymodels)  # parsnip + other tidymodels packages\nlibrary(learntidymodels)\nlibrary(embed)\n# Helper packages\nlibrary(readr)       # for importing data\nlibrary(broom.mixed) # for tidying Bayesian model output\nlibrary(dotwhisker)  # for visualizing regression results\nlibrary(skimr)       # for variable summaries\nlibrary(nycflights13)\nlibrary(ggforce)\n\n\n\nCode\ncolor_RUB_blue &lt;- \"#17365c\"\ncolor_RUB_green &lt;- \"#8dae10\"\ncolor_TUD_pink &lt;- \"#EC008D\"\ncolor_DRESDEN &lt;- c(\"#03305D\", \"#28618C\", \"#539DC5\", \"#84D1EE\", \"#009BA4\", \"#13A983\", \"#93C356\", \"#BCCF02\")",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#dummy-variables-for-unordered-categories",
+    "href": "mldl/ml_feature_engineering.html#dummy-variables-for-unordered-categories",
+    "title": "Feature Engineering and Selection",
+    "section": "3.1 Dummy Variables for Unordered Categories",
+    "text": "3.1 Dummy Variables for Unordered Categories\nThe most common way to encode categorical variables is to create dummy (one-hot) indicator variables.\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  step_dummy(origin)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$origin, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; \n  DT::datatable()",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#creating-dummy-variables-for-many-categories",
+    "href": "mldl/ml_feature_engineering.html#creating-dummy-variables-for-many-categories",
+    "title": "Feature Engineering and Selection",
+    "section": "3.2 Creating Dummy Variables for Many Categories",
+    "text": "3.2 Creating Dummy Variables for Many Categories\nWhen a variable has many categories (high cardinality), simple one-hot encoding becomes inefficient because it produces a very large sparse matrix.\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  step_dummy(dest)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$dest, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; \n  DT::datatable()\n\n\n\n\n\nA better approach for high-cardinality variables is hash encoding:\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  textrecipes::step_dummy_hash(dest, num_terms = 16)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$dest, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; \n  DT::datatable()\n\n\n\n\n\nHash encoding maps categorical levels to a fixed number of numerical features using a hashing function. Instead of creating one column per category, each category is transformed into a set of hashed feature values.\nAdvantages:\n\nProduces a fixed feature dimensionality through num_terms\nScales well to hundreds or thousands of categories\nAutomatically handles unseen categories at prediction time\nAvoids imposing artificial ordering (unlike integer encoding)\nMore memory-efficient than one-hot encoding for large category sets\nWorks directly on character/factor variables without additional preprocessing\n\nDisadvantages:\n\nHash collisions may occur, causing different categories to map to the same bucket\nFeatures are not interpretable because the mapping is not reversible\nCollisions can degrade accuracy, especially for models sensitive to feature distortions (e.g., linear models)\nChoosing an appropriate value for num_terms is heuristic and problem-dependent\nNot advantageous for low-cardinality variables",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#approaches-for-novel-categories",
+    "href": "mldl/ml_feature_engineering.html#approaches-for-novel-categories",
+    "title": "Feature Engineering and Selection",
+    "section": "3.3 Approaches for Novel Categories",
+    "text": "3.3 Approaches for Novel Categories\nIn practical applications, test data often contain categories not seen during training. Recipes includes a dedicated step for this:\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  step_novel() |&gt; \n  step_dummy(origin)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$origin, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; DT::datatable()\n\n\n\n\n\nstep_novel() must come before step_dummy() so that the training step learns the “new” category and creates a corresponding column. This does not improve prediction performance—it only prevents errors.",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#encodings-for-ordered-data",
+    "href": "mldl/ml_feature_engineering.html#encodings-for-ordered-data",
+    "title": "Feature Engineering and Selection",
+    "section": "3.4 Encodings for Ordered Data",
+    "text": "3.4 Encodings for Ordered Data\nFor ordinal categories (e.g., bad &lt; normal &lt; good or low &lt; medium &lt; high), the ordering contains useful information.\nPossible numeric encodings:\n\nLinear integer encoding (e.g. -1, 0, 1) → step_integer\nPolynomial or contrast encodings → step_poly\nMultiple orthogonal encodings to capture more structure",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#knowledge-based-mapping",
+    "href": "mldl/ml_feature_engineering.html#knowledge-based-mapping",
+    "title": "Feature Engineering and Selection",
+    "section": "3.5 Knowledge-based Mapping",
+    "text": "3.5 Knowledge-based Mapping\nSometimes a categorical variable corresponds to a meaningful numeric attribute. You can encode the category directly using domain knowledge.\nExamples:\n\nPlant species → root depth\nWeather condition (sunny, cloudy, rain) → sunshine hours\n\nThis requires a lookup table and domain understanding, so there is no universal function. You can simply use a join:\n\ndf_Main &lt;- tibble(\n  id = 1:6,\n  plant_type = c(\"Wheat\", \"Corn\", \"Soybean\", \"Wheat\", \"Corn\", \"Rice\")\n)\n\ndf_AttriTable &lt;- tibble(\n  plant_type = c(\"Wheat\", \"Corn\", \"Soybean\", \"Rice\"),\n  root_depth_cm = c(120, 150, 80, 130)\n)\n\ndf_Main |&gt; \n  left_join(df_AttriTable, by = \"plant_type\")\n\n# A tibble: 6 × 3\n     id plant_type root_depth_cm\n  &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;\n1     1 Wheat                120\n2     2 Corn                 150\n3     3 Soybean               80\n4     4 Wheat                120\n5     5 Corn                 150\n6     6 Rice                 130",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#distribution-shaping-transformations",
+    "href": "mldl/ml_feature_engineering.html#distribution-shaping-transformations",
+    "title": "Feature Engineering and Selection",
+    "section": "4.1 Distribution-shaping Transformations",
+    "text": "4.1 Distribution-shaping Transformations\nIn some variables, most values cluster within a very narrow range or display strong deviations from a normal-like distribution. Such skewed or compressed distributions may limit model performance. Similar to target transformation, applying transformations to minimize skewness in predictors can improve model fit. Box–Cox (step_BoxCox) and Yeo–Johnson (step_YeoJohnson) are commonly used approaches, although classical options such as logarithmic or square-root transformations also remain effective.\n\ndf_Bochum_KL &lt;- read_csv(\"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_Bochum_KL.csv\")\ndf_FeatureEng &lt;- df_Bochum_KL[,c(\"evapo_r\", \"evapo_p\", \"RSK\", \"soil_moist\")]\nggplot_hist &lt;- function(df_Data) {\n  df_long &lt;- df_Data |&gt;\n    pivot_longer(\n      cols = everything(),     # all columns; or select specific columns\n      names_to = \"variable\",\n      values_to = \"value\"\n    )\n  \n  # Plot faceted histograms\n  ggplot(df_long, aes(x = value)) +\n    geom_histogram(bins = 30, fill = color_RUB_green, color = color_RUB_blue) +\n    facet_wrap(~ variable, scales = \"free\") +\n    labs(x = \"Value\", y = \"Frequency\") +\n    theme(axis.text.y = element_text(angle = 90, vjust = 0.5, hjust = 0.5))\n}\ngp_Ori &lt;- ggplot_hist(df_FeatureEng[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Ori\n\n\n\n\n\n\n\n\n\n4.1.1 Yeo–Johnson Transformation\nA flexible transformation that accommodates positive, zero, and negative values.\nFormula\nFor a value $ x $ and transformation parameter $ $:\n\\[\nT(x;\\lambda) =\n\\begin{cases}\n\\frac{(x+1)^{\\lambda}-1}{\\lambda}, & x \\ge 0,\\ \\lambda \\ne 0 \\\\\n\\ln(x+1), & x \\ge 0,\\ \\lambda = 0 \\\\\n-\\frac{(1-x)^{2-\\lambda}-1}{2-\\lambda}, & x &lt; 0,\\ \\lambda \\ne 2 \\\\\n-\\ln(1-x), & x &lt; 0,\\ \\lambda = 2\n\\end{cases}\n\\]\nProperties - Works with positive, zero, and negative values. - Estimates the parameter $ $ to reduce skewness. - Often yields distributions closest to normality. - Less interpretable and slightly slower due to parameter estimation.\n\nrcp_YeoJohnson &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_YeoJohnson(all_predictors())   # handles zeros and negatives\ndf_YeoJohnson &lt;- prep(rcp_YeoJohnson) |&gt; bake(new_data = NULL)\ngp_YeoJohnson &lt;- ggplot_hist(df_YeoJohnson[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_YeoJohnson\n\n\n\n\n\n\n\n\n\n\n4.1.2 Logarithmic Transformation\nA strong transformation for right-skewed positive variables.\nFormula\n\\[\nT(x) = \\log(x)\n\\]\nProperties - Only defined for strictly positive values. - Suitable for multiplicative processes and highly right-skewed data. - Strongly compresses large values. - Not applicable to zero or negative values.\n\nrcp_Log &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_mutate(across(all_predictors(), ~ .x - min(.x) + 1e-6)) |&gt;\n  step_log(all_predictors())\ndf_Log &lt;- prep(rcp_Log) |&gt; bake(new_data = NULL)\ngp_Log &lt;- ggplot_hist(df_Log[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Log\n\n\n\n\n\n\n\n\n\n\n4.1.3 Square-Root Transformation\nA mild transformation suitable for non-negative, moderately right-skewed data.\nFormula\n\\[\nT(x) = \\sqrt{x}\n\\]\nProperties - Defined for zero and positive values. - Less aggressive than the log transformation. - Reduces right-skewness but insufficient for heavy skewness. - Not applicable to negative values.\n\nrcp_Sqrt &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_mutate(across(all_predictors(), ~ .x - min(.x) + 1e-6)) |&gt;\n  step_sqrt(all_predictors())\ndf_Sqrt &lt;- prep(rcp_Sqrt) |&gt; bake(new_data = NULL)\ngp_Sqrt &lt;- ggplot_hist(df_Sqrt[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Sqrt\n\n\n\n\n\n\n\n\n\n\n4.1.4 Choosing a Transformation\n\nRight-skewed and strictly positive → Log\nRight-skewed and non-negative → Square-root\nMixed signs or unclear skewness → Yeo–Johnson",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#standardization-and-normalization",
+    "href": "mldl/ml_feature_engineering.html#standardization-and-normalization",
+    "title": "Feature Engineering and Selection",
+    "section": "4.2 Standardization and Normalization",
+    "text": "4.2 Standardization and Normalization\nScaling features to comparable magnitudes is crucial for algorithms that rely on linear functions or distance metrics, such as regression models, neural networks, support vector machines, k-means, and hierarchical clustering.\n\n4.2.1 Standardization (Z-Scaling)\nCenters each feature at zero mean and scales to unit variance.\nFormula\n\\[\nz = \\frac{x - \\mu}{\\sigma}\n\\]\nwhere\n\\(\\mu\\) = mean of the feature,\n\\(\\sigma\\) = standard deviation.\nProperties - Produces features with mean 0 and standard deviation 1. - Preserves distribution shape and skewness. - Outliers still influence the scale. - Widely used for algorithms assuming normal-like distributions.\n\nrcp_Normal &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_normalize(all_predictors())    # (x − mean) / sd\ndf_Normal &lt;- prep(rcp_Normal) |&gt; bake(new_data = NULL)\ngp_Normal &lt;- ggplot_hist(df_Normal[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Normal\n\n\n\n\n\n\n\n\n\n\n4.2.2 Normalization (Min–Max Scaling)\nRescales each feature to the interval \\([0, 1]\\).\nFormula\n\\[\nx' = \\frac{x - x_{\\min}}{x_{\\max} - x_{\\min}}\n\\]\nProperties - Compresses all values into a fixed range. - Highly sensitive to outliers. - Preserves relative ordering but not distributional shape. - Useful when absolute scales matter or when features must lie in \\([0,1]\\), such as in neural networks and kNN.\n\nrcp_MinMax &lt;- recipe(evapo_r ~ ., data = df_FeatureEng)  |&gt; \n  step_range(all_predictors())\ndf_MinMax &lt;- prep(rcp_MinMax) |&gt; bake(new_data = NULL)\ngp_MinMax &lt;- ggplot_hist(df_MinMax[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_MinMax\n\n\n\n\n\n\n\n\n\n\n4.2.3 Choosing a Scaling Method\nUse standardization when\n- variables need equal weight,\n- algorithms assume normally scaled inputs,\n- outliers should not dominate the scaling range.\nUse normalization when\n- features must lie within \\([0,1]\\),\n- distance-based methods or neural networks are used,\n- absolute ranges are important.",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#principal-components-analysis",
+    "href": "mldl/ml_feature_engineering.html#principal-components-analysis",
+    "title": "Feature Engineering and Selection",
+    "section": "6.1 Principal Components Analysis",
+    "text": "6.1 Principal Components Analysis\nPrincipal components analysis (PCA) is a method for finding low-dimensional representations of a data set that retain as much of the original variation as possible.\nThe idea is that each of the n observations lives in p-dimensional space, but not all of these dimensions are equally interesting. In PCA we look for a smaller number of dimensions that are as interesting as possible, where the concept of interesting is measured by the amount that the observations vary along each dimension.\nFor Principal Component Analysis (PCA), the first step is to decide how many dimensions (principal components) to retain. A common approach is to base this decision on the eigenvalues of the principal components:\n\nEigenvalue threshold criterion: Retain components with eigenvalues greater than 1. This approach assumes that any component accounting for more variance than an individual original variable is worth keeping.\nCumulative variance explained criterion: Retain enough components to explain a desired proportion of the total variance, such as 75% or 90%. This allows the analyst to select the minimum number of components that capture a substantial fraction of the original data’s variability. Metrics such as Proportion of Variance Explained (PVE) or Cumulative Variance Explained (CVE) are commonly used for this purpose.\n\n\nrcp_NormalAll &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors())\ndf_NormalAll &lt;- prep(rcp_NormalAll) |&gt; bake(new_data = NULL)\n\npca_Noraml &lt;- prcomp(df_NormalAll |&gt; select(-evapo_r), scale = FALSE)\neigen_Normal &lt;- pca_Noraml$sdev^2\n\nggplot() +\n  geom_point(aes(x = 1:length(eigen_Normal), y = eigen_Normal)) +\n  geom_hline(yintercept = 1, linetype = \"dashed\", color = color_TUD_pink) +\n  labs(x = \"PC\", y = \"Eigenvalue\")\n\n\n\n\n\n\n\n\n\nnum_CVE &lt;- cumsum(eigen_Normal / sum(eigen_Normal))\nggplot() +\n  geom_line(aes(x = 1:length(num_CVE), y = num_CVE), color = color_RUB_green) +\n  geom_point(aes(x = 1:length(num_CVE), y = num_CVE), color = color_RUB_green) +\n  geom_hline(yintercept = .9, linetype = \"dashed\", color = color_TUD_pink) +\n  labs(x = \"PC\", y = \"CVE\")\n\n\n\n\n\n\n\n\n\nSet the number of principal components (PCs) manually\n\n\nrcp_PCA4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_pca(all_predictors(), num_comp = 4)\ndf_PCA4 &lt;- prep(rcp_PCA4) |&gt; bake(new_data = NULL)\n\n\nSet the percentage of variability in the variables\n\n\nrcp_PCA75per &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt; \n  step_pca(all_predictors(), threshold = .75)\n\ndf_PCA75per &lt;- prep(rcp_PCA75per) |&gt; bake(new_data = NULL)\n\n\nggplot(df_PCA4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)\n\n\n\n\n\n\n\n\nThe most influential variables for each principal component can also be inspected through their loadings.\nThese loadings (or coefficients) indicate how strongly each original feature contributes to a given PC,\nallowing us to interpret what each component represents in terms of the original variables.\n\nplot_top_loadings(\n  prep(rcp_PCA4),\n  component_number &lt;= 4,\n  n = 4,               # number of variables to show per PC\n  type = \"pca\"    # which PCs to plot\n) +\n  scale_fill_manual(values = c(\"TRUE\" = color_RUB_green, \"FALSE\" = color_RUB_blue))+\n  theme(legend.position = \"inside\",\n        legend.position.inside = c(.99, .01),\n        legend.justification = c(1,0))",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#independent-component-analysis-ica",
+    "href": "mldl/ml_feature_engineering.html#independent-component-analysis-ica",
+    "title": "Feature Engineering and Selection",
+    "section": "6.2 Independent Component Analysis (ICA)",
+    "text": "6.2 Independent Component Analysis (ICA)\nIndependent Component Analysis (ICA) is a dimension reduction technique that seeks to represent multivariate data as a combination of statistically independent components. Unlike methods such as Principal Component Analysis (PCA), which maximize variance and produce uncorrelated components, ICA focuses on identifying underlying latent factors that are mutually independent.\n\nrcp_ICA4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_ica(all_predictors(), num_comp = 4)\ndf_ICA4 &lt;- prep(rcp_ICA4) |&gt; bake(new_data = NULL)\n\nggplot(df_ICA4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)\n\n\n\n\n\n\n\n\n\nplot_top_loadings(\n  prep(rcp_ICA4),\n  component_number &lt;= 4,\n  n = 4,               # number of variables to show per PC\n  type = \"ica\"    # which PCs to plot\n) +\n  scale_fill_manual(values = c(\"TRUE\" = color_RUB_green, \"FALSE\" = color_RUB_blue))+\n  theme(legend.position = \"inside\",\n        legend.position.inside = c(.99, .01),\n        legend.justification = c(1,0))",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#uniform-manifold-approximation-and-projection-umap",
+    "href": "mldl/ml_feature_engineering.html#uniform-manifold-approximation-and-projection-umap",
+    "title": "Feature Engineering and Selection",
+    "section": "6.3 Uniform Manifold Approximation and Projection (UMAP)",
+    "text": "6.3 Uniform Manifold Approximation and Projection (UMAP)\nUniform Manifold Approximation and Projection (UMAP) is a nonlinear dimension reduction technique designed to project high-dimensional data into a lower-dimensional space while preserving its intrinsic geometric structure. UMAP is particularly effective at maintaining both local relationships (i.e., neighborhood structure) and global patterns in the data. Unlike linear methods such as PCA, UMAP can capture complex, nonlinear structures in the data, making it well-suited for high-dimensional datasets with intricate patterns.\n\nrcp_UMAP4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_umap(all_predictors(), num_comp = 4)\ndf_UMAP4 &lt;- prep(rcp_UMAP4) |&gt; bake(new_data = NULL)\n\nggplot(df_UMAP4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#generalized-low-rank-models-glrm",
+    "href": "mldl/ml_feature_engineering.html#generalized-low-rank-models-glrm",
+    "title": "Feature Engineering and Selection",
+    "section": "6.4 Generalized Low Rank Models (GLRM)",
+    "text": "6.4 Generalized Low Rank Models (GLRM)\nGeneralized Low Rank Models (GLRM) is a generalization of PCA and matrix factorization, which is more flexibel and useable for categorei variables. The the orginal variables iwll replace by a dimesnionreduced matrix X, which \\(A = X \\times Y\\). This approach is not aviable in recipes framework and more complex, so we do not give a excies. more details is in https://bradleyboehmke.github.io/HOML/GLRM.html aviable",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#distance",
+    "href": "mldl/ml_feature_engineering.html#distance",
+    "title": "Feature Engineering and Selection",
+    "section": "7.1 Distance",
+    "text": "7.1 Distance\nComputing the distance to a reference point is often helpful in spatial-related datasheet. With recipes, this can be achieved using steps such as step_geodist, allowing us to transform coordinates (e.g., latitude/longitude) into meaningful spatial distance features.\n\nrec_TimeSpat &lt;- recipe(target ~ ., data = df_TimeSpat)  |&gt; \n  step_geodist(lat, lon, ref_lat = 52.52, ref_lon = 13.40, name = \"dist_to_berlin\")\nbake(prep(rec_TimeSpat), new_data = df_TimeSpat) |&gt; head(100) |&gt; DT::datatable()",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#date-and-holiday",
+    "href": "mldl/ml_feature_engineering.html#date-and-holiday",
+    "title": "Feature Engineering and Selection",
+    "section": "7.2 Date and holiday",
+    "text": "7.2 Date and holiday\nDate variables can be expanded into more informative features such as weekday, weekend, month, or season. Additionally, holiday signatures can be added to capture special events or non-working days. Recipes provides steps like step_date and time-series extensions such as step_holiday.\n\nrec_TimeSpat &lt;- recipe(target ~ ., data = df_TimeSpat)  |&gt; \n  step_date(date) |&gt; \n  step_holiday(date)\nbake(prep(rec_TimeSpat), new_data = df_TimeSpat) |&gt; head(100) |&gt; DT::datatable()",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#lag",
+    "href": "mldl/ml_feature_engineering.html#lag",
+    "title": "Feature Engineering and Selection",
+    "section": "7.3 Lag",
+    "text": "7.3 Lag\nFor time-dependent data, the current value may depend on previous time steps. Lag transformations create new variables such as lag-1, lag-7, or lag-30. Recipes supports this through step_lag, which is especially useful in time-series prediction tasks.\n\nrec_TimeSpat &lt;- recipe(target ~ ., data = df_TimeSpat)  |&gt; \n  step_lag(target, lag = 3)\nbake(prep(rec_TimeSpat), new_data = df_TimeSpat) |&gt; head(100) |&gt; DT::datatable()",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_feature_engineering.html#missing-values-imputation",
+    "href": "mldl/ml_feature_engineering.html#missing-values-imputation",
+    "title": "Feature Engineering and Selection",
+    "section": "7.4 Missing values imputation",
+    "text": "7.4 Missing values imputation\nAlthough missing values—especially in time-series or spatial data—should ideally be treated during the EDA phase, recipes still offers convenient imputation options:\n\nstep_impute_knn: k-nearest neighbour imputation\nstep_impute_linear: linear interpolation\nstep_impute_roll: rolling window based filling\n\nThese steps integrate seamlessly into modelling pipelines, but it remains good practice to address outliers and missing values as early as possible during EDA for better control and transparency.",
+    "crumbs": [
+      "ML / DL",
+      "Feature Engineering and Selection"
     ]
   },
   {
@@ -1795,22 +1971,44 @@
     ]
   },
   {
-    "objectID": "mldl/ml_basic_concept.html#data-splitting",
-    "href": "mldl/ml_basic_concept.html#data-splitting",
+    "objectID": "mldl/ml_basic_concept.html#target-engineering",
+    "href": "mldl/ml_basic_concept.html#target-engineering",
     "title": "Basic Concept",
-    "section": "3.1 Data splitting",
-    "text": "3.1 Data splitting\nPrior to model development, the dataset is typically divided into separate subsets.\nThe primary purpose of this division is to train the model on one subset while reserving another for evaluation, thereby assessing how well the model generalizes beyond the data it has seen. Commonly used subsets include a training set for parameter estimation, a validation set for tuning and early stopping, and a test set for final performance assessment. A central principle is that the performance of a model should never be evaluated solely on data used during training.",
+    "section": "2.1 Target engineering",
+    "text": "2.1 Target engineering\nThe target is the variable treated as the outcome of the model, the quantity the model aims to predict. Target values in training datasets may contain noise, missing entries, or extreme outliers, any of which can impair model performance.\nCommon target-engineering operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical forms when appropriate. A clearly defined and well-processed target provides a meaningful objective for the learning procedure.",
     "crumbs": [
       "ML / DL",
       "Basic Concept"
     ]
   },
   {
-    "objectID": "mldl/ml_basic_concept.html#resampling",
-    "href": "mldl/ml_basic_concept.html#resampling",
+    "objectID": "mldl/ml_basic_concept.html#feature-engineering",
+    "href": "mldl/ml_basic_concept.html#feature-engineering",
     "title": "Basic Concept",
-    "section": "3.2 Resampling",
-    "text": "3.2 Resampling\nResampling techniques provide tools for estimating model performance more reliably, particularly when the available data are limited.\nThey help reduce the dependence on a single train–test split and yield more stable performance estimates. Standard introductory approaches include cross-validation, which repeatedly partitions the data into training and validation subsets, and bootstrapping, which draws samples with replacement to estimate variability. The overarching idea is that resampling reduces the risk of evaluations being overly sensitive to one particular dataset split.",
+    "section": "2.2 Feature engineering",
+    "text": "2.2 Feature engineering\nFeatures supply the information that the model uses to generate predictions. Effective feature engineering enhances the model’s ability to capture relevant structure in the data.\n\n2.2.1 Numeric feature engineering\nNumeric features often differ in both their distribution and their scale, and these issues require distinct preprocessing strategies. Transformations modify the shape of an individual feature’s distribution, while normalization (or standardization) adjust the scales of multiple features to make them comparable.\n\nTransformations (distribution shaping)\nTransformations are applied to single features to alter their distribution. They can reduce skewness, stabilize variance, or help satisfy model assumptions. Examples include\n\nlogarithmic,\nsquare-root,\nreciprocal, and\nBox–Cox transformations. These operations reshape a feature’s distribution but do not make different features comparable in scale.\n\nNormalization and standardization (scale adjustment)\nNormalization and standardization rescale features so they share similar or identical ranges, preventing any single feature from dominating the learning process due to its magnitude.\n\nStandardization rescales a feature to zero mean and unit variance.\n\nNormalization, such as min–max scaling, maps a feature to a fixed interval, typically [0, 1].\nThese methods do not change distributional shape but ensure comparability in scale, which is important for distance-based models or gradient-based optimization.\n\n\n\n\n2.2.2 Categorical feature engineering\nCategorical variables must be converted into numerical form, as most machine learning algorithms operate on numeric inputs. Unlike numeric features, categorical variables do not support distribution-shaping transformations. Consequently, categorical feature engineering focuses on encoding strategies that represent categories numerically while preserving their meaning.\nCommon encoding methods include:\n\nLumping, which merges rare or conceptually similar categories to reduce sparsity and improve robustness.\nOne-hot encoding, which creates binary indicator variables for each category without imposing artificial ordering.\nLabel encoding, which assigns integer codes to categories and is suitable for models that do not interpret these codes as ordinals, such as tree-based methods.\n\nSome tree-based algorithms can handle categorical variables directly or interpret encoded integers in a non-ordinal way. Nonetheless, choosing an appropriate encoding method remains essential to ensure that the numerical representation aligns with model assumptions.",
+    "crumbs": [
+      "ML / DL",
+      "Basic Concept"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_basic_concept.html#feature-filtering-and-dimension-reduction",
+    "href": "mldl/ml_basic_concept.html#feature-filtering-and-dimension-reduction",
+    "title": "Basic Concept",
+    "section": "2.3 Feature filtering and dimension reduction",
+    "text": "2.3 Feature filtering and dimension reduction\nFeature filtering removes variables that provide little or no useful information for the learning task. Features with\n- very low variance, \n- high proportions of missing values, or \n- strong multicollinearity \noften contribute minimally to predictive performance.\nEliminating such variables reduces noise, simplifies the modelling process, and can improve both accuracy and efficiency. Often, a smaller, more informative feature set is preferable to a high-dimensional collection of irrelevant or redundant variables.\nDimension reduction methods also decrease the number of features but take a different approach. Instead of discarding variables, they construct new, lower-dimensional representations that preserve essential information. These methods simplify high-dimensional data, reduce noise, and often improve computational efficiency and predictive performance. Conceptually, they identify the most informative directions or structures in the data while disregarding variation that contributes little to the modelling objective.\nPrincipal Component Analysis (PCA) creates new variables (principal components) that are linear combinations of the original features. These components are orthogonal and ranked according to the variance they explain. More flexible approaches, such as Generalized Low Rank Models (GLRM), extend this idea by allowing additional constraints or custom loss functions, making them adaptable to a wider range of data types and modelling requirements.\nIn summary, feature filtering removes uninformative variables directly, whereas dimension reduction retains information by reorganizing it into new combined features.",
+    "crumbs": [
+      "ML / DL",
+      "Basic Concept"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_basic_concept.html#data-splitting-and-resampling",
+    "href": "mldl/ml_basic_concept.html#data-splitting-and-resampling",
+    "title": "Basic Concept",
+    "section": "3.1 Data splitting and resampling",
+    "text": "3.1 Data splitting and resampling\nBefore model development begins, the dataset is usually divided into separate subsets. This division allows the model to be trained on one subset while another is reserved for evaluation, ensuring that performance reflects generalization rather than memorization.\nThe basic approach uses two groups:\n\ntraining dataset: used to estimate model parameters\n\ntesting dataset: used for final performance assessment\n\nWhen more rigorous tuning is required, a third group is added:\n\ntraining dataset: used for parameter estimation\n\nvalidation dataset: used for hyperparameter tuning, model selection, and early stopping\n\ntesting dataset: used exclusively for the final, unbiased assessment of model performance\n\nA key principle is that performance must not be evaluated solely on data used during training, as this can lead to overly optimistic results.\nResampling techniques provide more reliable estimates of model performance, particularly when data are limited. Instead of relying on a single train–test split, methods such as cross-validation repeatedly partition the data into training and validation sets, while bootstrapping generates samples with replacement to estimate variability. These techniques reduce sensitivity to any single split and yield more stable and trustworthy performance estimates.",
     "crumbs": [
       "ML / DL",
       "Basic Concept"
@@ -1822,17 +2020,6 @@
     "title": "Basic Concept",
     "section": "3.2 Model creation",
     "text": "3.2 Model creation\nModel creation involves selecting an appropriate algorithm and preparing it for training. This phase includes identifying relevant features, specifying the model structure, and configuring initial settings. The objective is to establish a suitable initial model that can be trained and refined.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#model-evaluation",
-    "href": "mldl/ml_basic_concept.html#model-evaluation",
-    "title": "Basic Concept",
-    "section": "3.6 Model Evaluation",
-    "text": "3.6 Model Evaluation\nModel evaluation involves systematically measuring how well a trained model performs on data that were not used during training. This process ensures that the model generalizes effectively to unseen data, facilitates comparison among alternative models, and identifies potential issues such as overfitting, underfitting, or insufficient feature quality. Performance metrics serve as quantitative indicators of the model’s predictive quality and guide both training decisions and model selection.",
     "crumbs": [
       "ML / DL",
       "Basic Concept"
@@ -1861,6 +2048,28 @@
     ]
   },
   {
+    "objectID": "mldl/ml_basic_concept.html#model-performance-assessment",
+    "href": "mldl/ml_basic_concept.html#model-performance-assessment",
+    "title": "Basic Concept",
+    "section": "3.5 Model Performance Assessment",
+    "text": "3.5 Model Performance Assessment\nDuring training and tuning, it is essential to monitor and compare model performance. Performance metrics provide quantitative indicators of a model’s predictive quality and guide decisions related to training, hyperparameter optimization, and model selection.\nWhile the model is being trained, metrics are computed on both the training and validation sets to track learning progress, identify overfitting, and adjust hyperparameters. After training, the model is evaluated on a separate testing set to obtain an unbiased estimate of its generalization ability, ensuring that performance reflects real-world applicability rather than memorization of the training data.\n\n3.5.1 Classification Metrics\nFor classification tasks, common metrics include accuracy, Brier score, and ROC AUC, each capturing different aspects of model performance:\n\nAccuracy: Measures the proportion of correct predictions relative to all predictions:\n\n\\[\n\\text{Accuracy} = \\frac{\\text{Number of Correct Predictions}}{\\text{Total Number of Predictions}}\n\\]\nValues range from 0 to 1, with higher values indicating better performance. Accuracy is intuitive but can be misleading for imbalanced datasets, where a model predicting only the majority class may appear highly accurate yet be uninformative.\n\nBrier Score: Evaluates the accuracy of probabilistic predictions. For a binary outcome:\n\n\\[\nBS = (p - o)^2\n\\]\nwhere \\(p\\) is the predicted probability and \\(o\\) the actual outcome (1 or 0). The mean Brier score across the dataset ranges from 0 to 1, with lower values indicating better calibration. Unlike accuracy, it accounts for both confidence and correctness of predictions.\n\nROC AUC: Measures a classifier’s ability to discriminate between classes across all possible thresholds. The ROC curve plots:\n\n\\[\n\\text{TPR} = \\frac{\\text{TP}}{\\text{TP} + \\text{FN}}\n\\qquad\\text{against}\\qquad\n\\text{FPR} = \\frac{\\text{FP}}{\\text{FP} + \\text{TN}}\n\\]\nThe area under the curve (AUC) ranges from 0.5 (random guessing) to 1.0 (perfect separation). ROC AUC is threshold-independent and particularly useful for imbalanced datasets.\n\n\n3.5.2 Regression Metrics\nFor regression tasks, metrics quantify the deviation between predicted and observed values:\n\nRoot Mean Squared Error (RMSE): Measures the average magnitude of prediction errors, penalizing large deviations:\n\n\\[\n\\text{RMSE} = \\sqrt{\\frac{1}{n}\\sum_{i=1}^{n}( \\hat{y}_i - y_i )^2}\n\\]\n\nMean Absolute Error (MAE): Computes the average absolute difference between predictions and observations, providing robustness to outliers:\n\n\\[\n\\text{MAE} = \\frac{1}{n}\\sum_{i=1}^{n}|\\hat{y}_i - y_i|\n\\]\n\nCoefficient of Determination (R²): Indicates the proportion of variance in the observed data explained by the model:\n\n\\[\nR^2 = 1 - \\frac{\\sum_{i=1}^{n}( \\hat{y}_i - y_i )^2}{\\sum_{i=1}^{n}( y_i - \\bar{y} )^2}\n\\]\nWhere:\n\n$ _i $ is the predicted value for the \\(i\\)-th observation\n\n$ y_i $ is the observed (true) value for the \\(i\\)-th observation\n\n$ {y} $ is the mean of all observed values\n\n$ n $ is the total number of observations\n\n$ $ denotes summation over all observations from \\(i = 1\\) to \\(n\\)\n\nBy integrating performance metrics into both training and evaluation phases, practitioners can iteratively refine models, prevent overfitting, optimize hyperparameters, and select models that provide reliable predictions on unseen data. This combined approach of monitoring during training and assessing after training ensures that models are both accurate and generalizable.",
+    "crumbs": [
+      "ML / DL",
+      "Basic Concept"
+    ]
+  },
+  {
+    "objectID": "mldl/ml_basic_concept.html#model-evaluation",
+    "href": "mldl/ml_basic_concept.html#model-evaluation",
+    "title": "Basic Concept",
+    "section": "3.6 Model Evaluation",
+    "text": "3.6 Model Evaluation\nModel evaluation involves systematically measuring how well a trained model performs on data that were not used during training. This process ensures that the model generalizes effectively to unseen data, facilitates comparison among alternative models, and identifies potential issues such as overfitting, underfitting, or insufficient feature quality. Performance metrics serve as quantitative indicators of the model’s predictive quality and guide both training decisions and model selection.",
+    "crumbs": [
+      "ML / DL",
+      "Basic Concept"
+    ]
+  },
+  {
     "objectID": "mldl/ml_basic_concept.html#model-selection",
     "href": "mldl/ml_basic_concept.html#model-selection",
     "title": "Basic Concept",
@@ -1872,37 +2081,47 @@
     ]
   },
   {
-    "objectID": "mldl/ml_basic_concept.html#target-engineering",
-    "href": "mldl/ml_basic_concept.html#target-engineering",
+    "objectID": "mldl/ml_basic_concept.html#modelling-workflow",
+    "href": "mldl/ml_basic_concept.html#modelling-workflow",
     "title": "Basic Concept",
-    "section": "2.1 Target engineering",
-    "text": "2.1 Target engineering\nThe target is the variable treated as the outcome of the model, the quantity the model aims to predict. Target values in training datasets may contain noise, missing entries, or extreme outliers, any of which can impair model performance.\nCommon target-engineering operations include correcting inconsistent values, smoothing or aggregating observations, applying transformations to reduce skewness, or converting between continuous and categorical forms when appropriate. A clearly defined and well-processed target provides a meaningful objective for the learning procedure.",
+    "section": "3.8 Modelling workflow",
+    "text": "3.8 Modelling workflow\nThe development of an effective model is both iterative and heuristic. It is rarely clear in advance what a dataset requires, and it is common to evaluate and modify multiple approaches before finalizing a model.",
     "crumbs": [
       "ML / DL",
       "Basic Concept"
     ]
   },
   {
-    "objectID": "mldl/ml_basic_concept.html#feature-filtering",
-    "href": "mldl/ml_basic_concept.html#feature-filtering",
+    "objectID": "mldl/ml_basic_concept.html#overfitting",
+    "href": "mldl/ml_basic_concept.html#overfitting",
     "title": "Basic Concept",
-    "section": "2.2 Feature filtering",
-    "text": "2.2 Feature filtering\nInput, predictor\nFeature filtering removes variables that are uninformative, redundant, or detrimental to model performance.\nFeatures with very low variance, high proportions of missing values, or strong collinearity may offer little useful information. Eliminating such features simplifies the modelling process, reduces noise, and often improves performance. In many cases, a smaller set of relevant features is preferable to a high-dimensional set containing noisy or irrelevant variables.\n\n2.2.1 Numeric feature engineering\nNumeric features frequently differ in scale or distribution, which can negatively affect model training.\nStandardization techniques, such as scaling to zero mean and unit variance or applying min–max normalization, help ensure that features contribute comparably to the learning process. Transformations such as logarithms can mitigate skewed distributions. Well-scaled numeric features support more stable learning and faster optimization.\n\n\n2.2.2 Categorical feature engineering\nCategorical variables must be converted into numeric form before most models can utilize them. Several strategies exist, each with advantages under specific conditions.\nLumping combines rare or similar categories to reduce sparsity and improve robustness.\nOne-hot or dummy encoding creates binary indicator variables for each category, providing explicit separation between categories.\nLabel encoding assigns integer codes to categories and is generally suitable for models that do not impose an ordinal interpretation on numeric values, such as tree-based methods.\nSelecting an appropriate encoding method helps preserve the meaning of categorical distinctions.",
+    "section": "3.9 Overfitting",
+    "text": "3.9 Overfitting\nOverfitting occurs when a model captures patterns that are specific to the training data but do not generalize to new samples. This typically arises when the model is overly complex or when it learns from noise or idiosyncratic patterns in the training set. A well-designed modelling process incorporates safeguards—such as validation, regularization, and resampling—to reduce the risk of overfitting and promote generalizable performance.",
     "crumbs": [
       "ML / DL",
       "Basic Concept"
     ]
   },
   {
-    "objectID": "mldl/ml_basic_concept.html#dimension-reduction",
-    "href": "mldl/ml_basic_concept.html#dimension-reduction",
-    "title": "Basic Concept",
-    "section": "2.3 Dimension reduction",
-    "text": "2.3 Dimension reduction\nDimension reduction techniques reduce the number of features while retaining essential information.\nThese methods can simplify high-dimensional data, reduce noise, and improve both computational efficiency and predictive performance. The conceptual aim is to identify the most informative directions or structures within the data and discard features that contribute little to explaining the variation. Reducing dimensionality often results in models that are more interpretable and less sensitive to noise.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
+    "objectID": "mldl/ml_supervised.html",
+    "href": "mldl/ml_supervised.html",
+    "title": "Feature Engineering and Selection",
+    "section": "",
+    "text": "library(tidymodels)\nlibrary(tidyverse)\ntheme_set(theme_bw())\n\n\ncolor_RUB_blue &lt;- \"#17365c\"\ncolor_RUB_green &lt;- \"#8dae10\"\ncolor_TUD_pink &lt;- \"#EC008D\"\n\ncolor_DRESDEN &lt;- c(\"#03305D\", \"#28618C\", \"#539DC5\", \"#84D1EE\", \"#009BA4\", \"#13A983\", \"#93C356\", \"#BCCF02\")\n\n\ndf_Bochum_KL &lt;- read_csv(\"../data_share/df_Bochum_KL.csv\")\n# Train–test split (75% / 25%)\nsplit_Bochum &lt;- initial_split(df_Bochum_KL, prop = 3/4)\ndf_Train &lt;- training(split_Bochum)\ndf_Test  &lt;- testing(split_Bochum)\n\n\n# Preprocessing recipe (normalize + PCA)\n\nrcp_Norm &lt;- \n  recipe(evapo_r ~ ., data = df_Train) |&gt;\n  step_YeoJohnson(all_predictors()) |&gt; \n  step_normalize(all_predictors())"
+  },
+  {
+    "objectID": "mldl/ml_supervised.html#grid-search",
+    "href": "mldl/ml_supervised.html#grid-search",
+    "title": "Feature Engineering and Selection",
+    "section": "2.1 Grid Search",
+    "text": "2.1 Grid Search\nGrid search is when we predefine a set of parameter values to evaluate. The main choices involved in grid search are how to make the grid and how many parameter combinations to evaluate. Grid search is often judged as inefficient since the number of grid points required to cover the parameter space can become unmanageable with the curse of dimensionality. There is truth to this concern, but it is most true when the process is not optimized. This is discussed more in Chapter 13.\nIterative search or sequential search is when we sequentially discover new parameter combinations based on previous results. Almost any nonlinear optimization method is appropriate, although some are more efficient than others. In some cases, an initial set of results for one or more parameter combinations is required to start the optimization process. Iterative search is discussed more in Chapter 14."
+  },
+  {
+    "objectID": "mldl/ml_supervised.html#hyperparameter",
+    "href": "mldl/ml_supervised.html#hyperparameter",
+    "title": "Feature Engineering and Selection",
+    "section": "3.1 Hyperparameter",
+    "text": "3.1 Hyperparameter\nFor ordinary linear regression (using the lm engine), there are no hyperparameters to tune.\nHowever, when we introduce regularization (ridge, lasso, elastic net), the model includes an additional penalty term in the loss function to prevent overfitting.\nRegularization requires the model to control how strong the penalty is and what type of penalty is used.\nThese controls are called hyperparameters, and two of them appear:\n\npenalty (lambda): determines the overall strength of the regularization\n\nmixture (alpha): determines the type of regularization (0 = ridge, 1 = lasso, values in between = elastic net)\n\nWithout regularization (ordinary linear regression), no hyperparameters are needed.\nThese hyperparameters must usually be tuned using cross-validation.\nDifferent regression methods use different loss functions and regularization strategies.\nThe key difference is whether the model introduces hyperparameters (penalty and mixture) that control the amount and type of regularization.\n\n3.1.1 Ordinary Least Squares (OLS)\n\nNo regularization → no hyperparameters.\n\nThe solution is obtained analytically by minimizing the sum of squared residuals.\n\n\\[\n\\min_{\\beta} \\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n\\]\nBecause there is no penalty term, the model can overfit when predictors are highly correlated.\n\n\n3.1.2 Ridge Regression (L2 penalty)\n\nIntroduces one hyperparameter:\n\npenalty (lambda): strength of coefficient shrinkage\n\n\nmixture is fixed to 0, meaning pure L2 regularization.\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\sum_{j=1}^p \\beta_j^2\n\\right)\n\\]\nLarge lambda → strong shrinkage.\nCoefficients approach zero but never become exactly zero.\n\n\n3.1.3 Lasso Regression (L1 penalty)\n\nAlso uses one hyperparameter:\n\npenalty (lambda): controls how strongly coefficients are pushed toward zero\n\n\nmixture is fixed to 1, meaning pure L1 regularization.\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\sum_{j=1}^p |\\beta_j|\n\\right)\n\\]\nLarge lambda → many coefficients become exactly zero → feature selection.\n\n\n3.1.4 Elastic Net Regression (combined L1 + L2)\n\nUses two hyperparameters:\n\npenalty (lambda): global strength of shrinkage\n\nmixture (alpha): balance between L1 and L2\n\nalpha = 0 → ridge\n\nalpha = 1 → lasso\n\n0 &lt; alpha &lt; 1 → mixture\n\n\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\left[\n\\alpha \\sum_{j=1}^p |\\beta_j|\n+ (1-\\alpha) \\sum_{j=1}^p \\beta_j^2\n\\right]\n\\right)\n\\]\nElastic Net is useful when predictors are correlated and when both shrinkage and feature selection are desired.\n\n\n3.1.5 Summary of Hyperparameter Settings\n\n\n\nMethod\npenalty (lambda)\nmixture (alpha)\nRegularization\n\n\n\n\nOLS\nnot used\nnot used\nnone\n\n\nRidge\nyes\n0\nL2\n\n\nLasso\nyes\n1\nL1\n\n\nElastic Net\nyes\n0 &lt; α &lt; 1\nL1 + L2\n\n\n\nIn practice, penalty and mixture are usually selected using cross-validation, since the optimal values depend on the dataset."
   },
   {
     "objectID": "modelling/basic_concept.html",
@@ -2089,423 +2308,6 @@
     "crumbs": [
       "Modelling",
       "Calibration Prozess"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html",
-    "href": "mldl/ml_feature_engineering.html",
-    "title": "Feature Engineering and Selection",
-    "section": "",
-    "text": "library(tidyverse)\ntheme_set(theme_bw())\n\nlibrary(tidymodels)  # parsnip + other tidymodels packages\nlibrary(learntidymodels)\nlibrary(embed)\n# Helper packages\nlibrary(readr)       # for importing data\nlibrary(broom.mixed) # for tidying Bayesian model output\nlibrary(dotwhisker)  # for visualizing regression results\nlibrary(skimr)       # for variable summaries\nlibrary(nycflights13)\nlibrary(ggforce)\n\n\n\nCode\ncolor_RUB_blue &lt;- \"#17365c\"\ncolor_RUB_green &lt;- \"#8dae10\"\ncolor_TUD_pink &lt;- \"#EC008D\"\ncolor_DRESDEN &lt;- c(\"#03305D\", \"#28618C\", \"#539DC5\", \"#84D1EE\", \"#009BA4\", \"#13A983\", \"#93C356\", \"#BCCF02\")",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#creating-dummy-variables-for-unordered-categories",
-    "href": "mldl/ml_feature_engineering.html#creating-dummy-variables-for-unordered-categories",
-    "title": "Feature Engineering and Selection",
-    "section": "3.1 Creating Dummy Variables for Unordered Categories",
-    "text": "3.1 Creating Dummy Variables for Unordered Categories\nThe most basic approach to representing categorical values as numeric data is to create dummy or indicator variables.\nBinary dummy variales with step_dummy\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    # Define target and predictors\n  step_dummy(origin)         # Remove predictors with zero variance\nprep_Flight &lt;- prep(rcp_Flight)\n\n# Apply (bake) to get transformed tibble\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$origin, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; head(100) |&gt; DT::datatable()"
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#creating-dummy-variables-for-many-categories",
-    "href": "mldl/ml_feature_engineering.html#creating-dummy-variables-for-many-categories",
-    "title": "Feature Engineering and Selection",
-    "section": "3.2 Creating Dummy Variables for Many Categories",
-    "text": "3.2 Creating Dummy Variables for Many Categories\nWhen a variable has many categories (high cardinality), simple one-hot encoding becomes inefficient because it produces a very large sparse matrix.\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  step_dummy(dest)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$dest, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; \n  DT::datatable()\n\n\n\n\n\nA better approach for high-cardinality variables is hash encoding:\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  textrecipes::step_dummy_hash(dest, num_terms = 16)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$dest, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; \n  DT::datatable()\n\n\n\n\n\nHash encoding maps categorical levels to a fixed number of numerical features using a hashing function. Instead of creating one column per category, each category is transformed into a set of hashed feature values.\nAdvantages:\n\nProduces a fixed feature dimensionality through num_terms\nScales well to hundreds or thousands of categories\nAutomatically handles unseen categories at prediction time\nAvoids imposing artificial ordering (unlike integer encoding)\nMore memory-efficient than one-hot encoding for large category sets\nWorks directly on character/factor variables without additional preprocessing\n\nDisadvantages:\n\nHash collisions may occur, causing different categories to map to the same bucket\nFeatures are not interpretable because the mapping is not reversible\nCollisions can degrade accuracy, especially for models sensitive to feature distortions (e.g., linear models)\nChoosing an appropriate value for num_terms is heuristic and problem-dependent\nNot advantageous for low-cardinality variables",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#approaches-for-novel-categories",
-    "href": "mldl/ml_feature_engineering.html#approaches-for-novel-categories",
-    "title": "Feature Engineering and Selection",
-    "section": "3.3 Approaches for Novel Categories",
-    "text": "3.3 Approaches for Novel Categories\nIn practical applications, test data often contain categories not seen during training. Recipes includes a dedicated step for this:\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  step_novel() |&gt; \n  step_dummy(origin)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$origin, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; DT::datatable()\n\n\n\n\n\nstep_novel() must come before step_dummy() so that the training step learns the “new” category and creates a corresponding column. This does not improve prediction performance—it only prevents errors.",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#encodings-for-ordered-data",
-    "href": "mldl/ml_feature_engineering.html#encodings-for-ordered-data",
-    "title": "Feature Engineering and Selection",
-    "section": "3.4 Encodings for Ordered Data",
-    "text": "3.4 Encodings for Ordered Data\nFor ordinal categories (e.g., bad &lt; normal &lt; good or low &lt; medium &lt; high), the ordering contains useful information.\nPossible numeric encodings:\n\nLinear integer encoding (e.g. -1, 0, 1) → step_integer\nPolynomial or contrast encodings → step_poly\nMultiple orthogonal encodings to capture more structure",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#knowledgebased-mapping",
-    "href": "mldl/ml_feature_engineering.html#knowledgebased-mapping",
-    "title": "Feature Engineering and Selection",
-    "section": "3.5 knowledgebased mapping",
-    "text": "3.5 knowledgebased mapping\nSimiler to the encoding for ordered Data, when the categorei has soem attribute, which will more infotensive to the target, we kan also map the categorei direclyi to the numeric attribute. in the encoding approach we wilkl mapping the cateogire to a continues numerical variale, which has a hiegh relastionship between them. some like plant-catogore ~ rootdepth. Wetter-categore (Sunny, cloudy, rain) ~ sunschein hour\nthe process is very diferencet and depedn on the dataset base odn the knolage and experience, so there is no commend function to deal with it. But in the EDA pahe we can deal with mapping (leftjion):\n\ndf_Main &lt;- tibble(\n  id = 1:6,\n  plant_type = c(\"Wheat\", \"Corn\", \"Soybean\", \"Wheat\", \"Corn\", \"Rice\")\n)\n\n# Lookup table: plant → root depth\ndf_AttriTable &lt;- tibble(\n  plant_type = c(\"Wheat\", \"Corn\", \"Soybean\", \"Rice\"),\n  root_depth_cm = c(120, 150, 80, 130)\n)\ndf_Main |&gt; \n  left_join(df_AttriTable, by = \"plant_type\")\n\n# A tibble: 6 × 3\n     id plant_type root_depth_cm\n  &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;\n1     1 Wheat                120\n2     2 Corn                 150\n3     3 Soybean               80\n4     4 Wheat                120\n5     5 Corn                 150\n6     6 Rice                 130"
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#skewness",
-    "href": "mldl/ml_feature_engineering.html#skewness",
-    "title": "Feature Engineering and Selection",
-    "section": "4.1 Skewness",
-    "text": "4.1 Skewness\nJust like target engunuring, the minimizing the skewness of numerica features is also benefit for th e model.\nBox-Cox step_BoxCox (when feature values are strictly positive) or Yeo-Johnson step_YeoJohnson (when feature values are not strictly positive)"
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#standardization",
-    "href": "mldl/ml_feature_engineering.html#standardization",
-    "title": "Feature Engineering and Selection",
-    "section": "4.2 Standardization",
-    "text": "4.2 Standardization\nStandardizing features includes centering and scaling so that numeric variables have zero mean and unit variance, which provides a common comparable unit of measure across all the variables.\nMany algorithms use linear functions within their algorithms, some more obvious (e.g., GLMs and regularized regression) than others (e.g., neural networks, support vector machines, and principal components analysis). Other examples include algorithms that use distance measures such as the Euclidean distance (e.g., k nearest neighbor, k-means clustering, and hierarchical clustering)."
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#distance",
-    "href": "mldl/ml_feature_engineering.html#distance",
-    "title": "Feature Engineering and Selection",
-    "section": "7.1 Distance",
-    "text": "7.1 Distance\nComputing the distance to a reference point is often helpful in spatial-related datasheet. With recipes, this can be achieved using steps such as step_geodist, allowing us to transform coordinates (e.g., latitude/longitude) into meaningful spatial distance features.\n\nrec_TimeSpat &lt;- recipe(target ~ ., data = df_TimeSpat)  |&gt; \n  step_geodist(lat, lon, ref_lat = 52.52, ref_lon = 13.40, name = \"dist_to_berlin\")\nbake(prep(rec_TimeSpat), new_data = df_TimeSpat) |&gt; head(100) |&gt; DT::datatable()",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#date-and-holiday",
-    "href": "mldl/ml_feature_engineering.html#date-and-holiday",
-    "title": "Feature Engineering and Selection",
-    "section": "7.2 Date and holiday",
-    "text": "7.2 Date and holiday\nDate variables can be expanded into more informative features such as weekday, weekend, month, or season. Additionally, holiday signatures can be added to capture special events or non-working days. Recipes provides steps like step_date and time-series extensions such as step_holiday.\n\nrec_TimeSpat &lt;- recipe(target ~ ., data = df_TimeSpat)  |&gt; \n  step_date(date) |&gt; \n  step_holiday(date)\nbake(prep(rec_TimeSpat), new_data = df_TimeSpat) |&gt; head(100) |&gt; DT::datatable()",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#lag",
-    "href": "mldl/ml_feature_engineering.html#lag",
-    "title": "Feature Engineering and Selection",
-    "section": "7.3 Lag",
-    "text": "7.3 Lag\nFor time-dependent data, the current value may depend on previous time steps. Lag transformations create new variables such as lag-1, lag-7, or lag-30. Recipes supports this through step_lag, which is especially useful in time-series prediction tasks.\n\nrec_TimeSpat &lt;- recipe(target ~ ., data = df_TimeSpat)  |&gt; \n  step_lag(target, lag = 3)\nbake(prep(rec_TimeSpat), new_data = df_TimeSpat) |&gt; head(100) |&gt; DT::datatable()",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#missing-values-imputation",
-    "href": "mldl/ml_feature_engineering.html#missing-values-imputation",
-    "title": "Feature Engineering and Selection",
-    "section": "7.4 Missing values imputation",
-    "text": "7.4 Missing values imputation\nAlthough missing values—especially in time-series or spatial data—should ideally be treated during the EDA phase, recipes still offers convenient imputation options:\n\nstep_impute_knn: k-nearest neighbour imputation\nstep_impute_linear: linear interpolation\nstep_impute_roll: rolling window based filling\n\nThese steps integrate seamlessly into modelling pipelines, but it remains good practice to address outliers and missing values as early as possible during EDA for better control and transparency.",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#remove-highly-correlated-variables",
-    "href": "mldl/ml_feature_engineering.html#remove-highly-correlated-variables",
-    "title": "Feature Engineering and Selection",
-    "section": "6.1 remove highly correlated variables",
-    "text": "6.1 remove highly correlated variables\nHIgjht related variables wiil set the informtion in dopelt, wich will mein futhure the worese estmate by the model traning. We can remove the high related variable, the reducetd dimeions will be helpfuul for the model traning, less is always better than too much.\nAfter the removing we will get the individuale features.",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#principal-components-analysis",
-    "href": "mldl/ml_feature_engineering.html#principal-components-analysis",
-    "title": "Feature Engineering and Selection",
-    "section": "6.1 Principal Components Analysis",
-    "text": "6.1 Principal Components Analysis\nPrincipal components analysis (PCA) is a method for finding low-dimensional representations of a data set that retain as much of the original variation as possible.\nThe idea is that each of the n observations lives in p-dimensional space, but not all of these dimensions are equally interesting. In PCA we look for a smaller number of dimensions that are as interesting as possible, where the concept of interesting is measured by the amount that the observations vary along each dimension.\nFor Principal Component Analysis (PCA), the first step is to decide how many dimensions (principal components) to retain. A common approach is to base this decision on the eigenvalues of the principal components:\n\nEigenvalue threshold criterion: Retain components with eigenvalues greater than 1. This approach assumes that any component accounting for more variance than an individual original variable is worth keeping.\nCumulative variance explained criterion: Retain enough components to explain a desired proportion of the total variance, such as 75% or 90%. This allows the analyst to select the minimum number of components that capture a substantial fraction of the original data’s variability. Metrics such as Proportion of Variance Explained (PVE) or Cumulative Variance Explained (CVE) are commonly used for this purpose.\n\n\nrcp_NormalAll &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors())\ndf_NormalAll &lt;- prep(rcp_NormalAll) |&gt; bake(new_data = NULL)\n\npca_Noraml &lt;- prcomp(df_NormalAll |&gt; select(-evapo_r), scale = FALSE)\neigen_Normal &lt;- pca_Noraml$sdev^2\n\nggplot() +\n  geom_point(aes(x = 1:length(eigen_Normal), y = eigen_Normal)) +\n  geom_hline(yintercept = 1, linetype = \"dashed\", color = color_TUD_pink) +\n  labs(x = \"PC\", y = \"Eigenvalue\")\n\n\n\n\n\n\n\n\n\nnum_CVE &lt;- cumsum(eigen_Normal / sum(eigen_Normal))\nggplot() +\n  geom_line(aes(x = 1:length(num_CVE), y = num_CVE), color = color_RUB_green) +\n  geom_point(aes(x = 1:length(num_CVE), y = num_CVE), color = color_RUB_green) +\n  geom_hline(yintercept = .9, linetype = \"dashed\", color = color_TUD_pink) +\n  labs(x = \"PC\", y = \"CVE\")\n\n\n\n\n\n\n\n\n\nSet the number of principal components (PCs) manually\n\n\nrcp_PCA4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_pca(all_predictors(), num_comp = 4)\ndf_PCA4 &lt;- prep(rcp_PCA4) |&gt; bake(new_data = NULL)\n\n\nSet the percentage of variability in the variables\n\n\nrcp_PCA75per &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt; \n  step_pca(all_predictors(), threshold = .75)\n\ndf_PCA75per &lt;- prep(rcp_PCA75per) |&gt; bake(new_data = NULL)\n\n\nggplot(df_PCA4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)\n\n\n\n\n\n\n\n\n\nplot_top_loadings(\n  prep(rcp_PCA4),\n  component_number &lt;= 4,\n  n = 4,               # number of variables to show per PC\n  type = \"pca\"    # which PCs to plot\n) +\n  scale_fill_manual(values = c(\"TRUE\" = color_RUB_green, \"FALSE\" = color_RUB_blue))+\n  theme(legend.position = \"inside\",\n        legend.position.inside = c(.99, .01),\n        legend.justification = c(1,0))",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#generalized-low-rank-models-glrm",
-    "href": "mldl/ml_feature_engineering.html#generalized-low-rank-models-glrm",
-    "title": "Feature Engineering and Selection",
-    "section": "6.4 Generalized Low Rank Models (GLRM)",
-    "text": "6.4 Generalized Low Rank Models (GLRM)\nGeneralized Low Rank Models (GLRM) is a generalization of PCA and matrix factorization, which is more flexibel and useable for categorei variables. The the orginal variables iwll replace by a dimesnionreduced matrix X, which \\(A = X \\times Y\\). This approach is not aviable in recipes framework and more complex, so we do not give a excies. more details is in https://bradleyboehmke.github.io/HOML/GLRM.html aviable",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_tidymodels_basic.html#evaluating-training-and-validation-sets",
-    "href": "mldl/ml_tidymodels_basic.html#evaluating-training-and-validation-sets",
-    "title": "ML Workflow with tidymodels",
-    "section": "4.1 Evaluating Training and Validation Sets",
-    "text": "4.1 Evaluating Training and Validation Sets\nA fitted model can be evaluated on both the training dataset and the validation (test) dataset.\nAfter generating predictions, we can compute performance metrics such as roc_auc and accuracy.\nFor both metrics, higher values indicate better predictive performance.\n\nlibrary(modeldata) \n\n# ----------------------------------\n# Dataset\n# ----------------------------------\n\n## Split the data\nset.seed(123)\nsplit_Cell &lt;- initial_split(\n  modeldata::cells |&gt; select(-case), \n  strata = class\n)\n\ndf_Train_Cell &lt;- training(split_Cell)\ndf_Validate_Cell  &lt;- testing(split_Cell)\n\n# ----------------------------------\n# Model\n# ----------------------------------\n\n## Specify a random forest classifier\nmdl_RandomForest &lt;- \n  rand_forest(trees = 1000) |&gt; \n  set_engine(\"ranger\") |&gt; \n  set_mode(\"classification\")\n\n## Fit the model\nset.seed(234)\nfit_RandomForest &lt;- \n  mdl_RandomForest |&gt; \n  fit(class ~ ., data = df_Train_Cell)\nfit_RandomForest\n\nparsnip model object\n\nRanger result\n\nCall:\n ranger::ranger(x = maybe_data_frame(x), y = y, num.trees = ~1000,      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) \n\nType:                             Probability estimation \nNumber of trees:                  1000 \nSample size:                      1514 \nNumber of independent variables:  56 \nMtry:                             7 \nTarget node size:                 10 \nVariable importance mode:         none \nSplitrule:                        gini \nOOB prediction error (Brier s.):  0.1187479 \n\n# ----------------------------------\n# Predictions\n# ----------------------------------\n\n## Training set predictions\npred_Train_Cell &lt;- \n  predict(fit_RandomForest, df_Train_Cell) |&gt; \n  bind_cols(predict(fit_RandomForest, df_Train_Cell, type = \"prob\")) |&gt; \n  bind_cols(df_Train_Cell |&gt; select(class))\n\n## Validation set predictions\npred_Validate_Cell &lt;- \n  predict(fit_RandomForest, df_Validate_Cell) |&gt; \n  bind_cols(predict(fit_RandomForest, df_Validate_Cell, type = \"prob\")) |&gt; \n  bind_cols(df_Validate_Cell |&gt; select(class))\n\n# ----------------------------------\n# Performance\n# ----------------------------------\n\n## Training\npred_Train_Cell |&gt; roc_auc(truth = class, .pred_PS)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         1.000\n\npred_Train_Cell |&gt; accuracy(truth = class, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.990\n\n## Validation\npred_Validate_Cell |&gt; roc_auc(truth = class, .pred_PS)\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 roc_auc binary         0.891\n\npred_Validate_Cell |&gt; accuracy(truth = class, .pred_class)\n\n# A tibble: 1 × 3\n  .metric  .estimator .estimate\n  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy binary         0.814\n\n\nThe results typically show a large gap between training and validation performance. This is normal: the model tends to overfit the training data, leading to reduced predictive ability on new, unseen data. This is precisely why a simple train/test split is often insufficient. To obtain more reliable and stable performance estimates, we use resampling methods.",
-    "crumbs": [
-      "ML / DL",
-      "ML Workflow with tidymodels"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_tidymodels_basic.html#resampling-cross-validation",
-    "href": "mldl/ml_tidymodels_basic.html#resampling-cross-validation",
-    "title": "ML Workflow with tidymodels",
-    "section": "4.2 Resampling (Cross-Validation)",
-    "text": "4.2 Resampling (Cross-Validation)\nCross-validation improves model evaluation by repeatedly splitting the training data into several folds. Each fold is used once as an assessment (test) set, while the remaining folds form the analysis (training) set.\nThis process reduces the variance in performance estimation and helps detect overfitting.\n\nset.seed(345)\nfolds_Cell &lt;- vfold_cv(df_Train_Cell, v = 10)\n\nwflow_CrossValidate &lt;- \n  workflow() |&gt;\n  add_model(mdl_RandomForest) |&gt;\n  add_formula(class ~ .)\n\nset.seed(456)\nfit_CrossValidate &lt;- \n  wflow_CrossValidate |&gt; \n  fit_resamples(folds_Cell)\n\ncollect_metrics(fit_CrossValidate)\n\n# A tibble: 3 × 6\n  .metric     .estimator  mean     n std_err .config             \n  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               \n1 accuracy    binary     0.833    10 0.00876 Preprocessor1_Model1\n2 brier_class binary     0.120    10 0.00406 Preprocessor1_Model1\n3 roc_auc     binary     0.905    10 0.00627 Preprocessor1_Model1\n\n\nCompared with normal model fitting, resampling uses the specialized function:\n\nfit_resamples() which fits the model on each fold and aggregates the performance results.\n\nCross-validation therefore provides a more robust estimate of the model’s generalization ability and reduces the risk of overfitting, compared with a single train/test split.",
-    "crumbs": [
-      "ML / DL",
-      "ML Workflow with tidymodels"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#feature-engineering",
-    "href": "mldl/ml_basic_concept.html#feature-engineering",
-    "title": "Basic Concept",
-    "section": "2.2 Feature engineering",
-    "text": "2.2 Feature engineering\nFeatures supply the information that the model uses to generate predictions. Effective feature engineering enhances the model’s ability to capture relevant structure in the data.\n\n2.2.1 Numeric feature engineering\nNumeric features often differ in both their distribution and their scale, and these issues require distinct preprocessing strategies. Transformations modify the shape of an individual feature’s distribution, while normalization (or standardization) adjust the scales of multiple features to make them comparable.\n\nTransformations (distribution shaping)\nTransformations are applied to single features to alter their distribution. They can reduce skewness, stabilize variance, or help satisfy model assumptions. Examples include\n\nlogarithmic,\nsquare-root,\nreciprocal, and\nBox–Cox transformations. These operations reshape a feature’s distribution but do not make different features comparable in scale.\n\nNormalization and standardization (scale adjustment)\nNormalization and standardization rescale features so they share similar or identical ranges, preventing any single feature from dominating the learning process due to its magnitude.\n\nStandardization rescales a feature to zero mean and unit variance.\n\nNormalization, such as min–max scaling, maps a feature to a fixed interval, typically [0, 1].\nThese methods do not change distributional shape but ensure comparability in scale, which is important for distance-based models or gradient-based optimization.\n\n\n\n\n2.2.2 Categorical feature engineering\nCategorical variables must be converted into numerical form, as most machine learning algorithms operate on numeric inputs. Unlike numeric features, categorical variables do not support distribution-shaping transformations. Consequently, categorical feature engineering focuses on encoding strategies that represent categories numerically while preserving their meaning.\nCommon encoding methods include:\n\nLumping, which merges rare or conceptually similar categories to reduce sparsity and improve robustness.\nOne-hot encoding, which creates binary indicator variables for each category without imposing artificial ordering.\nLabel encoding, which assigns integer codes to categories and is suitable for models that do not interpret these codes as ordinals, such as tree-based methods.\n\nSome tree-based algorithms can handle categorical variables directly or interpret encoded integers in a non-ordinal way. Nonetheless, choosing an appropriate encoding method remains essential to ensure that the numerical representation aligns with model assumptions.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#feature-filtering-and-dimension-reduction",
-    "href": "mldl/ml_basic_concept.html#feature-filtering-and-dimension-reduction",
-    "title": "Basic Concept",
-    "section": "2.3 Feature filtering and dimension reduction",
-    "text": "2.3 Feature filtering and dimension reduction\nFeature filtering removes variables that provide little or no useful information for the learning task. Features with\n- very low variance, \n- high proportions of missing values, or \n- strong multicollinearity \noften contribute minimally to predictive performance.\nEliminating such variables reduces noise, simplifies the modelling process, and can improve both accuracy and efficiency. Often, a smaller, more informative feature set is preferable to a high-dimensional collection of irrelevant or redundant variables.\nDimension reduction methods also decrease the number of features but take a different approach. Instead of discarding variables, they construct new, lower-dimensional representations that preserve essential information. These methods simplify high-dimensional data, reduce noise, and often improve computational efficiency and predictive performance. Conceptually, they identify the most informative directions or structures in the data while disregarding variation that contributes little to the modelling objective.\nPrincipal Component Analysis (PCA) creates new variables (principal components) that are linear combinations of the original features. These components are orthogonal and ranked according to the variance they explain. More flexible approaches, such as Generalized Low Rank Models (GLRM), extend this idea by allowing additional constraints or custom loss functions, making them adaptable to a wider range of data types and modelling requirements.\nIn summary, feature filtering removes uninformative variables directly, whereas dimension reduction retains information by reorganizing it into new combined features.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#data-splitting-and-resampling",
-    "href": "mldl/ml_basic_concept.html#data-splitting-and-resampling",
-    "title": "Basic Concept",
-    "section": "3.1 Data splitting and resampling",
-    "text": "3.1 Data splitting and resampling\nBefore model development begins, the dataset is usually divided into separate subsets. This division allows the model to be trained on one subset while another is reserved for evaluation, ensuring that performance reflects generalization rather than memorization.\nThe basic approach uses two groups:\n\ntraining dataset: used to estimate model parameters\n\ntesting dataset: used for final performance assessment\n\nWhen more rigorous tuning is required, a third group is added:\n\ntraining dataset: used for parameter estimation\n\nvalidation dataset: used for hyperparameter tuning, model selection, and early stopping\n\ntesting dataset: used exclusively for the final, unbiased assessment of model performance\n\nA key principle is that performance must not be evaluated solely on data used during training, as this can lead to overly optimistic results.\nResampling techniques provide more reliable estimates of model performance, particularly when data are limited. Instead of relying on a single train–test split, methods such as cross-validation repeatedly partition the data into training and validation sets, while bootstrapping generates samples with replacement to estimate variability. These techniques reduce sensitivity to any single split and yield more stable and trustworthy performance estimates.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#modelling-workflow",
-    "href": "mldl/ml_basic_concept.html#modelling-workflow",
-    "title": "Basic Concept",
-    "section": "3.8 Modelling workflow",
-    "text": "3.8 Modelling workflow\nThe development of an effective model is both iterative and heuristic. It is rarely clear in advance what a dataset requires, and it is common to evaluate and modify multiple approaches before finalizing a model.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#overfitting",
-    "href": "mldl/ml_basic_concept.html#overfitting",
-    "title": "Basic Concept",
-    "section": "3.9 Overfitting",
-    "text": "3.9 Overfitting\nOverfitting occurs when a model captures patterns that are specific to the training data but do not generalize to new samples. This typically arises when the model is overly complex or when it learns from noise or idiosyncratic patterns in the training set. A well-designed modelling process incorporates safeguards—such as validation, regularization, and resampling—to reduce the risk of overfitting and promote generalizable performance.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#modeling-process",
-    "href": "mldl/ml_basic_concept.html#modeling-process",
-    "title": "Basic Concept",
-    "section": "4.2 Modeling Process",
-    "text": "4.2 Modeling Process\nThe process of developing an effective model is both iterative and heuristic. It is difficult to know the needs of any data set prior to working with it and it is common for many approaches to be evaluated and modified before a model can be finalized.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#experience-driven-modeling-and-empirically-driven-modeling",
-    "href": "mldl/ml_basic_concept.html#experience-driven-modeling-and-empirically-driven-modeling",
-    "title": "Basic Concept",
-    "section": "4.3 Experience-Driven Modeling and Empirically Driven Modeling",
-    "text": "4.3 Experience-Driven Modeling and Empirically Driven Modeling",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#distribution-shaping-transforms",
-    "href": "mldl/ml_feature_engineering.html#distribution-shaping-transforms",
-    "title": "Feature Engineering and Selection",
-    "section": "4.1 Distribution-shaping transforms:",
-    "text": "4.1 Distribution-shaping transforms:\nIn soem variales the have strong differeent distribution then arverage or naormal distribution, the most values will concentrate in ansamll range. In this situation can some models may not so good deal with them, so we need improve the skwness for a beter fitting.\nJust like target engunuring, the minimizing the skewness of numerica features is also benefit for th e model. minimizing the skewness naems as transfomation.\nBox-Cox step_BoxCox (when feature values are strictly positive) or Yeo-Johnson step_YeoJohnson (when feature values are not strictly positive) are two noamally used but there is also some classsical method like log, squart root transfomer approach."
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#standardization-and-normalize",
-    "href": "mldl/ml_feature_engineering.html#standardization-and-normalize",
-    "title": "Feature Engineering and Selection",
-    "section": "4.2 Standardization and normalize",
-    "text": "4.2 Standardization and normalize\nStandardizing features includes centering and scaling so that numeric variables have zero mean and unit variance, which provides a common comparable unit of measure across all the variables.\nMany algorithms use linear functions within their algorithms, some more obvious (e.g., GLMs and regularized regression) than others (e.g., neural networks, support vector machines, and principal components analysis). Other examples include algorithms that use distance measures such as the Euclidean distance (e.g., k nearest neighbor, k-means clustering, and hierarchical clustering).\nCoampre normalistion with mena at 0 and variance at 1, min-max will rescale the rangge from original to a force range (normally 0-1)."
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#dummy-variables-for-unordered-categories",
-    "href": "mldl/ml_feature_engineering.html#dummy-variables-for-unordered-categories",
-    "title": "Feature Engineering and Selection",
-    "section": "3.1 Dummy Variables for Unordered Categories",
-    "text": "3.1 Dummy Variables for Unordered Categories\nThe most common way to encode categorical variables is to create dummy (one-hot) indicator variables.\n\nrcp_Flight &lt;- \n  recipe(arr_delay ~ ., data = df_Flight) |&gt;    \n  step_dummy(origin)\n\nprep_Flight &lt;- prep(rcp_Flight)\ndf_Back &lt;- bake(prep_Flight, new_data = NULL)\n\ndata.frame(df_Flight$origin, df_Back[setdiff(names(df_Back), names(df_Flight))]) |&gt; \n  head(100) |&gt; \n  DT::datatable()",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#knowledge-based-mapping",
-    "href": "mldl/ml_feature_engineering.html#knowledge-based-mapping",
-    "title": "Feature Engineering and Selection",
-    "section": "3.5 Knowledge-based Mapping",
-    "text": "3.5 Knowledge-based Mapping\nSometimes a categorical variable corresponds to a meaningful numeric attribute. You can encode the category directly using domain knowledge.\nExamples:\n\nPlant species → root depth\nWeather condition (sunny, cloudy, rain) → sunshine hours\n\nThis requires a lookup table and domain understanding, so there is no universal function. You can simply use a join:\n\ndf_Main &lt;- tibble(\n  id = 1:6,\n  plant_type = c(\"Wheat\", \"Corn\", \"Soybean\", \"Wheat\", \"Corn\", \"Rice\")\n)\n\ndf_AttriTable &lt;- tibble(\n  plant_type = c(\"Wheat\", \"Corn\", \"Soybean\", \"Rice\"),\n  root_depth_cm = c(120, 150, 80, 130)\n)\n\ndf_Main |&gt; \n  left_join(df_AttriTable, by = \"plant_type\")\n\n# A tibble: 6 × 3\n     id plant_type root_depth_cm\n  &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;\n1     1 Wheat                120\n2     2 Corn                 150\n3     3 Soybean               80\n4     4 Wheat                120\n5     5 Corn                 150\n6     6 Rice                 130",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#distribution-shaping-transformations",
-    "href": "mldl/ml_feature_engineering.html#distribution-shaping-transformations",
-    "title": "Feature Engineering and Selection",
-    "section": "4.1 Distribution-shaping Transformations",
-    "text": "4.1 Distribution-shaping Transformations\nIn some variables, most values cluster within a very narrow range or display strong deviations from a normal-like distribution. Such skewed or compressed distributions may limit model performance. Similar to target transformation, applying transformations to minimize skewness in predictors can improve model fit. Box–Cox (step_BoxCox) and Yeo–Johnson (step_YeoJohnson) are commonly used approaches, although classical options such as logarithmic or square-root transformations also remain effective.\n\ndf_Bochum_KL &lt;- read_csv(\"../data_share/df_Bochum_KL.csv\")\ndf_FeatureEng &lt;- df_Bochum_KL[,c(\"evapo_r\", \"evapo_p\", \"RSK\", \"soil_moist\")]\nggplot_hist &lt;- function(df_Data) {\n  df_long &lt;- df_Data |&gt;\n    pivot_longer(\n      cols = everything(),     # all columns; or select specific columns\n      names_to = \"variable\",\n      values_to = \"value\"\n    )\n  \n  # Plot faceted histograms\n  ggplot(df_long, aes(x = value)) +\n    geom_histogram(bins = 30, fill = color_RUB_green, color = color_RUB_blue) +\n    facet_wrap(~ variable, scales = \"free\") +\n    labs(x = \"Value\", y = \"Frequency\") +\n    theme(axis.text.y = element_text(angle = 90, vjust = 0.5, hjust = 0.5))\n}\ngp_Ori &lt;- ggplot_hist(df_FeatureEng[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Ori\n\n\n\n\n\n\n\n\n\n4.1.1 Yeo–Johnson Transformation\nA flexible transformation that accommodates positive, zero, and negative values.\nFormula\nFor a value $ x $ and transformation parameter $ $:\n\\[\nT(x;\\lambda) =\n\\begin{cases}\n\\frac{(x+1)^{\\lambda}-1}{\\lambda}, & x \\ge 0,\\ \\lambda \\ne 0 \\\\\n\\ln(x+1), & x \\ge 0,\\ \\lambda = 0 \\\\\n-\\frac{(1-x)^{2-\\lambda}-1}{2-\\lambda}, & x &lt; 0,\\ \\lambda \\ne 2 \\\\\n-\\ln(1-x), & x &lt; 0,\\ \\lambda = 2\n\\end{cases}\n\\]\nProperties - Works with positive, zero, and negative values. - Estimates the parameter $ $ to reduce skewness. - Often yields distributions closest to normality. - Less interpretable and slightly slower due to parameter estimation.\n\nrcp_YeoJohnson &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_YeoJohnson(all_predictors())   # handles zeros and negatives\ndf_YeoJohnson &lt;- prep(rcp_YeoJohnson) |&gt; bake(new_data = NULL)\ngp_YeoJohnson &lt;- ggplot_hist(df_YeoJohnson[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_YeoJohnson\n\n\n\n\n\n\n\n\n\n\n4.1.2 Logarithmic Transformation\nA strong transformation for right-skewed positive variables.\nFormula\n\\[\nT(x) = \\log(x)\n\\]\nProperties - Only defined for strictly positive values. - Suitable for multiplicative processes and highly right-skewed data. - Strongly compresses large values. - Not applicable to zero or negative values.\n\nrcp_Log &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_mutate(across(all_predictors(), ~ .x - min(.x) + 1e-6)) |&gt;\n  step_log(all_predictors())\ndf_Log &lt;- prep(rcp_Log) |&gt; bake(new_data = NULL)\ngp_Log &lt;- ggplot_hist(df_Log[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Log\n\n\n\n\n\n\n\n\n\n\n4.1.3 Square-Root Transformation\nA mild transformation suitable for non-negative, moderately right-skewed data.\nFormula\n\\[\nT(x) = \\sqrt{x}\n\\]\nProperties - Defined for zero and positive values. - Less aggressive than the log transformation. - Reduces right-skewness but insufficient for heavy skewness. - Not applicable to negative values.\n\nrcp_Sqrt &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_mutate(across(all_predictors(), ~ .x - min(.x) + 1e-6)) |&gt;\n  step_sqrt(all_predictors())\ndf_Sqrt &lt;- prep(rcp_Sqrt) |&gt; bake(new_data = NULL)\ngp_Sqrt &lt;- ggplot_hist(df_Sqrt[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Sqrt\n\n\n\n\n\n\n\n\n\n\n4.1.4 Choosing a Transformation\n\nRight-skewed and strictly positive → Log\nRight-skewed and non-negative → Square-root\nMixed signs or unclear skewness → Yeo–Johnson",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#standardization-and-normalization",
-    "href": "mldl/ml_feature_engineering.html#standardization-and-normalization",
-    "title": "Feature Engineering and Selection",
-    "section": "4.2 Standardization and Normalization",
-    "text": "4.2 Standardization and Normalization\nScaling features to comparable magnitudes is crucial for algorithms that rely on linear functions or distance metrics, such as regression models, neural networks, support vector machines, k-means, and hierarchical clustering.\n\n4.2.1 Standardization (Z-Scaling)\nCenters each feature at zero mean and scales to unit variance.\nFormula\n\\[\nz = \\frac{x - \\mu}{\\sigma}\n\\]\nwhere\n\\(\\mu\\) = mean of the feature,\n\\(\\sigma\\) = standard deviation.\nProperties - Produces features with mean 0 and standard deviation 1. - Preserves distribution shape and skewness. - Outliers still influence the scale. - Widely used for algorithms assuming normal-like distributions.\n\nrcp_Normal &lt;- recipe(evapo_r ~ ., data = df_FeatureEng) |&gt;\n  step_normalize(all_predictors())    # (x − mean) / sd\ndf_Normal &lt;- prep(rcp_Normal) |&gt; bake(new_data = NULL)\ngp_Normal &lt;- ggplot_hist(df_Normal[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_Normal\n\n\n\n\n\n\n\n\n\n\n4.2.2 Normalization (Min–Max Scaling)\nRescales each feature to the interval \\([0, 1]\\).\nFormula\n\\[\nx' = \\frac{x - x_{\\min}}{x_{\\max} - x_{\\min}}\n\\]\nProperties - Compresses all values into a fixed range. - Highly sensitive to outliers. - Preserves relative ordering but not distributional shape. - Useful when absolute scales matter or when features must lie in \\([0,1]\\), such as in neural networks and kNN.\n\nrcp_MinMax &lt;- recipe(evapo_r ~ ., data = df_FeatureEng)  |&gt; \n  step_range(all_predictors())\ndf_MinMax &lt;- prep(rcp_MinMax) |&gt; bake(new_data = NULL)\ngp_MinMax &lt;- ggplot_hist(df_MinMax[,c(\"evapo_p\", \"RSK\", \"soil_moist\")])\ngp_MinMax\n\n\n\n\n\n\n\n\n\n\n4.2.3 Choosing a Scaling Method\nUse standardization when\n- variables need equal weight,\n- algorithms assume normally scaled inputs,\n- outliers should not dominate the scaling range.\nUse normalization when\n- features must lie within \\([0,1]\\),\n- distance-based methods or neural networks are used,\n- absolute ranges are important.",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#independent-component-analysis",
-    "href": "mldl/ml_feature_engineering.html#independent-component-analysis",
-    "title": "Feature Engineering and Selection",
-    "section": "6.3 Independent component analysis",
-    "text": "6.3 Independent component analysis\n\nrcp_ICA4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_ica(all_predictors(), num_comp = 4)\ndf_ICA4 &lt;- prep(rcp_ICA4) |&gt; bake(new_data = NULL)\n\nggplot(df_ICA4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)\n\n\n\n\n\n\n\n\n\nplot_top_loadings(\n  prep(rcp_ICA4),\n  component_number &lt;= 4,\n  n = 4,               # number of variables to show per PC\n  type = \"ica\"    # which PCs to plot\n) +\n  scale_fill_manual(values = c(\"TRUE\" = color_RUB_green, \"FALSE\" = color_RUB_blue))+\n  theme(legend.position = \"inside\",\n        legend.position.inside = c(.99, .01),\n        legend.justification = c(1,0))",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#uniform-manifold-approximation-and-projection",
-    "href": "mldl/ml_feature_engineering.html#uniform-manifold-approximation-and-projection",
-    "title": "Feature Engineering and Selection",
-    "section": "6.4 Uniform manifold approximation and projection",
-    "text": "6.4 Uniform manifold approximation and projection\n\nrcp_UMAP4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_umap(all_predictors(), num_comp = 4)\ndf_UMAP4 &lt;- prep(rcp_UMAP4) |&gt; bake(new_data = NULL)\n\nggplot(df_UMAP4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_supervised.html",
-    "href": "mldl/ml_supervised.html",
-    "title": "Feature Engineering and Selection",
-    "section": "",
-    "text": "library(tidymodels)\nlibrary(tidyverse)\ntheme_set(theme_bw())\n\n\ncolor_RUB_blue &lt;- \"#17365c\"\ncolor_RUB_green &lt;- \"#8dae10\"\ncolor_TUD_pink &lt;- \"#EC008D\"\n\ncolor_DRESDEN &lt;- c(\"#03305D\", \"#28618C\", \"#539DC5\", \"#84D1EE\", \"#009BA4\", \"#13A983\", \"#93C356\", \"#BCCF02\")\n\n\ndf_Bochum_KL &lt;- read_csv(\"../data_share/df_Bochum_KL.csv\")\n# Train–test split (75% / 25%)\nsplit_Bochum &lt;- initial_split(df_Bochum_KL, prop = 3/4)\ndf_Train &lt;- training(split_Bochum)\ndf_Test  &lt;- testing(split_Bochum)\n\n\n# Preprocessing recipe (normalize + PCA)\n\nrcp_Norm &lt;- \n  recipe(evapo_r ~ ., data = df_Train) |&gt;\n  step_YeoJohnson(all_predictors()) |&gt; \n  step_normalize(all_predictors())"
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#hyperparameter",
-    "href": "mldl/ml_supervised.html#hyperparameter",
-    "title": "Feature Engineering and Selection",
-    "section": "3.1 Hyperparameter",
-    "text": "3.1 Hyperparameter\nFor ordinary linear regression (using the lm engine), there are no hyperparameters to tune.\nHowever, when we introduce regularization (ridge, lasso, elastic net), the model includes an additional penalty term in the loss function to prevent overfitting.\nRegularization requires the model to control how strong the penalty is and what type of penalty is used.\nThese controls are called hyperparameters, and two of them appear:\n\npenalty (lambda): determines the overall strength of the regularization\n\nmixture (alpha): determines the type of regularization (0 = ridge, 1 = lasso, values in between = elastic net)\n\nWithout regularization (ordinary linear regression), no hyperparameters are needed.\nThese hyperparameters must usually be tuned using cross-validation.\nDifferent regression methods use different loss functions and regularization strategies.\nThe key difference is whether the model introduces hyperparameters (penalty and mixture) that control the amount and type of regularization.\n\n3.1.1 Ordinary Least Squares (OLS)\n\nNo regularization → no hyperparameters.\n\nThe solution is obtained analytically by minimizing the sum of squared residuals.\n\n\\[\n\\min_{\\beta} \\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n\\]\nBecause there is no penalty term, the model can overfit when predictors are highly correlated.\n\n\n3.1.2 Ridge Regression (L2 penalty)\n\nIntroduces one hyperparameter:\n\npenalty (lambda): strength of coefficient shrinkage\n\n\nmixture is fixed to 0, meaning pure L2 regularization.\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\sum_{j=1}^p \\beta_j^2\n\\right)\n\\]\nLarge lambda → strong shrinkage.\nCoefficients approach zero but never become exactly zero.\n\n\n3.1.3 Lasso Regression (L1 penalty)\n\nAlso uses one hyperparameter:\n\npenalty (lambda): controls how strongly coefficients are pushed toward zero\n\n\nmixture is fixed to 1, meaning pure L1 regularization.\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\sum_{j=1}^p |\\beta_j|\n\\right)\n\\]\nLarge lambda → many coefficients become exactly zero → feature selection.\n\n\n3.1.4 Elastic Net Regression (combined L1 + L2)\n\nUses two hyperparameters:\n\npenalty (lambda): global strength of shrinkage\n\nmixture (alpha): balance between L1 and L2\n\nalpha = 0 → ridge\n\nalpha = 1 → lasso\n\n0 &lt; alpha &lt; 1 → mixture\n\n\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\left[\n\\alpha \\sum_{j=1}^p |\\beta_j|\n+ (1-\\alpha) \\sum_{j=1}^p \\beta_j^2\n\\right]\n\\right)\n\\]\nElastic Net is useful when predictors are correlated and when both shrinkage and feature selection are desired.\n\n\n3.1.5 Summary of Hyperparameter Settings\n\n\n\nMethod\npenalty (lambda)\nmixture (alpha)\nRegularization\n\n\n\n\nOLS\nnot used\nnot used\nnone\n\n\nRidge\nyes\n0\nL2\n\n\nLasso\nyes\n1\nL1\n\n\nElastic Net\nyes\n0 &lt; α &lt; 1\nL1 + L2\n\n\n\nIn practice, penalty and mixture are usually selected using cross-validation, since the optimal values depend on the dataset."
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#fitting-algorithms-ols-vs-ridge-vs-lasso-vs-elastic-net",
-    "href": "mldl/ml_supervised.html#fitting-algorithms-ols-vs-ridge-vs-lasso-vs-elastic-net",
-    "title": "Feature Engineering and Selection",
-    "section": "2.2 Fitting algorithms: OLS vs Ridge vs Lasso vs Elastic Net",
-    "text": "2.2 Fitting algorithms: OLS vs Ridge vs Lasso vs Elastic Net\nDifferent regression methods use different loss functions and regularization strategies.\nThe key difference is whether the model introduces hyperparameters (penalty and mixture) that control the amount and type of regularization.\n\n2.2.1 Ordinary Least Squares (OLS)\n\nNo regularization → no hyperparameters.\n\nThe solution is obtained analytically by minimizing the sum of squared residuals.\n\n\\[\n\\min_{\\beta} \\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n\\]\nBecause there is no penalty term, the model can overfit when predictors are highly correlated.\n\n\n2.2.2 Ridge Regression (L2 penalty)\n\nIntroduces one hyperparameter:\n\npenalty (lambda): strength of coefficient shrinkage\n\n\nmixture is fixed to 0, meaning pure L2 regularization.\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\sum_{j=1}^p \\beta_j^2\n\\right)\n\\]\nLarge lambda → strong shrinkage.\nCoefficients approach zero but never become exactly zero.\n\n\n2.2.3 Lasso Regression (L1 penalty)\n\nAlso uses one hyperparameter:\n\npenalty (lambda): controls how strongly coefficients are pushed toward zero\n\n\nmixture is fixed to 1, meaning pure L1 regularization.\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\sum_{j=1}^p |\\beta_j|\n\\right)\n\\]\nLarge lambda → many coefficients become exactly zero → feature selection.\n\n\n2.2.4 Elastic Net Regression (combined L1 + L2)\n\nUses two hyperparameters:\n\npenalty (lambda): global strength of shrinkage\n\nmixture (alpha): balance between L1 and L2\n\nalpha = 0 → ridge\n\nalpha = 1 → lasso\n\n0 &lt; alpha &lt; 1 → mixture\n\n\n\n\\[\n\\min_{\\beta} \\left(\n\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\n+ \\lambda \\left[\n\\alpha \\sum_{j=1}^p |\\beta_j|\n+ (1-\\alpha) \\sum_{j=1}^p \\beta_j^2\n\\right]\n\\right)\n\\]\nElastic Net is useful when predictors are correlated and when both shrinkage and feature selection are desired.\n\n\n2.2.5 Summary of Hyperparameter Settings\n\n\n\nMethod\npenalty (lambda)\nmixture (alpha)\nRegularization\n\n\n\n\nOLS\nnot used\nnot used\nnone\n\n\nRidge\nyes\n0\nL2\n\n\nLasso\nyes\n1\nL1\n\n\nElastic Net\nyes\n0 &lt; α &lt; 1\nL1 + L2\n\n\n\nIn practice, penalty and mixture are usually selected using cross-validation, since the optimal values depend on the dataset."
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#general-ordinary-linear-regression-ols",
-    "href": "mldl/ml_supervised.html#general-ordinary-linear-regression-ols",
-    "title": "Feature Engineering and Selection",
-    "section": "3.1 1. General: Ordinary Linear Regression (OLS)",
-    "text": "3.1 1. General: Ordinary Linear Regression (OLS)\n\n# linear regression --------------\n\nmdl_Mlm &lt;- \n  linear_reg() |&gt;\n  set_engine(\"lm\")\n\nwflow_Norm_Mlm &lt;- \n  workflow() |&gt;\n  add_recipe(rcp_Norm) |&gt;\n  add_model(mdl_Mlm)\n\nfit_Norm_Mlm &lt;- \n  wflow_Norm_Mlm |&gt;\n  fit(data = df_Train)\n\npred_Mlm &lt;- \n  predict(fit_Norm_Mlm, df_Test) |&gt;\n  bind_cols(df_Test |&gt; select(evapo_r))\n\nmetrics(pred_Mlm, truth = evapo_r, estimate = .pred)\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard       3.83 \n2 rsq     standard       0.862\n3 mae     standard       2.87 \n\nggplot(pred_Mlm, aes(x = evapo_r, y = .pred)) +\n  geom_point(alpha = 0.6, color = color_RUB_blue) +\n  geom_abline(intercept = 0, slope = 1, linetype = \"dashed\", color = color_TUD_pink) +\n  labs(x = \"Observed\", y = \"Predicted\")"
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#ridge-regression-l2",
-    "href": "mldl/ml_supervised.html#ridge-regression-l2",
-    "title": "Feature Engineering and Selection",
-    "section": "3.2 2. Ridge Regression (L2)",
-    "text": "3.2 2. Ridge Regression (L2)\n\n# Ridge model (alpha = 0) -------------\n\nmdl_Ridge &lt;- \n  linear_reg(\n    penalty = 0.1,   # lambda\n    mixture = 0      # alpha = 0 -&gt; ridge\n  ) |&gt;\n  set_engine(\"glmnet\")\n\nwflow_Norm_Ridge &lt;- \n  workflow() |&gt;\n  add_recipe(rcp_Norm) |&gt;\n  add_model(mdl_Ridge)\n\nfit_Norm_Ridge &lt;- \n  wflow_Norm_Ridge |&gt;\n  fit(df_Train)\n\npred_Ridge &lt;- \n  predict(fit_Norm_Ridge, df_Test) |&gt;\n  bind_cols(df_Test |&gt; select(evapo_r))\n\nmetrics(pred_Ridge, truth = evapo_r, estimate = .pred)\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard       4.28 \n2 rsq     standard       0.832\n3 mae     standard       3.04"
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#lasso-regression-l1",
-    "href": "mldl/ml_supervised.html#lasso-regression-l1",
-    "title": "Feature Engineering and Selection",
-    "section": "3.3 3. Lasso Regression (L1)",
-    "text": "3.3 3. Lasso Regression (L1)\n\n# Lasso Regression (L1) ----------\n\nmdl_Lasso &lt;- \n  linear_reg(\n    penalty = 0.1,   # lambda\n    mixture = 1      # alpha = 1 -&gt; lasso\n  ) |&gt;\n  set_engine(\"glmnet\")\n\nwflow_Norm_Lasso &lt;- \n  workflow() |&gt;\n  add_recipe(rcp_Norm) |&gt;\n  add_model(mdl_Lasso)\n\nfit_Norm_Lasso &lt;- \n  wflow_Norm_Lasso |&gt; fit(df_Train)\n\npred_Lasso &lt;- \n  predict(fit_Norm_Lasso, df_Test) |&gt;\n  bind_cols(df_Test |&gt; select(evapo_r))\n\nmetrics(pred_Lasso, truth = evapo_r, estimate = .pred)\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard       3.99 \n2 rsq     standard       0.851\n3 mae     standard       2.89"
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#elastic-net-regression-0-α-1",
-    "href": "mldl/ml_supervised.html#elastic-net-regression-0-α-1",
-    "title": "Feature Engineering and Selection",
-    "section": "3.4 4. Elastic Net Regression (0 < α < 1)",
-    "text": "3.4 4. Elastic Net Regression (0 &lt; α &lt; 1)\n\n# Elastic Net Regression ------------\n\nmdl_Enet &lt;- \n  linear_reg(\n    penalty = 0.1,  # lambda\n    mixture = 0.5   # alpha between 0 and 1\n  ) |&gt;\n  set_engine(\"glmnet\")\n\nwflow_Norm_Enet &lt;- \n  workflow() |&gt;\n  add_recipe(rcp_Norm) |&gt;\n  add_model(mdl_Enet)\n\nfit_Norm_Enet &lt;- \n  wflow_Norm_Enet |&gt; fit(df_Train)\n\npred_Enet &lt;- \n  predict(fit_Norm_Enet, df_Test) |&gt;\n  bind_cols(df_Test |&gt; select(evapo_r))\n\nmetrics(pred_Enet, truth = evapo_r, estimate = .pred)\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard       3.90 \n2 rsq     standard       0.858\n3 mae     standard       2.83"
-  },
-  {
-    "objectID": "mldl/ml_supervised.html#grid-search",
-    "href": "mldl/ml_supervised.html#grid-search",
-    "title": "Feature Engineering and Selection",
-    "section": "2.1 Grid Search",
-    "text": "2.1 Grid Search\nGrid search is when we predefine a set of parameter values to evaluate. The main choices involved in grid search are how to make the grid and how many parameter combinations to evaluate. Grid search is often judged as inefficient since the number of grid points required to cover the parameter space can become unmanageable with the curse of dimensionality. There is truth to this concern, but it is most true when the process is not optimized. This is discussed more in Chapter 13.\nIterative search or sequential search is when we sequentially discover new parameter combinations based on previous results. Almost any nonlinear optimization method is appropriate, although some are more efficient than others. In some cases, an initial set of results for one or more parameter combinations is required to start the optimization process. Iterative search is discussed more in Chapter 14."
-  },
-  {
-    "objectID": "mldl/ml_basic_concept.html#model-performance-assessment",
-    "href": "mldl/ml_basic_concept.html#model-performance-assessment",
-    "title": "Basic Concept",
-    "section": "3.5 Model Performance Assessment",
-    "text": "3.5 Model Performance Assessment\nDuring training and tuning, it is essential to monitor and compare model performance. Performance metrics provide quantitative indicators of a model’s predictive quality and guide decisions related to training, hyperparameter optimization, and model selection.\nWhile the model is being trained, metrics are computed on both the training and validation sets to track learning progress, identify overfitting, and adjust hyperparameters. After training, the model is evaluated on a separate testing set to obtain an unbiased estimate of its generalization ability, ensuring that performance reflects real-world applicability rather than memorization of the training data.\n\n3.5.1 Classification Metrics\nFor classification tasks, common metrics include accuracy, Brier score, and ROC AUC, each capturing different aspects of model performance:\n\nAccuracy: Measures the proportion of correct predictions relative to all predictions:\n\n\\[\n\\text{Accuracy} = \\frac{\\text{Number of Correct Predictions}}{\\text{Total Number of Predictions}}\n\\]\nValues range from 0 to 1, with higher values indicating better performance. Accuracy is intuitive but can be misleading for imbalanced datasets, where a model predicting only the majority class may appear highly accurate yet be uninformative.\n\nBrier Score: Evaluates the accuracy of probabilistic predictions. For a binary outcome:\n\n\\[\nBS = (p - o)^2\n\\]\nwhere \\(p\\) is the predicted probability and \\(o\\) the actual outcome (1 or 0). The mean Brier score across the dataset ranges from 0 to 1, with lower values indicating better calibration. Unlike accuracy, it accounts for both confidence and correctness of predictions.\n\nROC AUC: Measures a classifier’s ability to discriminate between classes across all possible thresholds. The ROC curve plots:\n\n\\[\n\\text{TPR} = \\frac{\\text{TP}}{\\text{TP} + \\text{FN}}\n\\qquad\\text{against}\\qquad\n\\text{FPR} = \\frac{\\text{FP}}{\\text{FP} + \\text{TN}}\n\\]\nThe area under the curve (AUC) ranges from 0.5 (random guessing) to 1.0 (perfect separation). ROC AUC is threshold-independent and particularly useful for imbalanced datasets.\n\n\n3.5.2 Regression Metrics\nFor regression tasks, metrics quantify the deviation between predicted and observed values:\n\nRoot Mean Squared Error (RMSE): Measures the average magnitude of prediction errors, penalizing large deviations:\n\n\\[\n\\text{RMSE} = \\sqrt{\\frac{1}{n}\\sum_{i=1}^{n}( \\hat{y}_i - y_i )^2}\n\\]\n\nMean Absolute Error (MAE): Computes the average absolute difference between predictions and observations, providing robustness to outliers:\n\n\\[\n\\text{MAE} = \\frac{1}{n}\\sum_{i=1}^{n}|\\hat{y}_i - y_i|\n\\]\n\nCoefficient of Determination (R²): Indicates the proportion of variance in the observed data explained by the model:\n\n\\[\nR^2 = 1 - \\frac{\\sum_{i=1}^{n}( \\hat{y}_i - y_i )^2}{\\sum_{i=1}^{n}( y_i - \\bar{y} )^2}\n\\]\nBy integrating performance metrics into both training and evaluation phases, practitioners can iteratively refine models, prevent overfitting, optimize hyperparameters, and select models that provide reliable predictions on unseen data. This combined approach of monitoring during training and assessing after training ensures that models are both accurate and generalizable.",
-    "crumbs": [
-      "ML / DL",
-      "Basic Concept"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#independent-component-analysis-ica",
-    "href": "mldl/ml_feature_engineering.html#independent-component-analysis-ica",
-    "title": "Feature Engineering and Selection",
-    "section": "6.2 Independent Component Analysis (ICA)",
-    "text": "6.2 Independent Component Analysis (ICA)\nIndependent Component Analysis (ICA) is a dimension reduction technique that seeks to represent multivariate data as a combination of statistically independent components. Unlike methods such as Principal Component Analysis (PCA), which maximize variance and produce uncorrelated components, ICA focuses on identifying underlying latent factors that are mutually independent.\n\nrcp_ICA4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_ica(all_predictors(), num_comp = 4)\ndf_ICA4 &lt;- prep(rcp_ICA4) |&gt; bake(new_data = NULL)\n\nggplot(df_ICA4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)\n\n\n\n\n\n\n\n\n\nplot_top_loadings(\n  prep(rcp_ICA4),\n  component_number &lt;= 4,\n  n = 4,               # number of variables to show per PC\n  type = \"ica\"    # which PCs to plot\n) +\n  scale_fill_manual(values = c(\"TRUE\" = color_RUB_green, \"FALSE\" = color_RUB_blue))+\n  theme(legend.position = \"inside\",\n        legend.position.inside = c(.99, .01),\n        legend.justification = c(1,0))",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
-    ]
-  },
-  {
-    "objectID": "mldl/ml_feature_engineering.html#uniform-manifold-approximation-and-projection-umap",
-    "href": "mldl/ml_feature_engineering.html#uniform-manifold-approximation-and-projection-umap",
-    "title": "Feature Engineering and Selection",
-    "section": "6.3 Uniform Manifold Approximation and Projection (UMAP)",
-    "text": "6.3 Uniform Manifold Approximation and Projection (UMAP)\nUniform Manifold Approximation and Projection (UMAP) is a nonlinear dimension reduction technique designed to project high-dimensional data into a lower-dimensional space while preserving its intrinsic geometric structure. UMAP is particularly effective at maintaining both local relationships (i.e., neighborhood structure) and global patterns in the data. Unlike linear methods such as PCA, UMAP can capture complex, nonlinear structures in the data, making it well-suited for high-dimensional datasets with intricate patterns.\n\nrcp_UMAP4 &lt;- recipe(evapo_r ~ ., data = df_Bochum_KL) |&gt;\n  step_normalize(all_predictors()) |&gt;\n  step_umap(all_predictors(), num_comp = 4)\ndf_UMAP4 &lt;- prep(rcp_UMAP4) |&gt; bake(new_data = NULL)\n\nggplot(df_UMAP4, aes(x = .panel_x, y = .panel_y, color = evapo_r, fill = evapo_r)) +\n  geom_point(size = 0.5) +\n  geom_autodensity(alpha = .8, fill = color_RUB_green, color = color_RUB_blue) +\n  facet_matrix(vars(-evapo_r), layer.diag = 2) + \n  scale_color_gradientn(colors = color_DRESDEN) + \n  scale_fill_gradientn(colors = color_DRESDEN)",
-    "crumbs": [
-      "ML / DL",
-      "Feature Engineering and Selection"
     ]
   }
 ]

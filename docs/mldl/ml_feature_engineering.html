@@ -523,7 +523,7 @@ window.Quarto = {
 <h2 data-number="4.1" class="anchored" data-anchor-id="distribution-shaping-transformations"><span class="header-section-number">4.1</span> Distribution-shaping Transformations</h2>
 <p>In some variables, most values cluster within a very narrow range or display strong deviations from a normal-like distribution. Such skewed or compressed distributions may limit model performance. Similar to target transformation, applying transformations to minimize skewness in predictors can improve model fit. Box–Cox (<code>step_BoxCox</code>) and Yeo–Johnson (<code>step_YeoJohnson</code>) are commonly used approaches, although classical options such as logarithmic or square-root transformations also remain effective.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_Bochum_KL <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data_share/df_Bochum_KL.csv"</span>)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_Bochum_KL <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/HydroSimul/Web/refs/heads/main/data_share/df_Bochum_KL.csv"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_FeatureEng <span class="ot">&lt;-</span> df_Bochum_KL[,<span class="fu">c</span>(<span class="st">"evapo_r"</span>, <span class="st">"evapo_p"</span>, <span class="st">"RSK"</span>, <span class="st">"soil_moist"</span>)]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>ggplot_hist <span class="ot">&lt;-</span> <span class="cf">function</span>(df_Data) {</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  df_long <span class="ot">&lt;-</span> df_Data <span class="sc">|&gt;</span></span>
@@ -793,6 +793,9 @@ x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}
 </div>
 </div>
 </div>
+<p>The most influential variables for each principal component can also be inspected through their loadings.<br>
+These loadings (or coefficients) indicate how strongly each original feature contributes to a given PC,<br>
+allowing us to interpret what each component represents in terms of the original variables.</p>
 <div class="cell" data-fig-fullwidth="true">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_top_loadings</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>(rcp_PCA4),</span>
