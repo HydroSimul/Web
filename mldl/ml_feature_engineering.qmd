@@ -241,7 +241,7 @@ gp_Ori
 A flexible transformation that accommodates positive, zero, and negative values.
 
 **Formula**  
-For a value $ x $ and transformation parameter $ \lambda $:
+For a value $x$ and transformation parameter $\lambda$:
 
 $$
 T(x;\lambda) =
@@ -255,7 +255,7 @@ $$
 
 **Properties**
 - Works with positive, zero, and negative values.
-- Estimates the parameter $ \lambda $ to reduce skewness.
+- Estimates the parameter $\lambda$ to reduce skewness.
 - Often yields distributions closest to normality.
 - Less interpretable and slightly slower due to parameter estimation.
 
