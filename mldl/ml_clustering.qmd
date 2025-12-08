@@ -40,6 +40,11 @@ df_Substance <- read.csv("../data_share/df_2010_bafg.csv", row.names = 1)
 
 # EDA
 
+We have loaded the data into a DataFrame. First, let's have a look at the structure of the data.
+
+As we can see, there might be datapoints/rows with some NaN values left. Since we only want to retain data with a valid date, we can drop all rows with date == NaN. Then, we inspect column the names and some of their contents.
+
+
 ```{r}
 # Drop rows where "date" is NA
 df_Substance <- df_Substance[!is.na(df_Substance$date), ]
@@ -52,12 +57,24 @@ unique(df_Substance$sampling_location)
 
 # Rivers (title case)
 unique(df_Substance$river)
+```
 
+There are sampling locations as well as river names. The dataset's main river is the Rhine, but there are also tributaries to the Rhine included. Some locations might also have multiple rivers:
+
+```{r}
 # Rivers at the sampling location Koblenz
 unique(df_Substance$river[df_Substance$sampling_location == "KOBLENZ"])
 
 
+```
 
+There are also two sampling locations that seem to be similar: Lauterbourg-Karlsruhe and Karlsruhe. We will check, if these are duplicates at a later point. For now we can make a mental note.
+
+The three main data columns are 'discharge', 'conc', and 'ph'. 'discharge' and 'ph' should be self explanatory. 'conc' holds the concentration of the substance in the column 'substance'. Each of these has the corresponding data columns: unit_, less_than_ and sampling_type_ (which are less important for the pH value, but still included). unit_ and less_than_ denote the unit and give a hint to whether the measured value was below the level of detectability, respectively. less_than_ might be True or False; if it is False, the measured value could be quantified.
+
+Let's have a look at the units and substances.
+
+```{r}
 # Discharge units
 unique(df_Substance$unit_discharge)
 
@@ -66,13 +83,21 @@ unique(df_Substance$unit_conc)
 
 # Substances
 unique(df_Substance$substance)
+```
 
+For the discharge the unit is m³/s, but there are some rows, where there is no discharge recorded, so there is also NaN for these rows.
+For the concentration the unit is µg/L, but similar to discharge, there are some rows with NaN.
+In the dataset, there seems to be a total of 17 substances and NaN for the same reason as above. However there is 'As' and 'AS', which both stand for arsenic. We need to fix this. 
 
+```{r}
 df_Substance$substance[df_Substance$substance == "AS"] <- "As"
 
 unique(df_Substance$substance)
+```
 
-# 
+Looks much better now: we have a total of 16 substances and NaN.
+
+```{r} 
 df_substances <- df_Substance[!is.na(df_Substance$conc), ]
 
 ggplot(df_substances, aes(x = conc)) +
@@ -82,8 +107,11 @@ ggplot(df_substances, aes(x = conc)) +
     y = "Count",
     title = "Histogram of substance concentrations"
   )
+```
 
+In the dataset there is a large quantity of concentrations below 0.1 µg/L. We still have the concentrations below detectability included. We do not know, what the exact values for the concentrations are in these cases, so we discard the respective rows.
 
+```{r}
 df_substances_quant <- df_substances[df_substances$less_than_conc == "False", ]
 ggplot(df_substances_quant, aes(x = conc)) +
   geom_histogram(bins = 50, color = color_RUB_blue, fill = color_RUB_green) +
@@ -92,9 +120,11 @@ ggplot(df_substances_quant, aes(x = conc)) +
     y = "Count",
     title = "Histogram of substance concentrations"
   )
+```
 
+Now we fewer measurements and especially the concentrations below 0.1 µg/L have become fewer. There are still some possible outliers. Optional: We can use IQR to exclude these. Since every substance has its own concentration range, we have to calculate IQR for every substance independently.
 
-
+```{r}
 all_substances <- unique(df_substances_quant$substance)
 df_iqr <- do.call(rbind, lapply(all_substances, function(substance) {
   df_sub <- df_substances_quant[df_substances_quant$substance == substance, ]
@@ -118,6 +148,7 @@ ggplot(df_iqr, aes(x = conc)) +
 ```
 
 
+One clustering application one might come to try out is to identify substance groups from concentrations, pH values, and discharge. Let's first plot these values.
 
 ```{r}
 #| fig-fullwidth: true
@@ -146,7 +177,9 @@ gp_Concen1 + gp_Concen2 + plot_layout(guides = "collect")
 
 ```
 
+Since we already know the different substance groups, we can see, that they all share a similar space of concentration over discharge or pH. Here, trying to find the distinct substances from our numerical data would be a classification problem anyways, but the diagrams also show, that clustering would not be suitable since we see a lot of overlap.
 
+There are still some unreasonable low pH values left that have to be removed. We still need to have a look at the possible duplicate data in Karlsruhe. 
 
 ```{r}
 #| fig-fullwidth: true
@@ -189,6 +222,7 @@ unique(df_k_l$river)
 
 ```
 
+From a visual perspective, the Karlsruhe subset seems to be included in the Lauterbourg-Karlsruhe data. For the intents of this exercise, visual inspection is enough here, and we discard the Karlsruhe subset.
 
 
 ## Final data
@@ -200,7 +234,23 @@ df_final <- df_filtered[df_filtered$sampling_location != "KARLSRUHE", ]
 
 
 
-# PCA
+# Unsupervised Learning -- Source Allocation
+
+Substances in the aquatic environment might have different emission sources and pathways. Some substances will have similar behaviour. To find and know such similarities greatly helps in modelling studies and regulatory policies. Since the groupings of similar substances are unknown to us, unsupervised learning can be applied. Several clustering techniques can aid us in finding groups. 
+This works by comparing concentration profiles at different sampling locations. 
+
+In the following use PCA and UMAP to reduce the dimensionality of the data. Then cluster the scores of the respective substances using different clustering techniques. How many clusters should you choose? How does the clustering compare to your subjective visual inspection? How should the input data be scaled? How is the final clustering affected?
+
+At the end, create a consesus matrix and interpret the results.
+
+## Feature engineering
+
+First, the features have to be engineered. Each sampling location at each river is a feature for our substance observations. In this exercise we calculate the median of all concentration over the last ten year. NaN values are filled with 0.
+
+## Preprocessing
+
+How should the features be scaled? Try out different techniques. How are they affecting the result?
+
 
 ```{r}
 df_PCA <- df_final
@@ -219,24 +269,19 @@ df_PCA_Summary <- df_PCA |>
 
 
 mat_PCA_Summary <- df_PCA_Summary[,-1]
-df_PCA_Final <- t(mat_PCA_Summary) |> as.data.frame()
-colnames(df_PCA_Final) <- df_PCA_Summary$site
+df_Clust_Substance <- t(mat_PCA_Summary) |> as.data.frame()
+colnames(df_Clust_Substance) <- df_PCA_Summary$site
+```
 
 
-rcp_Clust <- recipe(~ ., data = df_PCA_Final |> t()) |>
+```{r}
+rcp_Clust <- recipe(~ ., data = df_Clust_Substance) |>
+  step_YeoJohnson(all_predictors()) |> 
   step_normalize(all_predictors())  # normalize all columns
 
 # Prep and bake
-df_Clust_Substance <- prep(rcp_Clust) |> bake(new_data = NULL) |> t()
-colnames(df_Clust_Substance) <- colnames(df_PCA_Final)
-rownames(df_Clust_Substance) <- rownames(df_PCA_Final)
-
-rcp_Clust2 <- recipe(~ ., data = df_Clust_Substance) |>
-  step_normalize(all_predictors())  # normalize all columns
-
-# Prep and bake
-df_Clust_Normal <- prep(rcp_Clust2) |> bake(new_data = NULL)
-rownames(df_Clust_Normal) <- rownames(df_PCA_Final)
+df_Clust_Normal <- prep(rcp_Clust) |> bake(new_data = NULL)
+rownames(df_Clust_Normal) <- rownames(df_Clust_Substance)
 
 # Perform PCA
 pca_Clust <- prcomp(df_Clust_Normal, scale. = FALSE)  # already normalized
@@ -252,6 +297,9 @@ ggplot() +
 
 ```
 
+## Number of Principal Components
+
+Number of PCA components: if we use standardized data, we can use the Kaiser Criterion. Otherwise we can also choose the number of component as such that the PCA explains 95% of the variance.
 
 ```{r}
 #| fig-fullwidth: true
@@ -259,6 +307,7 @@ ggplot() +
 #| fig-height: 8
 # Recipe for PCA on clustering data
 rcp_Clust_PCA <- recipe(~ ., data = df_Clust_Substance) |>
+  step_YeoJohnson(all_predictors()) |>  
   step_normalize(all_predictors()) |>  # normalize all numeric columns
   step_pca(all_predictors(), num_comp = 3)  # keep first 4 PCs
 
@@ -369,8 +418,7 @@ gp_Hclust1 + (gp_Hclust2 + theme(axis.text.y = element_blank(),
 
 # K-Means
 
-
-## k test
+To find the appropriate number of clusters, we can use the elbow test. If the elbow test does not work as expected, i.e. it does not flat out, we can still use the silhouette method.
 
 ```{r}
 df_Kmeans_Elbow <- tibble(k = 2:8, wss_value = NA)
@@ -521,8 +569,10 @@ gp_DBSCAN1 + (gp_DBSCAN2 + theme(axis.text.y = element_blank(),
 ```
 
 
-
 # UMAP
+
+Instead of PCA, one can also use UMAP for dimensionality reduction.
+
 
 ```{r}
 #| fig-fullwidth: true
@@ -531,6 +581,7 @@ gp_DBSCAN1 + (gp_DBSCAN2 + theme(axis.text.y = element_blank(),
 # Recipe for UMAP on clustering data
 set.seed(42)
 rcp_Clust_UMAP <- recipe(~ ., data = df_Clust_Substance) |>
+  step_YeoJohnson(all_predictors()) |>  
   step_normalize(all_predictors()) |>  # normalize all numeric columns
   step_umap(all_predictors(), num_comp = 3)  # keep first 4 PCs
 
@@ -548,7 +599,7 @@ ggplot(df_Clust_Plot_UMAP, aes(x = .panel_x, y = .panel_y)) +
 
 
 
-# Hierachical 
+## Hierachical 
 
 ```{r}
 # HIERARCHICAL CLUSTERING ------------
@@ -594,7 +645,7 @@ df_clst_Match_UMAP <- tibble(
 
 # Join segment → label → cluster
 df_Segment_Hclst_UMAP <- dend_Data_UMAP$segments %>%
-  left_join(dend_Data_UMAP$labels %>% select(label, x), by = "x") %>%
+  left_join(dend_Data_UMAP$labels %>% dplyr::select(label, x), by = "x") %>%
   left_join(df_clst_Match_UMAP, by = "label")
 
 # Fill NA cluster values upward in tree
@@ -641,10 +692,10 @@ gp_Hclust1_UMAP + (gp_Hclust2_UMAP + theme(axis.text.y = element_blank(),
 ```
 
 
-# K-Means
+## K-Means
 
 
-## k test
+### k test
 
 ```{r}
 df_Kmeans_Elbow_UMAP <- tibble(k = 2:8, wss_value = NA)
@@ -758,11 +809,11 @@ gp_Kmeans1_UMAP + (gp_Kmeans2_UMAP + theme(axis.text.y = element_blank(),
 
 
 
-# DBSCAN
+## DBSCAN
 
 ```{r}
 # dbscan -----------
-fit_DBSCAN_UMAP <- dbscan(df_Clust_UMAP, eps = 1.3, minPts = 3)
+fit_DBSCAN_UMAP <- dbscan(df_Clust_UMAP, eps = 1, minPts = 2)
 clst_DBSCAN_UMAP <- paste0("Cluster_", fit_DBSCAN_UMAP$cluster)
 clst_DBSCAN_UMAP[clst_DBSCAN_UMAP == "Cluster_0"] <- NA
 
