@@ -69,6 +69,7 @@ website:
             - mldl/ml_basic_concept.qmd      
             - mldl/ml_tidymodels_basic.qmd  
             - mldl/ml_feature_engineering.qmd
+            - mldl/ml_clustering.qmd
 
 format:
   html:

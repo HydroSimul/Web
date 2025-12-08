@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../mldl/ml_clustering.html" rel="next">
 <link href="../mldl/ml_tidymodels_basic.html" rel="prev">
 <link href="../Kan.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -236,6 +237,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../mldl/ml_feature_engineering.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Feature Engineering and Selection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../mldl/ml_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
   </div>
 </li>
       </ul>
@@ -554,7 +561,7 @@ window.Quarto = {
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="yeojohnson-transformation"><span class="header-section-number">4.1.1</span> Yeo–Johnson Transformation</h3>
 <p>A flexible transformation that accommodates positive, zero, and negative values.</p>
 <p><strong>Formula</strong><br>
-For a value $ x $ and transformation parameter $ $:</p>
+For a value <span class="math inline">\(x\)</span> and transformation parameter <span class="math inline">\(\lambda\)</span>:</p>
 <p><span class="math display">\[
 T(x;\lambda) =
 \begin{cases}
@@ -564,7 +571,7 @@ T(x;\lambda) =
 -\ln(1-x), &amp; x &lt; 0,\ \lambda = 2
 \end{cases}
 \]</span></p>
-<p><strong>Properties</strong> - Works with positive, zero, and negative values. - Estimates the parameter $ $ to reduce skewness. - Often yields distributions closest to normality. - Less interpretable and slightly slower due to parameter estimation.</p>
+<p><strong>Properties</strong> - Works with positive, zero, and negative values. - Estimates the parameter <span class="math inline">\(\lambda\)</span> to reduce skewness. - Often yields distributions closest to normality. - Less interpretable and slightly slower due to parameter estimation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rcp_YeoJohnson <span class="ot">&lt;-</span> <span class="fu">recipe</span>(evapo_r <span class="sc">~</span> ., <span class="at">data =</span> df_FeatureEng) <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_YeoJohnson</span>(<span class="fu">all_predictors</span>())   <span class="co"># handles zeros and negatives</span></span>
@@ -1379,6 +1386,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../mldl/ml_clustering.html" class="pagination-link" aria-label="Clustering">
+        <span class="nav-page-text">Clustering</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

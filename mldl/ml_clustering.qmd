@@ -1,0 +1,840 @@
+---
+title: Clustering
+execute:
+  warning: false
+  error: false
+sidebar:
+  contents: auto
+number-sections: true
+---
+
+
+# Library and Data
+
+```{r}
+library(tidymodels)
+library(tidyverse)
+theme_set(theme_bw())
+library(tidyclust)
+library(embed)
+# library(cluster)
+library(dbscan)
+library(ggdendro)
+library(patchwork)
+library(ggforce)
+library(reshape2)
+```
+
+```{r}
+color_RUB_blue <- "#17365c"
+color_RUB_green <- "#8dae10"
+color_TUD_pink <- "#EC008D"
+color_DRESDEN <- c("#03305D", "#28618C", "#539DC5", "#84D1EE", "#009BA4", "#13A983", "#93C356", "#BCCF02")
+
+```
+
+
+```{r}
+df_Substance <- read.csv("../data_share/df_2010_bafg.csv", row.names = 1)
+```
+
+# EDA
+
+```{r}
+# Drop rows where "date" is NA
+df_Substance <- df_Substance[!is.na(df_Substance$date), ]
+
+# Print all column names
+print(paste("All columns:", paste(names(df_Substance), collapse = ", ")))
+
+# Sampling locations (title case)
+unique(df_Substance$sampling_location)
+
+# Rivers (title case)
+unique(df_Substance$river)
+
+# Rivers at the sampling location Koblenz
+unique(df_Substance$river[df_Substance$sampling_location == "KOBLENZ"])
+
+
+
+# Discharge units
+unique(df_Substance$unit_discharge)
+
+# Concentration units
+unique(df_Substance$unit_conc)
+
+# Substances
+unique(df_Substance$substance)
+
+
+df_Substance$substance[df_Substance$substance == "AS"] <- "As"
+
+unique(df_Substance$substance)
+
+# 
+df_substances <- df_Substance[!is.na(df_Substance$conc), ]
+
+ggplot(df_substances, aes(x = conc)) +
+  geom_histogram(bins = 50, color = color_RUB_blue, fill = color_RUB_green) +
+  labs(
+    x = "Concentration (µg/L)",
+    y = "Count",
+    title = "Histogram of substance concentrations"
+  )
+
+
+df_substances_quant <- df_substances[df_substances$less_than_conc == "False", ]
+ggplot(df_substances_quant, aes(x = conc)) +
+  geom_histogram(bins = 50, color = color_RUB_blue, fill = color_RUB_green) +
+  labs(
+    x = "Concentration (µg/L)",
+    y = "Count",
+    title = "Histogram of substance concentrations"
+  )
+
+
+
+all_substances <- unique(df_substances_quant$substance)
+df_iqr <- do.call(rbind, lapply(all_substances, function(substance) {
+  df_sub <- df_substances_quant[df_substances_quant$substance == substance, ]
+  q1 <- quantile(df_sub$conc, 0.25, na.rm = TRUE)
+  q3 <- quantile(df_sub$conc, 0.75, na.rm = TRUE)
+  iqr_substance <- q3 - q1
+  lower <- q1 - 1.5 * iqr_substance
+  upper <- q3 + 1.5 * iqr_substance
+  df_sub[df_sub$conc >= lower & df_sub$conc <= upper, ]
+}))
+
+
+ggplot(df_iqr, aes(x = conc)) +
+  geom_histogram(bins = 50, color = color_RUB_blue, fill = color_RUB_green) +
+  labs(
+    x = "Concentration (µg/L)",
+    y = "Count",
+    title = "Histogram of substance concentrations"
+  )
+
+```
+
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 5.8
+# Create a color palette
+colors <- scales::hue_pal()(length(all_substances))
+names(colors) <- all_substances
+
+# Scatter plot: Discharge vs Concentration
+gp_Concen1 <- ggplot(df_iqr, aes(x = discharge, y = conc, color = substance)) +
+  geom_point(alpha = 0.7) +
+  scale_color_manual(values = colors) +
+  labs(x = "Discharge (m³/s)", y = "Concentration (µg/L)") +
+  theme(legend.position = "right")
+
+# Scatter plot: pH vs Concentration
+gp_Concen2 <- ggplot(df_iqr, aes(x = ph, y = conc, color = substance)) +
+  geom_point(alpha = 0.7) +
+  scale_color_manual(values = colors) +
+  labs(x = "pH (-)", y = NULL) +
+  theme(legend.position = "none")
+
+# Combine plots
+gp_Concen1 + gp_Concen2 + plot_layout(guides = "collect")
+
+```
+
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 5.8
+# Filter data
+df_filtered <- df_iqr[df_iqr$ph > 2, ]
+df_k <- df_filtered[df_filtered$sampling_location == "KARLSRUHE", ]
+df_k_l <- df_filtered[df_filtered$sampling_location == "LAUTERBOURG-KARLSRUHE", ]
+
+# Create as many colors as needed
+colors <- scales::hue_pal()(length(all_substances))
+names(colors) <- all_substances
+
+# Plot: Karlsruhe
+gp_Karl <- ggplot(df_k, aes(x = discharge, y = conc, color = substance)) +
+  geom_point(alpha = 0.7) +
+  scale_color_manual(values = colors) +
+  labs(title = "Karlsruhe", x = "Discharge (m³/s)", y = "Concentration (µg/L)") +
+  theme(legend.position = "right") +
+  ylim(-5000, 80000)
+
+# Plot: Lauterbourg-Karlsruhe
+gp_Laut <- ggplot(df_k_l, aes(x = discharge, y = conc, color = substance)) +
+  geom_point(alpha = 0.7) +
+  scale_color_manual(values = colors) +
+  labs(title = "Lauterbourg-Karlsruhe", x = "Discharge (m³/s)") +
+  theme(legend.position = "none",
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank()) +
+  ylim(-5000, 80000)
+
+# Combine plots
+gp_Karl + gp_Laut + plot_layout(guides = "collect")
+
+# Print unique rivers
+unique(df_k$river)
+unique(df_k_l$river)
+
+
+```
+
+
+
+## Final data
+
+```{r}
+df_final <- df_filtered[df_filtered$sampling_location != "KARLSRUHE", ]
+
+```
+
+
+
+# PCA
+
+```{r}
+df_PCA <- df_final
+df_PCA <- df_PCA[df_PCA$year >= 2015, ]
+
+# Create "site" combining sampling_location and river
+df_PCA$site <- paste(df_PCA$sampling_location, df_PCA$river, sep = "_")
+
+# Pivot to wide format with median concentrations
+df_PCA_Summary <- df_PCA |>
+  group_by(site, substance) |>
+  summarize(conc_median = median(conc, na.rm = TRUE), .groups = "drop") |>
+  pivot_wider(names_from = substance, values_from = conc_median, values_fill = 0) |> 
+  dplyr::select(-`NA`) |>
+  filter(site != "NA_NA")
+
+
+mat_PCA_Summary <- df_PCA_Summary[,-1]
+df_PCA_Final <- t(mat_PCA_Summary) |> as.data.frame()
+colnames(df_PCA_Final) <- df_PCA_Summary$site
+
+
+rcp_Clust <- recipe(~ ., data = df_PCA_Final |> t()) |>
+  step_normalize(all_predictors())  # normalize all columns
+
+# Prep and bake
+df_Clust_Substance <- prep(rcp_Clust) |> bake(new_data = NULL) |> t()
+colnames(df_Clust_Substance) <- colnames(df_PCA_Final)
+rownames(df_Clust_Substance) <- rownames(df_PCA_Final)
+
+rcp_Clust2 <- recipe(~ ., data = df_Clust_Substance) |>
+  step_normalize(all_predictors())  # normalize all columns
+
+# Prep and bake
+df_Clust_Normal <- prep(rcp_Clust2) |> bake(new_data = NULL)
+rownames(df_Clust_Normal) <- rownames(df_PCA_Final)
+
+# Perform PCA
+pca_Clust <- prcomp(df_Clust_Normal, scale. = FALSE)  # already normalized
+
+# Eigenvalues
+eigen_Clust <- pca_Clust$sdev^2
+
+# Scree plot
+ggplot() +
+  geom_point(aes(x = 1:length(eigen_Clust), y = eigen_Clust)) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = color_TUD_pink) +
+  labs(x = "PC", y = "Eigenvalue")
+
+```
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 8
+# Recipe for PCA on clustering data
+rcp_Clust_PCA <- recipe(~ ., data = df_Clust_Substance) |>
+  step_normalize(all_predictors()) |>  # normalize all numeric columns
+  step_pca(all_predictors(), num_comp = 3)  # keep first 4 PCs
+
+# Prep and bake
+df_Clust_PCA <- prep(rcp_Clust_PCA) |> bake(new_data = NULL)
+df_Clust_Plot_PCA <- df_Clust_PCA
+df_Clust_Plot_PCA$substance <- rownames(df_Clust_Substance)
+ggplot(df_Clust_Plot_PCA, aes(x = .panel_x, y = .panel_y)) +
+  geom_point(aes(shape = substance), color = color_RUB_blue) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_autodensity(alpha = 0.8, fill = color_RUB_green, color = color_RUB_blue) +
+  facet_matrix(vars(-substance), layer.diag = 2)
+
+```
+
+# Hierachical 
+
+```{r}
+# HIERARCHICAL CLUSTERING ------------
+
+mdl_Hclust <- hier_clust(
+  num_clusters = 4,
+  linkage_method = "complete"  # or "single", "average", "ward.D2"
+) |>
+  set_engine("stats")
+
+# Workflow
+wflow_Hclust <- workflow() |>
+  add_recipe(rcp_Clust_PCA) |>
+  add_model(mdl_Hclust)
+
+# Fit the model
+fit_Hclust <- fit(wflow_Hclust, data = df_Clust_Substance)
+
+# Extract cluster assignments
+clst_Hclust <- fit_Hclust |>
+  extract_cluster_assignment()
+
+
+```
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 8
+label_clst_Hclust <- clst_Hclust$.cluster
+names(label_clst_Hclust) <- rownames(df_Clust_Substance)
+mat_Dist <- dist(df_Clust_PCA)
+df_Hc <- hclust(mat_Dist, method = "complete")
+# Set labels (same order as df_Clust_Substance)
+df_Hc$labels <- rownames(df_Clust_Substance)
+# Convert to dendro format
+dend_Data <- as.dendrogram(df_Hc) |> dendro_data()
+df_clst_Match <- tibble(
+  label = dend_Data$labels$label,
+  cluster = label_clst_Hclust[dend_Data$labels$label]
+)
+
+# Join segment → label → cluster
+df_Segment_Hclst <- dend_Data$segments %>%
+  left_join(dend_Data$labels %>% select(label, x), by = "x") %>%
+  left_join(df_clst_Match, by = "label")
+
+# Fill NA cluster values upward in tree
+df_Segment_Hclst$cluster <- zoo::na.locf(df_Segment_Hclst$cluster, fromLast = TRUE)
+
+ggplot() +
+  geom_segment(data = df_Segment_Hclst,
+               aes(x = x, y = y, xend = xend, yend = yend,
+                   color = factor(cluster)),
+               linewidth = 0.7) +
+  geom_text(data = dend_Data$labels,
+            aes(x = x, y = y, label = label),
+            hjust = 1, angle = 90, size = 3) +
+  labs(title = "Dendrogram (Complete Linkage)",
+       x = "", y = "Height", color = "Cluster") +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid = element_blank())
+
+```
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 7
+df_Hclust_Plot <- cbind(df_Clust_Plot_PCA, clst_Hclust)
+# Scatter plot: PC1 vs PC2
+gp_Hclust1 <- ggplot(df_Hclust_Plot, aes(x = PC2, y = PC1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_mark_ellipse(aes(x = PC2, y = PC1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "PC2", y = "PC1")
+
+# Scatter plot: PC1 vs PC3
+gp_Hclust2 <- ggplot(df_Hclust_Plot, aes(x = PC3, y = PC1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_mark_ellipse(aes(x = PC3, y = PC1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "PC3", y = "PC1")
+gp_Hclust1 + (gp_Hclust2 + theme(axis.text.y = element_blank(),
+                                 axis.title.y = element_blank())) + plot_layout(guides = "collect")
+
+```
+
+
+# K-Means
+
+
+## k test
+
+```{r}
+df_Kmeans_Elbow <- tibble(k = 2:8, wss_value = NA)
+df_Kmeans_Silhouette <- tibble(
+  k = 2:8, 
+  avg_silhouette = NA
+)
+
+for (i in 2:8) {
+  set.seed(123)
+  fit_Temp <- workflow() |>
+    add_recipe(rcp_Clust_PCA) |>
+    add_model(k_means(num_clusters = i) |> set_engine("stats")) |>
+    fit(data = df_Clust_Substance)
+  
+  df_Kmeans_Elbow$wss_value[df_Kmeans_Elbow$k == i] <- fit_Temp |> 
+    extract_fit_engine() |> 
+    pluck("tot.withinss")
+  
+
+  clusters <- fit_Temp |> extract_cluster_assignment()
+  # Prepare PCA data
+
+  # Calculate silhouette scores
+  sil <- cluster::silhouette(as.numeric(clusters$.cluster), dist(df_Clust_PCA))
+  
+  # Store average silhouette width
+  df_Kmeans_Silhouette$avg_silhouette[df_Kmeans_Silhouette$k == i] <- 
+    mean(sil[, 3])
+  
+}
+
+```
+
+
+```{r}
+# Plot elbow curve
+ggplot(df_Kmeans_Elbow, aes(x = k, y = wss_value)) +
+  geom_line(color = color_RUB_blue) +
+  geom_point(color = color_RUB_green) +
+  labs(title = "Elbow Method", 
+       x = "Number of Clusters (k)", 
+       y = "Inertia (Within-Cluster Sum of Squares)")
+
+```
+
+
+```{r}
+ggplot(df_Kmeans_Silhouette, aes(x = k, y = avg_silhouette)) +
+  geom_line(color = color_RUB_blue) +
+  geom_point(color = color_RUB_green) +
+  labs(
+    title = "Average Silhouette Score",
+    x = "Number of Clusters (k)",
+    y = "Average Silhouette Width"
+  )
+
+```
+
+
+```{r}
+# Model specification
+mdl_Kmeans <- k_means(num_clusters = 4)
+
+# Workflow
+wflow_Kmeans <- workflow() |>
+  add_recipe(rcp_Clust_PCA) |>
+  add_model(mdl_Kmeans)
+
+# Fit the model
+fit_Kmeans <- fit(wflow_Kmeans, data = df_Clust_Substance)
+fit_Kmeans$fit
+# Extract cluster assignments
+clst_Kmeans <- fit_Kmeans |>
+  extract_cluster_assignment()
+clst_Kmeans_Centroids <- fit_Kmeans |> extract_centroids()
+
+
+```
+
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 7
+df_Kmeans_Plot <- cbind(df_Clust_Plot_PCA, clst_Kmeans)
+# Scatter plot: PC1 vs PC2
+gp_Kmeans1 <- ggplot(df_Kmeans_Plot, aes(x = PC2, y = PC1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_point(data = clst_Kmeans_Centroids, 
+             aes(x = PC2, y = PC1, color = .cluster), 
+             shape = "X", size = 4) +
+  geom_mark_ellipse(aes(x = PC2, y = PC1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "PC2", y = "PC1")
+
+# Scatter plot: PC1 vs PC3
+gp_Kmeans2 <- ggplot(df_Kmeans_Plot, aes(x = PC3, y = PC1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_point(data = clst_Kmeans_Centroids, 
+             aes(x = PC3, y = PC1, color = .cluster), 
+             shape = "X", size = 4) +
+  geom_mark_ellipse(aes(x = PC3, y = PC1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "PC3", y = "PC1")
+gp_Kmeans1 + (gp_Kmeans2 + theme(axis.text.y = element_blank(),
+                                 axis.title.y = element_blank())) + plot_layout(guides = "collect")
+
+```
+
+
+
+# DBSCAN
+
+```{r}
+# dbscan -----------
+
+fit_DBSCAN <- dbscan(df_Clust_PCA, eps = 2, minPts = 2)
+clst_DBSCAN <- paste0("Cluster_", fit_DBSCAN$cluster)
+clst_DBSCAN[clst_DBSCAN == "Cluster_0"] <- NA
+
+
+
+```
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 7
+df_DBSCAN_Plot <- cbind(df_Clust_Plot_PCA, .cluster = clst_DBSCAN)
+# Scatter plot: PC1 vs PC2
+gp_DBSCAN1 <- ggplot(df_DBSCAN_Plot, aes(x = PC2, y = PC1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_mark_ellipse(aes(x = PC2, y = PC1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "PC2", y = "PC1")
+
+# Scatter plot: PC1 vs PC3
+gp_DBSCAN2 <- ggplot(df_DBSCAN_Plot, aes(x = PC3, y = PC1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_PCA$substance))) +
+  geom_mark_ellipse(aes(x = PC3, y = PC1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "PC3", y = "PC1")
+gp_DBSCAN1 + (gp_DBSCAN2 + theme(axis.text.y = element_blank(),
+                                 axis.title.y = element_blank())) + plot_layout(guides = "collect")
+
+```
+
+
+
+# UMAP
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 8
+# Recipe for UMAP on clustering data
+set.seed(42)
+rcp_Clust_UMAP <- recipe(~ ., data = df_Clust_Substance) |>
+  step_normalize(all_predictors()) |>  # normalize all numeric columns
+  step_umap(all_predictors(), num_comp = 3)  # keep first 4 PCs
+
+# Prep and bake
+df_Clust_UMAP <- prep(rcp_Clust_UMAP) |> bake(new_data = NULL)
+df_Clust_Plot_UMAP <- df_Clust_UMAP
+df_Clust_Plot_UMAP$substance <- rownames(df_Clust_Substance)
+ggplot(df_Clust_Plot_UMAP, aes(x = .panel_x, y = .panel_y)) +
+  geom_point(aes(shape = substance), color = color_RUB_blue) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_autodensity(alpha = 0.8, fill = color_RUB_green, color = color_RUB_blue) +
+  facet_matrix(vars(-substance), layer.diag = 2)
+
+```
+
+
+
+# Hierachical 
+
+```{r}
+# HIERARCHICAL CLUSTERING ------------
+
+mdl_Hclust <- hier_clust(
+  num_clusters = 4,
+  linkage_method = "complete"  # or "single", "average", "ward.D2"
+) |>
+  set_engine("stats")
+
+# Workflow
+wflow_Hclust_UMAP <- workflow() |>
+  add_recipe(rcp_Clust_UMAP) |>
+  add_model(mdl_Hclust)
+
+# Fit the model
+fit_Hclust_UMAP <- fit(wflow_Hclust_UMAP, data = df_Clust_Substance)
+
+# Extract cluster assignments
+clst_Hclust_UMAP <- fit_Hclust_UMAP |>
+  extract_cluster_assignment()
+
+
+```
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 8
+label_clst_Hclust_UMAP <- clst_Hclust_UMAP$.cluster
+names(label_clst_Hclust_UMAP) <- rownames(df_Clust_Substance)
+mat_Dist_UMAP <- dist(df_Clust_UMAP)
+df_Hc_UMAP <- hclust(mat_Dist_UMAP, method = "complete")
+# Set labels (same order as df_Clust_Substance)
+df_Hc_UMAP$labels <- rownames(df_Clust_Substance)
+# Convert to dendro format
+dend_Data_UMAP <- as.dendrogram(df_Hc_UMAP) |> dendro_data()
+df_clst_Match_UMAP <- tibble(
+  label = dend_Data_UMAP$labels$label,
+  cluster = label_clst_Hclust_UMAP[dend_Data_UMAP$labels$label]
+)
+
+# Join segment → label → cluster
+df_Segment_Hclst_UMAP <- dend_Data_UMAP$segments %>%
+  left_join(dend_Data_UMAP$labels %>% select(label, x), by = "x") %>%
+  left_join(df_clst_Match_UMAP, by = "label")
+
+# Fill NA cluster values upward in tree
+df_Segment_Hclst_UMAP$cluster <- zoo::na.locf(df_Segment_Hclst_UMAP$cluster, fromLast = TRUE)
+
+ggplot() +
+  geom_segment(data = df_Segment_Hclst_UMAP,
+               aes(x = x, y = y, xend = xend, yend = yend,
+                   color = factor(cluster)),
+               linewidth = 0.7) +
+  geom_text(data = dend_Data_UMAP$labels,
+            aes(x = x, y = y, label = label),
+            hjust = 1, angle = 90, size = 3) +
+  labs(title = "Dendrogram (Complete Linkage)",
+       x = "", y = "Height", color = "Cluster") +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid = element_blank())
+
+```
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 7
+df_Hclust_Plot_UMAP <- cbind(df_Clust_Plot_UMAP, clst_Hclust_UMAP)
+# Scatter plot: UMAP1 vs UMAP2
+gp_Hclust1_UMAP <- ggplot(df_Hclust_Plot_UMAP, aes(x = UMAP2, y = UMAP1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_mark_ellipse(aes(x = UMAP2, y = UMAP1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "UMAP2", y = "UMAP1")
+
+# Scatter plot: UMAP1 vs UMAP3
+gp_Hclust2_UMAP <- ggplot(df_Hclust_Plot_UMAP, aes(x = UMAP3, y = UMAP1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_mark_ellipse(aes(x = UMAP3, y = UMAP1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "UMAP3", y = "UMAP1")
+gp_Hclust1_UMAP + (gp_Hclust2_UMAP + theme(axis.text.y = element_blank(),
+                                 axis.title.y = element_blank())) + plot_layout(guides = "collect")
+
+```
+
+
+# K-Means
+
+
+## k test
+
+```{r}
+df_Kmeans_Elbow_UMAP <- tibble(k = 2:8, wss_value = NA)
+df_Kmeans_Silhouette_UMAP <- tibble(
+  k = 2:8, 
+  avg_silhouette = NA
+)
+
+for (i in 2:8) {
+  set.seed(666)
+  fit_Temp <- workflow() |>
+    add_recipe(rcp_Clust_UMAP) |>
+    add_model(k_means(num_clusters = i) |> set_engine("stats")) |>
+    fit(data = df_Clust_Substance)
+  
+  df_Kmeans_Elbow_UMAP$wss_value[df_Kmeans_Elbow$k == i] <- fit_Temp |> 
+    extract_fit_engine() |> 
+    pluck("tot.withinss")
+  
+
+  clusters <- fit_Temp |> extract_cluster_assignment()
+  # Prepare UMAPA data
+  
+  # Calculate silhouette scores
+  sil <- cluster::silhouette(as.numeric(clusters$.cluster), dist(df_Clust_UMAP))
+  
+  # Store average silhouette width
+  df_Kmeans_Silhouette_UMAP$avg_silhouette[df_Kmeans_Silhouette$k == i] <- 
+    mean(sil[, 3])
+  
+}
+
+```
+
+
+```{r}
+# Plot elbow curve
+ggplot(df_Kmeans_Elbow_UMAP, aes(x = k, y = wss_value)) +
+  geom_line(color = color_RUB_blue) +
+  geom_point(color = color_RUB_green) +
+  labs(title = "Elbow Method", 
+       x = "Number of Clusters (k)", 
+       y = "Inertia (Within-Cluster Sum of Squares)")
+
+```
+
+
+```{r}
+ggplot(df_Kmeans_Silhouette_UMAP, aes(x = k, y = avg_silhouette)) +
+  geom_line(color = color_RUB_blue) +
+  geom_point(color = color_RUB_green) +
+  labs(
+    title = "Average Silhouette Score",
+    x = "Number of Clusters (k)",
+    y = "Average Silhouette Width"
+  )
+
+```
+
+
+```{r}
+# Model specification
+mdl_Kmeans <- k_means(num_clusters = 4)
+
+# Workflow
+wflow_Kmeans <- workflow() |>
+  add_recipe(rcp_Clust_UMAP) |>
+  add_model(mdl_Kmeans)
+
+# Fit the model
+fit_Kmeans_UMAP <- fit(wflow_Kmeans, data = df_Clust_Substance)
+fit_Kmeans_UMAP$fit
+# Extract cluster assignments
+clst_Kmeans_UMAP <- fit_Kmeans_UMAP |>
+  extract_cluster_assignment()
+clst_Kmeans_Centroids_UMAP <- fit_Kmeans_UMAP |> extract_centroids()
+
+
+```
+
+
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 7
+df_Kmeans_Plot_UMAP <- cbind(df_Clust_Plot_UMAP, clst_Kmeans_UMAP)
+# Scatter plot: UMAP1 vs UMAP2
+gp_Kmeans1_UMAP <- ggplot(df_Kmeans_Plot_UMAP, aes(x = UMAP2, y = UMAP1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_point(data = clst_Kmeans_Centroids_UMAP, 
+             aes(x = UMAP2, y = UMAP1, color = .cluster), 
+             shape = "X", size = 4) +
+  geom_mark_ellipse(aes(x = UMAP2, y = UMAP1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "UMAP2", y = "UMAP1")
+
+# Scatter plot: UMAP1 vs UMAP3
+gp_Kmeans2_UMAP <- ggplot(df_Kmeans_Plot_UMAP, aes(x = UMAP3, y = UMAP1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_point(data = clst_Kmeans_Centroids_UMAP, 
+             aes(x = UMAP3, y = UMAP1, color = .cluster), 
+             shape = "X", size = 4) +
+  geom_mark_ellipse(aes(x = UMAP3, y = UMAP1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "UMAP3", y = "UMAP1")
+gp_Kmeans1_UMAP + (gp_Kmeans2_UMAP + theme(axis.text.y = element_blank(),
+                                 axis.title.y = element_blank())) + plot_layout(guides = "collect")
+
+```
+
+
+
+# DBSCAN
+
+```{r}
+# dbscan -----------
+fit_DBSCAN_UMAP <- dbscan(df_Clust_UMAP, eps = 1.3, minPts = 3)
+clst_DBSCAN_UMAP <- paste0("Cluster_", fit_DBSCAN_UMAP$cluster)
+clst_DBSCAN_UMAP[clst_DBSCAN_UMAP == "Cluster_0"] <- NA
+
+```
+
+```{r}
+#| fig-fullwidth: true
+#| fig-width: 9
+#| fig-height: 7
+df_DBSCAN_Plot_UMAP <- cbind(df_Clust_Plot_UMAP, .cluster = clst_DBSCAN_UMAP)
+# Scatter plot: UMAP1 vs UMAP2
+gp_DBSCAN1_UMAP <- ggplot(df_DBSCAN_Plot_UMAP, aes(x = UMAP2, y = UMAP1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_mark_ellipse(aes(x = UMAP2, y = UMAP1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "UMAP2", y = "UMAP1")
+
+# Scatter plot: UMAP1 vs UMAP3
+gp_DBSCAN2_UMAP <- ggplot(df_DBSCAN_Plot_UMAP, aes(x = UMAP3, y = UMAP1, color = .cluster, shape = substance)) +
+  geom_point(size = 2) +
+  scale_shape_manual(values = 1:length(unique(df_Clust_Plot_UMAP$substance))) +
+  geom_mark_ellipse(aes(x = UMAP3, y = UMAP1, group = .cluster), alpha = 0.2, show.legend = FALSE) +
+  labs(x = "UMAP3", y = "UMAP1")
+gp_DBSCAN1_UMAP + (gp_DBSCAN2_UMAP + theme(axis.text.y = element_blank(),
+                                 axis.title.y = element_blank())) + plot_layout(guides = "collect")
+
+```
+
+
+
+# Consensus Matrix -- Co-clustering of substances
+
+```{r}
+mat_Clust <- as.matrix(df_Clust_Normal)
+int_K <- 4
+n_Obsevation <- nrow(mat_Clust)
+mat_Consensus <- matrix(0, n_Obsevation, n_Obsevation)
+n_Run <- 100
+for (i_Run in 1:n_Run) {
+  # you can choose any clustering algorithm (kmeans, pam, hclust)
+  fit <- kmeans(mat_Clust, centers = int_K)
+  clst_Km <- fit$cluster
+  # update mat_Consensus matrix
+  for (i in 1:n_Obsevation) {
+    for (j in 1:n_Obsevation) {
+      if (clst_Km[i] == clst_Km[j]) mat_Consensus[i, j] <- mat_Consensus[i, j] + 1
+    }
+  }
+}
+
+# normalize to 0–1
+mat_Consensus <- mat_Consensus / n_Run
+rownames(mat_Consensus) <- rownames(df_Clust_Normal)
+colnames(mat_Consensus) <- rownames(df_Clust_Normal)
+# melt matrix
+df_Consensus_Plot <- melt(mat_Consensus)
+colnames(df_Consensus_Plot) <- c("Substance1", "Substance2", "Prob")
+
+# optional: order substances by hierarchical clustering
+hc_Con <- hclust(dist(mat_Consensus))
+idx_Order <- hc_Con$labels[hc_Con$order]
+df_Consensus_Plot$Substance1 <- factor(df_Consensus_Plot$Substance1, levels = idx_Order)
+df_Consensus_Plot$Substance2 <- factor(df_Consensus_Plot$Substance2, levels = idx_Order)
+
+# heatmap
+ggplot(df_Consensus_Plot, aes(Substance1, Substance2, fill = Prob)) +
+  geom_tile(color = "grey96") +
+  scale_fill_gradientn("Co-clustering\nProbability", colors = color_DRESDEN[-c(1:3)]) +
+  coord_fixed(ratio = 1, expand = FALSE) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+

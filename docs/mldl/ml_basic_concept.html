@@ -185,6 +185,12 @@ window.Quarto = {
  <span class="menu-text">Feature Engineering and Selection</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../mldl/ml_clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -223,10 +229,11 @@ window.Quarto = {
   <li><a href="#classification-metrics" id="toc-classification-metrics" class="nav-link" data-scroll-target="#classification-metrics"><span class="header-section-number">3.5.1</span> Classification Metrics</a></li>
   <li><a href="#regression-metrics" id="toc-regression-metrics" class="nav-link" data-scroll-target="#regression-metrics"><span class="header-section-number">3.5.2</span> Regression Metrics</a></li>
   </ul></li>
-  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation"><span class="header-section-number">3.6</span> Model Evaluation</a></li>
-  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">3.7</span> Model selection</a></li>
-  <li><a href="#modelling-workflow" id="toc-modelling-workflow" class="nav-link" data-scroll-target="#modelling-workflow"><span class="header-section-number">3.8</span> Modelling workflow</a></li>
-  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting"><span class="header-section-number">3.9</span> Overfitting</a></li>
+  <li><a href="#predict-using-trained-model" id="toc-predict-using-trained-model" class="nav-link" data-scroll-target="#predict-using-trained-model"><span class="header-section-number">3.6</span> Predict Using Trained Model</a></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation"><span class="header-section-number">3.7</span> Model Evaluation</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">3.8</span> Model selection</a></li>
+  <li><a href="#modelling-workflow" id="toc-modelling-workflow" class="nav-link" data-scroll-target="#modelling-workflow"><span class="header-section-number">3.9</span> Modelling workflow</a></li>
+  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting"><span class="header-section-number">3.10</span> Overfitting</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -315,7 +322,6 @@ These methods do not change distributional shape but ensure comparability in sca
 <p>Categorical variables must be converted <strong>into numerical</strong> form, as most machine learning algorithms operate on numeric inputs. Unlike numeric features, categorical variables do not support distribution-shaping transformations. Consequently, categorical feature engineering focuses on <strong>encoding strategies</strong> that represent categories numerically while preserving their meaning.</p>
 <p>Common encoding methods include:</p>
 <ul>
-<li><strong>Lumping</strong>, which merges rare or conceptually similar categories to reduce sparsity and improve robustness.</li>
 <li><strong>One-hot encoding</strong>, which creates binary indicator variables for each category without imposing artificial ordering.</li>
 <li><strong>Label encoding</strong>, which assigns integer codes to categories and is suitable for models that do not interpret these codes as ordinals, such as tree-based methods.</li>
 </ul>
@@ -325,9 +331,11 @@ These methods do not change distributional shape but ensure comparability in sca
 <section id="feature-filtering-and-dimension-reduction" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="feature-filtering-and-dimension-reduction"><span class="header-section-number">2.3</span> Feature filtering and dimension reduction</h2>
 <p><strong>Feature filtering</strong> <strong>removes</strong> variables that provide little or no useful information for the learning task. Features with</p>
-<pre><code>- very low variance, 
-- high proportions of missing values, or 
-- strong multicollinearity </code></pre>
+<ul>
+<li>very low variance,</li>
+<li>high proportions of missing values, or</li>
+<li>strong multicollinearity</li>
+</ul>
 <p>often contribute minimally to predictive performance.</p>
 <p>Eliminating such variables reduces noise, simplifies the modelling process, and can improve both accuracy and efficiency. Often, a smaller, more informative feature set is preferable to a high-dimensional collection of irrelevant or redundant variables.</p>
 <p><strong>Dimension reduction</strong> methods also decrease the number of features but take a different approach. Instead of discarding variables, they <strong>construct new, lower-dimensional</strong> representations that preserve essential information. These methods simplify high-dimensional data, reduce noise, and often improve computational efficiency and predictive performance. Conceptually, they identify the most informative directions or structures in the data while disregarding variation that contributes little to the modelling objective.</p>
@@ -438,20 +446,24 @@ R^2 = 1 - \frac{\sum_{i=1}^{n}( \hat{y}_i - y_i )^2}{\sum_{i=1}^{n}( y_i - \bar{
 <p>By integrating performance metrics into both training and evaluation phases, practitioners can iteratively refine models, prevent overfitting, optimize hyperparameters, and select models that provide reliable predictions on unseen data. This combined approach of monitoring during training and assessing after training ensures that models are both accurate and generalizable.</p>
 </section>
 </section>
-<section id="model-evaluation" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">3.6</span> Model Evaluation</h2>
+<section id="predict-using-trained-model" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="predict-using-trained-model"><span class="header-section-number">3.6</span> Predict Using Trained Model</h2>
+<p>Once a model has been trained, it can be used to generate predictions on new or unseen data. This step applies the learned relationships from the training phase to make informed estimates of the target variable for previously unobserved samples. Predicting with a trained model is a critical part of the modeling workflow, as it enables evaluation of generalization performance, comparison across different models, and practical application of the model to real-world data.</p>
+</section>
+<section id="model-evaluation" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="model-evaluation"><span class="header-section-number">3.7</span> Model Evaluation</h2>
 <p>Model evaluation involves systematically measuring how well a trained model performs on data that were not used during training. This process ensures that the model generalizes effectively to unseen data, facilitates comparison among alternative models, and identifies potential issues such as overfitting, underfitting, or insufficient feature quality. Performance metrics serve as quantitative indicators of the model’s predictive quality and guide both training decisions and model selection.</p>
 </section>
-<section id="model-selection" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">3.7</span> Model selection</h2>
+<section id="model-selection" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">3.8</span> Model selection</h2>
 <p>Model selection involves choosing the most appropriate model from a set of candidates, which may differ in algorithmic approach, hyperparameter settings, or feature engineering choices. Selection relies on fair comparison using consistent metrics and validation procedures. The preferred model is the one that demonstrates strong and stable generalization, not merely the best training performance.</p>
 </section>
-<section id="modelling-workflow" class="level2" data-number="3.8">
-<h2 data-number="3.8" class="anchored" data-anchor-id="modelling-workflow"><span class="header-section-number">3.8</span> Modelling workflow</h2>
+<section id="modelling-workflow" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="modelling-workflow"><span class="header-section-number">3.9</span> Modelling workflow</h2>
 <p>The development of an effective model is both iterative and heuristic. It is rarely clear in advance what a dataset requires, and it is common to evaluate and modify multiple approaches before finalizing a model.</p>
 </section>
-<section id="overfitting" class="level2" data-number="3.9">
-<h2 data-number="3.9" class="anchored" data-anchor-id="overfitting"><span class="header-section-number">3.9</span> Overfitting</h2>
+<section id="overfitting" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="overfitting"><span class="header-section-number">3.10</span> Overfitting</h2>
 <p>Overfitting occurs when a model captures patterns that are specific to the training data but do not generalize to new samples. This typically arises when the model is overly complex or when it learns from noise or idiosyncratic patterns in the training set. A well-designed modelling process incorporates safeguards—such as validation, regularization, and resampling—to reduce the risk of overfitting and promote generalizable performance.</p>
 
 
