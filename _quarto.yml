@@ -70,6 +70,7 @@ website:
             - mldl/ml_tidymodels_basic.qmd  
             - mldl/ml_feature_engineering.qmd
             - mldl/ml_clustering.qmd
+            - mldl/ml_supervised.qmd
 
 format:
   html:
