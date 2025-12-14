@@ -64,7 +64,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../mldl/ml_clustering.html" rel="prev">
 <link href="../Kan.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -135,7 +134,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating nav-fixed">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -165,7 +164,7 @@ window.Quarto = {
 <span class="menu-text">Modelling</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../mldl/index.html" aria-current="page"> 
+    <a class="nav-link" href="../mldl/index.html"> 
 <span class="menu-text">ML / DL</span></a>
   </li>  
 </ul>
@@ -174,68 +173,10 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../mldl/index.html">ML / DL</a></li><li class="breadcrumb-item"><a href="../mldl/ml_supervised.html">Feature Engineering and Selection</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../mldl/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">ML / DL</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../mldl/ml_basic_concept.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Basic Concept</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../mldl/ml_tidymodels_basic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">ML Workflow with <code>tidymodels</code></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../mldl/ml_feature_engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Feature Engineering and Selection</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../mldl/ml_clustering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Clustering</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../mldl/ml_supervised.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Feature Engineering and Selection</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -280,7 +221,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../mldl/index.html">ML / DL</a></li><li class="breadcrumb-item"><a href="../mldl/ml_supervised.html">Feature Engineering and Selection</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Feature Engineering and Selection</h1>
 </div>
@@ -471,9 +412,9 @@ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       3.93 
-2 rsq     standard       0.859
-3 mae     standard       3.08 </code></pre>
+1 rmse    standard       4.32 
+2 rsq     standard       0.820
+3 mae     standard       3.03 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># observed vs. predicted scatter plot</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_Mlm, <span class="fu">aes</span>(<span class="at">x =</span> evapo_r, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
@@ -731,11 +672,11 @@ Next, the regression model is specified while leaving the hyperparameters unset 
 <pre><code># A tibble: 5 × 8
        penalty mixture .metric .estimator  mean     n std_err .config           
          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;             
-1 0.0000000001    0.05 rmse    standard    4.09    10   0.229 Preprocessor1_Mod…
-2 0.00000001      0.05 rmse    standard    4.09    10   0.229 Preprocessor1_Mod…
-3 0.000001        0.05 rmse    standard    4.09    10   0.229 Preprocessor1_Mod…
-4 0.0001          0.05 rmse    standard    4.09    10   0.229 Preprocessor1_Mod…
-5 0.01            0.05 rmse    standard    4.09    10   0.229 Preprocessor1_Mod…</code></pre>
+1 0.0000000001    0.43 rmse    standard    3.92    10   0.134 Preprocessor1_Mod…
+2 0.00000001      0.43 rmse    standard    3.92    10   0.134 Preprocessor1_Mod…
+3 0.000001        0.43 rmse    standard    3.92    10   0.134 Preprocessor1_Mod…
+4 0.0001          0.43 rmse    standard    3.92    10   0.134 Preprocessor1_Mod…
+5 0.0000000001    0.62 rmse    standard    3.92    10   0.134 Preprocessor1_Mod…</code></pre>
 </div>
 </div>
 <ol start="9" type="1">
@@ -769,9 +710,9 @@ Next, the regression model is specified while leaving the hyperparameters unset 
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       3.91 
-2 rsq     standard       0.860
-3 mae     standard       3.06 </code></pre>
+1 rmse    standard       4.32 
+2 rsq     standard       0.819
+3 mae     standard       3.02 </code></pre>
 </div>
 </div>
 </section>
@@ -845,11 +786,11 @@ This specifies the minimum number of observations that must be present in a node
 <pre><code># A tibble: 5 × 9
   cost_complexity tree_depth min_n .metric .estimator  mean     n std_err
             &lt;dbl&gt;      &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
-1       0.00110            5    27 rmse    standard    3.64    10   0.247
-2       0.00113            5    22 rmse    standard    3.69    10   0.258
-3       0.0000291          4    31 rmse    standard    3.94    10   0.241
-4       0.000299           4    23 rmse    standard    3.97    10   0.269
-5       0.000692           4    13 rmse    standard    4.00    10   0.271
+1        0.00113           5    22 rmse    standard    3.28    10   0.162
+2        0.00110           5    27 rmse    standard    3.31    10   0.181
+3        0.000299          4    23 rmse    standard    3.84    10   0.182
+4        0.000692          4    13 rmse    standard    3.89    10   0.225
+5        0.00238           4    28 rmse    standard    3.97    10   0.199
 # ℹ 1 more variable: .config &lt;chr&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_prams_DT <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_DT, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
@@ -871,9 +812,9 @@ This specifies the minimum number of observations that must be present in a node
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       3.76 
-2 rsq     standard       0.866
-3 mae     standard       2.42 </code></pre>
+1 rmse    standard       4.06 
+2 rsq     standard       0.838
+3 mae     standard       2.41 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot predicted vs observed</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_final_DT, <span class="fu">aes</span>(<span class="at">x =</span> evapo_r, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
@@ -994,11 +935,11 @@ The number of predictors randomly sampled at each split. Smaller values increase
 <pre><code># A tibble: 5 × 9
    mtry trees min_n .metric .estimator  mean     n std_err .config              
   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
-1    10  1000     2 rmse    standard    2.23    10   0.201 Preprocessor1_Model06
-2    10  2000     2 rmse    standard    2.24    10   0.205 Preprocessor1_Model09
-3     5  2000     2 rmse    standard    2.48    10   0.220 Preprocessor1_Model08
-4     5  1000     2 rmse    standard    2.48    10   0.216 Preprocessor1_Model05
-5    10  1000    21 rmse    standard    2.49    10   0.232 Preprocessor1_Model15</code></pre>
+1    10  1000     2 rmse    standard    2.30    10  0.141  Preprocessor1_Model06
+2    10  2000     2 rmse    standard    2.30    10  0.139  Preprocessor1_Model09
+3     5  1000     2 rmse    standard    2.53    10  0.0961 Preprocessor1_Model05
+4     5  2000     2 rmse    standard    2.53    10  0.0971 Preprocessor1_Model08
+5    10  2000    21 rmse    standard    2.55    10  0.147  Preprocessor1_Model18</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>best_prams_RF <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_RF, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1019,9 +960,9 @@ The number of predictors randomly sampled at each split. Smaller values increase
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       2.20 
-2 rsq     standard       0.954
-3 mae     standard       1.28 </code></pre>
+1 rmse    standard       2.48 
+2 rsq     standard       0.938
+3 mae     standard       1.37 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot predicted vs observed</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_final_RF, <span class="fu">aes</span>(<span class="at">x =</span> evapo_r, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
@@ -1112,11 +1053,11 @@ The number of predictors randomly sampled at each split. Smaller values increase
 <pre><code># A tibble: 5 × 8
     cost rbf_sigma .metric .estimator  mean     n std_err .config              
    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
-1  3.82    0.00762 rmse    standard    3.42    10   0.221 Preprocessor1_Model34
-2  0.302   0.0892  rmse    standard    3.44    10   0.190 Preprocessor1_Model09
-3 10.1     0.00351 rmse    standard    3.57    10   0.226 Preprocessor1_Model21
-4 10.5     0.00341 rmse    standard    3.57    10   0.225 Preprocessor1_Model08
-5  2.60    0.707   rmse    standard    3.65    10   0.153 Preprocessor1_Model37</code></pre>
+1  3.82    0.00762 rmse    standard    3.26    10   0.213 Preprocessor1_Model34
+2  0.302   0.0892  rmse    standard    3.30    10   0.241 Preprocessor1_Model09
+3  2.60    0.707   rmse    standard    3.38    10   0.239 Preprocessor1_Model37
+4 10.1     0.00351 rmse    standard    3.39    10   0.221 Preprocessor1_Model21
+5 10.5     0.00341 rmse    standard    3.40    10   0.221 Preprocessor1_Model08</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>best_prams_SVM <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_SVM, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1137,9 +1078,9 @@ The number of predictors randomly sampled at each split. Smaller values increase
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       3.07 
-2 rsq     standard       0.911
-3 mae     standard       1.98 </code></pre>
+1 rmse    standard       3.77 
+2 rsq     standard       0.863
+3 mae     standard       2.10 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10. Plot predicted vs observed</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_final_SVM, <span class="fu">aes</span>(<span class="at">x =</span> evapo_r, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
@@ -1214,11 +1155,11 @@ The number of predictors randomly sampled at each split. Smaller values increase
 <pre><code># A tibble: 5 × 13
    mtry trees min_n tree_depth learn_rate loss_reduction .metric .estimator
   &lt;int&gt; &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     
-1    11   445    14         10    0.0245    0.0000000001 rmse    standard  
-2    11   784    15         14    0.0458    0.138        rmse    standard  
-3     7  1654     3          9    0.0293    0.000000720  rmse    standard  
-4     9  1555    18         13    0.00359   1.67         rmse    standard  
-5    10  1754    19         11    0.00263   0.00000114   rmse    standard  
+1    11  1281     5         14     0.0206   0.000000175  rmse    standard  
+2    11  1074     4         12     0.261    0.0000000295 rmse    standard  
+3    11   445    14         10     0.0245   0.0000000001 rmse    standard  
+4    10   261     4         10     0.238    0.00000161   rmse    standard  
+5     7  1998    17          3     0.0371   0.00756      rmse    standard  
 # ℹ 5 more variables: mean &lt;dbl&gt;, n &lt;int&gt;, std_err &lt;dbl&gt;, .config &lt;chr&gt;,
 #   .iter &lt;int&gt;</code></pre>
 </div>
@@ -1241,9 +1182,9 @@ The number of predictors randomly sampled at each split. Smaller values increase
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       1.99 
-2 rsq     standard       0.963
-3 mae     standard       1.19 </code></pre>
+1 rmse    standard       2.11 
+2 rsq     standard       0.955
+3 mae     standard       1.18 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. Plot predicted vs observed</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_final_GB, <span class="fu">aes</span>(<span class="at">x =</span> evapo_r, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
@@ -1688,15 +1629,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../mldl/ml_clustering.html" class="pagination-link" aria-label="Clustering">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Clustering</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
