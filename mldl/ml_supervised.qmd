@@ -1,5 +1,5 @@
 ---
-title: Feature Engineering and Selection
+title: Supervised learning
 execute:
   warning: false
   error: false
