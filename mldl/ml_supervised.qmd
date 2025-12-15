@@ -95,14 +95,16 @@ As discussed in the previous article, the basic workflow for model fitting using
 
 In standard model fitting, the hyperparameters of the modeling method remain fixed. However, these parameters can also be modified and optimized. This optimization process is referred to as **tuning** rather than **fitting**. When tuning is included, several steps in the workflow change:
 
-1. Split the data into resampled sets, typically using cross-folds.  
+1. Split the data into **resampled sets**, typically using cross-folds.  
 2. Perform feature engineering using a recipe.  
-3. Specify the model, leaving the hyperparameters unset by using the `tune()` function so that they can be optimized.  
+3. Specify the model, leaving the **hyperparameters unset** by using the `tune()` function so that they can be optimized.  
 4. Define a workflow designed for tuning.  
-5. Define the parameter ranges to be explored.  
-6. Specify the tuning search strategy, such as grid search or iterative search.  
+5. Define the **parameter ranges** to be explored.  
+6. Specify the tuning **search strategy**, such as **grid search** or **iterative search**.  
 7. Conduct the tuning procedure.  
 8. Identify the best-performing parameter values.  
+
+
 9. Use the tuned parameters to construct the final model.  
 10. Fit the final model to the training data.  
 11. Generate predictions.  
@@ -117,6 +119,7 @@ The aim of tuning is to identify the optimal set of hyperparameters for a given 
 Grid search involves **predefining a set of hyperparameter values** and evaluating all possible combinations. The key design choices are how the grid is constructed and how many combinations are included. Grid search is often criticized for being computationally inefficient, especially in high-dimensional hyperparameter spaces. However, this inefficiency mainly arises when the grid is poorly designed. With a well-chosen grid, grid search can be effective and straightforward. Strategies for efficient grid construction are discussed in Chapter 13.
 
 Typical variants include:
+
 - `grid_regular(levels = 3)`: a structured grid with evenly spaced values for each hyperparameter  
 - `grid_random(size = 30)`: 30 randomly sampled combinations, which are not evenly spaced but often provide broader coverage of the parameter space  
 
@@ -132,7 +135,7 @@ When prior experience or guidance from the literature is available, **manual sea
 # Linear regression
 
 Linear regression is a classical supervised learning method used to estimate the linear relationship between one or more predictors and a continuous outcome variable.  
-In practice, most applications involve several predictors, so the standard approach is the *multiple linear regression* model, where the response is modeled as a linear combination of all predictors.
+In practice, most applications involve several predictors, so the standard approach is the **multiple linear regression** model, where the response is modeled as a linear combination of all predictors.
 
 For predictors $x_1, x_2, ..., x_p$, the model is:
 
@@ -190,21 +193,23 @@ ggplot(pred_Mlm, aes(x = evapo_r, y = .pred)) +
 
 # Regularization
 
-For ordinary linear regression (using the `lm` engine), there are no hyperparameters to tune. However, once regularization is introduced (ridge, lasso, or elastic net), an additional penalty term is added to the loss function in order to prevent overfitting.
+For ordinary linear regression (using the `lm` engine), there are no hyperparameters to tune. However, once regularization is introduced (ridge, lasso, or elastic net), an **additional penalty** term is added to the loss function in order to **prevent overfitting**.
 
 In regression, instead of minimizing only the training error (e.g. the sum of squared residuals), the objective function becomes
 
   training error + penalty on model parameters
 
 This penalty constrains the size or structure of the regression coefficients and serves three main purposes:
-- reduce overfitting by preventing the model from fitting noise in the training data  
+
+- reduce overfitting by **preventing the model from fitting noise** in the training data  
 - improve generalization performance on unseen data  
 - mitigate multicollinearity by stabilizing coefficient estimates  
 
 More specifically:
-- Ridge regression applies an L2 penalty (the sum of squared coefficients). It shrinks coefficients toward zero but typically does not set them exactly to zero.
-- Lasso regression applies an L1 penalty (the sum of absolute coefficients). This can force some coefficients to become exactly zero, effectively performing variable selection.
-- Elastic net combines L1 and L2 penalties, providing a balance between sparsity (lasso) and stability (ridge).
+
+- **Ridge regression** applies an L2 penalty (the sum of squared coefficients). It shrinks coefficients **toward zero** but typically does not set them exactly to zero.
+- **Lasso regression** applies an L1 penalty (the sum of absolute coefficients). This can force some coefficients to become exactly zero, effectively performing variable selection.
+- **Elastic net** combines L1 and L2 penalties, providing a balance between sparsity (lasso) and stability (ridge).
 
 In summary, regularization controls model complexity by penalizing large or unstable parameter values during model fitting.
 
@@ -299,8 +304,8 @@ Summary of Hyperparameter Settings:
 In practice, `penalty` and `mixture` are usually selected using **cross-validation**, since the optimal values depend on the dataset.
 
 
-1. Split the data into resampled sets
-  define the parameter “Number of partitions” `v` which means how many subsets (folds) the dataset is split into for cross-validation.
+1. Split the data into **resampled sets**
+Define the parameter **“Number of partitions” `v`** which means how many subsets (folds) the dataset is split into for cross-validation.
 
 In v-fold cross-validation:
 
@@ -316,10 +321,10 @@ cv_folds_Norm <- vfold_cv(df_Train, v = 10)
 
 ```
 
-2. Feature engineering using a recipe  
+2. **Feature engineering** using a recipe  
 The feature engineering step is performed using a preprocessing recipe, which has already been defined in the previous section. 
 
-3. Model specification with tunable hyperparameters  
+3. **Model specification with tunable hyperparameters**  
 Next, the regression model is specified while leaving the hyperparameters unset by using the `tune()` function. This allows the hyperparameters to be optimized during the tuning process rather than fixed in advance. The model structure (e.g. linear regression with regularization) is defined at this stage, while the optimal values of the hyperparameters are determined later through the chosen tuning strategy.
 
 ```{r}
@@ -333,7 +338,7 @@ mdl_tune_EN <-
 
 ```
 
-4. Define a workflow designed for tuning.
+4. Define a **workflow** designed for tuning.
 
 ```{r}
 ## Workflow -------------------------
@@ -345,8 +350,7 @@ wflow_tune_EN <-
 
 ```
 
-5. Define the parameter ranges to be explored  
-
+5. Define the **parameter ranges** to be explored  
 The ranges of the hyperparameters to be tuned must be specified before the tuning process. In most cases, reasonable default ranges are already stored within the model specification. These predefined ranges can be directly extracted using the `extract_parameter_set_dials()` function. This approach ensures that the tuning process starts from sensible and model-appropriate parameter bounds, while still allowing the ranges to be adjusted if prior knowledge or problem-specific considerations are available.
 
 ```{r}
@@ -360,8 +364,7 @@ param_tune_EN_final <-
 
 ```
 
-6. Specify the tuning search strategy  
-
+6. Specify the tuning **search strategy**  
 The tuning search strategy determines how hyperparameter combinations are generated and evaluated. Common approaches include grid search and iterative (sequential) search.
 
 For grid search, `grid_regular()` is often used. This function divides the predefined parameter ranges into a specified number of evenly spaced values using the `levels` argument. The full grid is then formed by evaluating all possible combinations of these values across the hyperparameters. A larger number of levels increases the resolution of the search but also raises the computational cost.
@@ -442,9 +445,9 @@ metrics(pred_final_EN, truth = evapo_r, estimate = .pred)
 
 # Decision Trees
 
-Tree-based models are a class of nonparametric algorithms that work by partitioning the feature space into a set of smaller, non-overlapping regions with similar response values using a series of splitting rules. Predictions are obtained by fitting a simple model within each region, typically a constant such as the mean response value. These divide-and-conquer methods yield intuitive decision rules that are easy to interpret and visualize using tree diagrams [@MLR_Boehmke_2019].
+Tree-based models are a class of nonparametric algorithms that work by partitioning the feature space into **a set of smaller, non-overlapping regions** with similar response values using a series of splitting rules. Predictions are obtained by fitting a simple model within each region, typically a constant such as the mean response value. These divide-and-conquer methods yield intuitive decision rules that are easy to interpret and visualize using tree diagrams [@MLR_Boehmke_2019].
 
-One of the most widely used tree-based methods is the Classification and Regression Tree (CART) algorithm. CART first partitions the feature space into increasingly homogeneous subgroups and then applies a simple constant prediction within each terminal node. In this sense, tree-based regression can be viewed as a sequence of classification-like splits followed by local regression within each region.
+One of the most widely used tree-based methods is the **Classification and Regression Tree (CART)** algorithm. CART first partitions the feature space into increasingly **homogeneous subgroups** and then applies a simple constant prediction within each terminal node. In this sense, tree-based regression can be viewed as a sequence of **classification-like splits** followed by local regression within each region.
 
 A CART tree can be described in terms of a root node, internal nodes, branches, and leaf nodes. The model uses binary recursive partitioning, meaning that each internal node is always split into exactly two child nodes.
 
@@ -455,13 +458,13 @@ A CART tree can be described in terms of a root node, internal nodes, branches, 
 There are three main hyperparameters in a CART model:
 
 1. `cost_complexity` (also called `cp` or alpha)  
-   This parameter controls the complexity of the tree by adding a penalty for each additional split. A higher value encourages simpler trees by pruning branches that provide little improvement in predictive accuracy, while a smaller value allows more complex trees to grow.
+   This parameter controls the **complexity** of the tree by adding a penalty for each additional split. A higher value encourages simpler trees by pruning branches that provide little improvement in predictive accuracy, while a smaller value allows more complex trees to grow.
 
 2. `tree_depth` (or `max_depth`)  
-   This defines the maximum number of levels in the tree from the root node to the deepest leaf. Limiting tree depth helps prevent overfitting, especially when the dataset is small or noisy, by restricting the number of splits.
+   This defines the maximum **number of levels** in the tree from the root node to the deepest leaf. Limiting tree depth helps prevent overfitting, especially when the dataset is small or noisy, by restricting the number of splits.
 
 3. `min_n` (or `min_samples_split`)  
-   This specifies the minimum number of observations that must be present in a node for it to be eligible for splitting. Larger values produce more generalized trees, while smaller values allow the tree to fit more detailed patterns in the data.
+   This specifies the **minimum number of observations** that must be present in a node for it to be eligible for splitting. Larger values produce more generalized trees, while smaller values allow the tree to fit more detailed patterns in the data.
 
 These hyperparameters determine the size, structure, and complexity of the tree and have a direct impact on its predictive performance. Proper tuning is crucial to achieve a balance between underfitting and overfitting.
 
@@ -487,7 +490,7 @@ wflow_tune_DT <-
 # 4. Hyperparameter grid
 set.seed(123)
 grid_DT <- grid_random(
-  cost_complexity(range = c(-5, -0.5)),  # .00001 to .3 (log scale)
+  cost_complexity(range = c(-5, -0.5)),  # 
   tree_depth(range = c(2, 5)),
   min_n(range = c(2, 40)),
   size = 30     # number of random grid combinations
@@ -558,7 +561,7 @@ rpart.plot::rpart.plot(plot_Tree)
 
 
 
-In addition to the tree structure plot, a Variable Importance Plot (VIP) provides a complementary view. It ranks the predictors according to their contribution to the model and highlights which variables have the most influence on predictions.
+In addition to the tree structure plot, a **Variable Importance Plot (VIP)** provides a complementary view. It ranks the predictors according to their contribution to the model and highlights which variables have the most influence on predictions.
 
 ```{r}
 vip::vip(fit_Tree, scale = TRUE)
@@ -567,20 +570,20 @@ vip::vip(fit_Tree, scale = TRUE)
 
 # Random Forest
 
-Random forest is an improved decision tree algorithm that builds an ensemble of many decision trees to enhance predictive performance and reduce overfitting. Instead of relying on a single tree, random forest aggregates the predictions from multiple trees, each trained on a different bootstrap sample of the data and using a random subset of predictors at each split. This combination of bagging (bootstrap aggregating) and feature randomness increases model stability, improves generalization, and reduces the variance associated with a single decision tree.
+Random forest is an improved decision tree algorithm that builds an ensemble of **many decision trees** to enhance predictive performance and reduce overfitting. Instead of relying on a single tree, random forest aggregates the predictions from multiple trees, each trained on a different bootstrap sample of the data and using a **random subset** of predictors at each split. This combination of bagging (bootstrap aggregating) and feature randomness increases model stability, improves generalization, and reduces the variance associated with a single decision tree.
 
 ## Hyperparameters
 
 Random forest has several key hyperparameters that control the ensemble's complexity and performance:
 
 1. `mtry`  
-   The number of predictors randomly sampled at each split. Smaller values increase tree diversity and reduce correlation among trees, while larger values allow stronger predictors to dominate splits.
+   The **number of predictors randomly sampled** at each split. Smaller values increase tree diversity and reduce correlation among trees, while larger values allow stronger predictors to dominate splits.
 
 2. `trees` 
-   The total number of trees in the forest. Increasing the number of trees usually improves stability and accuracy, but with diminishing returns beyond a certain point.
+   The total **number of trees** in the forest. Increasing the number of trees usually improves stability and accuracy, but with diminishing returns beyond a certain point.
 
 3. `min_n` 
-   The minimum number of observations required to split a node. Larger values produce simpler trees and reduce overfitting, while smaller values allow more detailed splits.
+   The **minimum number of observations** required to split a node. Larger values produce simpler trees and reduce overfitting, while smaller values allow more detailed splits.
 
 
 These hyperparameters determine the balance between bias and variance in the ensemble and are typically tuned to optimize predictive performance. Proper tuning ensures that the random forest captures important patterns while remaining robust to noise in the data.
