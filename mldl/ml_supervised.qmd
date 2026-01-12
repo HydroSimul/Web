@@ -116,7 +116,7 @@ The aim of tuning is to identify the optimal set of hyperparameters for a given 
 
 ## Grid search
 
-Grid search involves **predefining a set of hyperparameter values** and evaluating all possible combinations. The key design choices are how the grid is constructed and how many combinations are included. Grid search is often criticized for being computationally inefficient, especially in high-dimensional hyperparameter spaces. However, this inefficiency mainly arises when the grid is poorly designed. With a well-chosen grid, grid search can be effective and straightforward. Strategies for efficient grid construction are discussed in Chapter 13.
+Grid search involves **predefining a set of hyperparameter values** and evaluating all possible combinations. The key design choices are how the grid is constructed and how many combinations are included. Grid search is often criticized for being computationally inefficient, especially in high-dimensional hyperparameter spaces. However, this inefficiency mainly arises when the grid is poorly designed. With a well-chosen grid, grid search can be effective and straightforward. 
 
 Typical variants include:
 
@@ -125,11 +125,57 @@ Typical variants include:
 
 ## Iterative (sequential) search
 
-Iterative or sequential search methods **identify promising hyperparameter combinations step by step, guided by the results of previous evaluations**. These methods adaptively explore the parameter space and can be much more efficient than grid search for complex or high-dimensional problems. Many nonlinear optimization algorithms fall into this category, although their performance can vary. In some cases, an initial set of hyperparameter combinations must be evaluated to initialize the search. Iterative tuning strategies are discussed in more detail in Chapter 14.
+Iterative or sequential search methods **identify promising hyperparameter combinations step by step, guided by the results of previous evaluations**. These methods adaptively explore the parameter space and can be much more efficient than grid search for complex or high-dimensional problems. Many nonlinear optimization algorithms fall into this category, although their performance can vary. In some cases, an initial set of hyperparameter combinations must be evaluated to initialize the search. 
 
 ## Manual search
 
 When prior experience or guidance from the literature is available, **manual search** can also be effective. In this approach, expert knowledge is used to reduce the number of hyperparameters to tune or to restrict their plausible ranges. Although manual search is less systematic, it can substantially decrease computational cost and is often useful as a preliminary step before applying automated tuning methods.
+
+
+## Get (set) the range of hyperparameters
+
+Before tuning a model, we usually need to define a reasonable range for each hyperparameter.  
+The `tidymodels` API already provides commonly recommended hyperparameter ranges for most
+machine-learning methods via the function `extract_parameter_set_dials()`.
+
+In many cases, the default ranges can be used directly for tuning. However, in some situations
+you may want to adjust them manually. This can be done with the `update()` function:
+
+```{r}
+#| eval: false
+# 4. Hyperparameter grid (extracted from workflow)
+param_tune_RF <- extract_parameter_set_dials(wflow_tune_RF)
+
+# Update mtry with the actual number of predictors
+param_tune_RF <- param_tune_RF |>
+  update(mtry = mtry(range = c(1, ncol(df_Train) - 1)))
+```
+
+For grid search, all hyperparameter combinations must be predefined. Therefore, it is necessary
+to explicitly specify the parameter ranges in advance.
+
+For iterative search methods such as `tune_bayes()`, specifying the range beforehand is not
+strictly required, because the function can automatically infer suitable ranges. However, if
+you want to control or restrict the search space, you can still explicitly define the ranges
+using the `param_info` argument.
+
+
+## Hyperparameter ranges
+
+`tidymodels` provides a very complete workflow for hyperparameter tuning. In particular, it
+collects reasonable default ranges for hyperparameters, which can be used directly in most
+cases. However, to tune parameters more efficiently, `tidymodels` sometimes applies
+transformations to hyperparameters, especially compared to defining them manually.
+
+These transformations are important because tuning is often performed on a transformed scale
+(e.g., log scale) rather than on the original parameter scale.
+
+You can inspect the transformations applied to each hyperparameter as follows:
+
+```{r}
+#| eval: false
+param_tune_RF$object
+```
 
 
 # Linear regression
@@ -680,88 +726,72 @@ vip::vip(fit_RandomForest, geom = "col", scale = TRUE)
 
 
 
+# Gradient Boosting (GBOST)
+
+The key idea of GBOST can be divided into two key concepts: **boosting**, which improves weak models sequentially, and **gradient descent**, which iteratively adjusts model parameters in order to minimize a cost (loss) function.
 
 
-# SVM
-
-```{r}
-# Tunable SVM model (RBF kernel) --------------------------------
-
-# 1. Cross-validation folds (already created)
-set.seed(123)
-cv_folds_Norm <- vfold_cv(df_Train, v = 10)
-
-# 2. Define tunable SVM model
-mdl_tune_SVM <-
-  svm_rbf(
-    cost      = tune(),   # C penalty
-    rbf_sigma = tune()    # kernel width
-  ) |>
-  set_engine("kernlab") |>
-  set_mode("regression")
-
-# 3. Workflow (recipe + model)
-wflow_tune_SVM <-
-  workflow() |>
-  add_recipe(rcp_Norm) |>
-  add_model(mdl_tune_SVM)
-
-# 4. Hyperparameter grid
-param_tune_SVM <- extract_parameter_set_dials(wflow_tune_SVM)
-
-set.seed(123)
-grid_SVM <- grid_random(
-  param_tune_SVM,
-  size = 50
-)
-
-# 5. Cross-validated tuning
-set.seed(123)
-tune_SVM <-
-  tune_grid(
-    wflow_tune_SVM,
-    resamples = cv_folds_Norm,
-    grid = grid_SVM,
-    metrics = metric_set(rmse, rsq, mae),
-    control = control_grid(save_pred = TRUE)
-  )
-
-# 6. Best hyperparameters
-show_best(tune_SVM, metric = "rmse")
-best_prams_SVM <- select_best(tune_SVM, metric = "rmse")
-
-# 7. Final SVM model with tuned hyperparameters
-wflow_final_SVM <-
-  finalize_workflow(wflow_tune_SVM, best_prams_SVM)
-
-fit_final_SVM <- fit(wflow_final_SVM, df_Train)
-
-# 8. Predict
-pred_final_SVM <-
-  predict(fit_final_SVM, df_Test) |>
-  bind_cols(df_Test |> dplyr::select(evapo_r))
-
-# 9. Metrics
-metrics(pred_final_SVM, truth = evapo_r, estimate = .pred)
-
-# 10. Plot predicted vs observed
-ggplot(pred_final_SVM, aes(x = evapo_r, y = .pred)) +
-  geom_point(alpha = 0.6, color = color_RUB_blue) +
-  geom_abline(
-    intercept = 0,
-    slope = 1,
-    linetype = "dashed",
-    color = color_TUD_pink
-  ) +
-  labs(
-    x = "Observed",
-    y = "Predicted"
-  )
-
-```
+The GBOST method combines many simple models and is most effectively applied using **decision trees (DT)**. In contrast to random forests, where trees are trained independently, GBOST builds trees sequentially. Each new tree is trained based on the previously trained trees, and the training direction is guided by the gradient of the loss function.
 
 
-# GBOST
+**Boosting**
+
+
+The key idea of boosting is to add new models to the ensemble one after another. Boosting addresses the bias–variance trade-off by starting with a **weak model** (for example, a decision tree with only a few splits) and then **sequentially improving** performance. Each new tree focuses on correcting the largest mistakes made by the current ensemble, meaning that later trees pay more attention to training samples with large **prediction errors**.
+
+1. Base learners
+
+Boosting is a general framework that can iteratively improve any weak learning model. In practice, however, gradient boosting almost always uses decision trees as base learners. Therefore, boosting is typically discussed in the context of decision trees.
+
+2. Training weak models
+
+A weak model is one whose performance is only slightly better than random guessing. The idea behind boosting is that each model in the sequence slightly improves upon the previous one by focusing on the observations with the largest errors. For decision trees, weak learners are usually shallow trees. In gradient boosting, trees with 1–6 splits are most common.
+
+3. Sequential training with respect to errors
+
+Boosted trees are trained sequentially. Each tree uses information from the previously trained trees to improve performance. In regression problems, this is typically done by fitting each new tree to the residuals of the current ensemble. By doing so, each new tree focuses on correcting the mistakes made by earlier trees.
+
+
+![Boosted regression decision stumps as 0-1024 successive trees are added (from https://bradleyboehmke.github.io/HOML/gbm.html)](../images/homl_boosting-in-action-1.png)
+
+**Gradient descent**
+
+Gradient descent is the optimization mechanism behind gradient boosting. Instead of directly predicting the target variable, each new tree is fitted to the negative gradient of the loss function with respect to the current predictions. This ensures that each update moves the model in the direction that most reduces the loss.
+
+
+
+
+![Gradient descent is the process of gradually decreasing the cost function (from https://bradleyboehmke.github.io/HOML/gbm.html)](../images/homl_gradient-descent-fig-1.png)
+
+
+The learning rate controls the size of each update step. If the learning rate is too small, many iterations (trees) are required to reach the minimum. If it is too large, the algorithm may overshoot the minimum and fail to converge.
+
+
+![A learning rate that is too small will require many iterations to find the minimum. A learning rate too big may jump over the minimum. (from https://bradleyboehmke.github.io/HOML/gbm.html)](../images/homl_learning-rate-fig-1.png)
+
+
+## Hyperparameters
+
+1. `trees`  
+Number of trees in the ensemble. More trees allow the model to learn more complex patterns, but increase computation time and the risk of overfitting.
+
+2. `learn_rate`  
+Learning rate (shrinkage) controls how much each tree contributes to the final model. Smaller values improve generalization but require more trees; larger values speed up training but may cause overfitting.
+
+3. `mtry`  
+Number of predictors randomly selected at each split. Smaller values increase randomness and reduce correlation between trees; larger values allow each tree to use more predictors.
+
+4. `tree_depth`  
+Maximum depth of each tree. Shallow trees act as weak learners and reduce overfitting, while deeper trees can model more complex interactions.
+
+5. `min_n`  
+Minimum number of observations required in a terminal node. Larger values produce smoother, more conservative trees; smaller values allow the model to fit finer details.
+
+6. `loss_reduction`  
+Minimum reduction in loss required to make a further split. Larger values make the model more conservative and help prevent unnecessary splits.
+
+## Codes
+
 
 ```{r}
 # Tunable Gradient Boosting model (XGBoost) ---------------------
@@ -839,4 +869,263 @@ ggplot(pred_final_GB, aes(x = evapo_r, y = .pred)) +
   )
 
 ```
+
+
+
+# Support Vector Machines (SVM)
+
+Support Vector Machines were developed in the 1990s by Vladimir N. Vapnik and his colleagues. Their foundational work was published in the paper “Support Vector Method for Function Approximation, Regression Estimation, and Signal Processing” [@SVM_Vapnik_1996].
+
+The term **“support vectors”** refers to a subset of the training data that plays a crucial role in defining the final model. Unlike many traditional training strategies that use all observations equally, SVM focuses only on those data points that **lie outside or on the boundary of a tolerance region around the regression function**. These points are typically not very close to the regression line (or regression tube) and are the most informative for determining the model.
+
+In support vector regression (SVR), errors are measured using the $\epsilon$-insensitive loss function, which is defined as
+
+$$
+L_{\epsilon}(y, f(x)) =
+\begin{cases}
+0, & \text{if } |y - f(x)| \le \epsilon \\
+|y - f(x)| - \epsilon, & \text{if } |y - f(x)| > \epsilon
+\end{cases}
+$$
+
+This means that deviations smaller than $\epsilon$ are ignored and treated as zero error. Only observations whose absolute residual exceeds $\epsilon$ contribute to the loss and can become support vectors. As a result, many training points inside the $\epsilon$-tube do not influence the fitted model.
+
+
+**Kernel function**
+
+In addition to this core idea, **kernel function** is also a key concept in SVMs, especially for regression problems. A kernel function implicitly maps the input data into a higher-dimensional feature space, where a linear or nonlinear model can be fitted. The shape and flexibility of the final fitted function depend strongly on the chosen kernel. Commonly used kernels include the linear kernel, the polynomial kernel, and the radial basis function (RBF) kernel. For specific tasks, selecting an appropriate kernel is critical for good performance.
+
+Originally, SVMs were mainly designed for binary classification problems. However, by combining the support vector idea with kernel functions, regression problems can also be solved effectively using support vector regression.
+
+
+Last but not least, the support vectors are the points lying on or outside the ε-tube. This highlights an important distinction compared to other optimization methods that minimize MAE using all data points. SVR does not directly “look for the best-fitting line.” Instead, it searches for the **simplest line that the data cannot reject**.
+
+
+## Hyperparameters
+
+Support Vector Machines rely on several hyperparameters that control model complexity, smoothness, and generalization performance. The most important hyperparameters and their roles are described below.
+
+- 'cost' (C): The cost parameter, usually denoted by C, controls the trade-off between model flatness and the penalty for observations that lie outside the $\epsilon$-tube.
+    - A large C strongly penalizes large deviations, forcing the model to fit the training data closely. This can lead to low bias but increases the risk of overfitting.
+    - A small C allows more violations of the $\epsilon$-tube, resulting in a smoother function with higher bias but better generalization.
+    - It is common to all SVM kernels.
+
+![SVR with slack variables (suport vectors) (from @SVM_Rasifaghihi_2023)](../images/SVM_Rasifaghihi_2023_svr.webp)
+
+
+
+
+### Linear kernel
+
+For the linear kernel, the only kernel-related hyperparameter is cost (C). The resulting model is a linear function of the input variables, making it suitable for problems with approximately linear relationships or high-dimensional feature spaces.
+
+
+### Polynomial kernel
+
+The polynomial kernel introduces additional flexibility by modeling nonlinear relationships. Its main hyperparameters are:
+
+- `cost` (C): controls the penalty for errors, as described above.
+- `degree`: specifies the degree of the polynomial. Higher values allow more complex nonlinear patterns but increase the risk of overfitting.
+- `scale_factor`: scales the input features before applying the polynomial transformation and influences the curvature of the fitted function.
+
+
+### Radial Basis Function (RBF) kernel
+
+The RBF kernel is one of the most widely used kernels due to its flexibility. Its key hyperparameters are:
+
+- `cost` (C): controls the trade-off between smoothness and fitting accuracy.
+- `rbf_sigma`: determines the width of the Gaussian kernel.
+  - A small `rbf_sigma` leads to highly localized influence of individual observations and very flexible models.
+  - A large `rbf_sigma` produces smoother functions with broader influence of each data point.
+
+![Comparison of SVM Kernel Functions with Varying Hyperparameters](../images/mldl_svm_kenel.png)
+
+
+## Codes
+
+
+### Linear kernel
+
+```{r}
+# 1. Define tunable SVM model
+mdl_tune_SVM_linear <-
+  svm_linear(
+    cost = tune()   # C penalty
+  ) |>
+  set_engine("kernlab") |>
+  set_mode("regression")
+
+# 2. Workflow (recipe + model)
+wflow_tune_SVM_linear <-
+  workflow() |>
+  add_recipe(rcp_Norm) |>
+  add_model(mdl_tune_SVM_linear)
+
+# 3. Bayesian tuning
+set.seed(123)
+tune_SVM_linear <-
+  tune_bayes(
+    wflow_tune_SVM_linear,
+    resamples = cv_folds_Norm,
+    metrics   = metric_set(rmse, rsq, mae),
+    initial   = 10,
+    iter      = 40,
+    control   = control_bayes(save_pred = TRUE)
+  )
+
+# 4. Best hyperparameters
+show_best(tune_SVM_linear, metric = "rmse")
+best_params_SVM_linear <- select_best(tune_SVM_linear, metric = "rmse")
+
+# 5. Final model
+wflow_final_SVM_linear <-
+  finalize_workflow(wflow_tune_SVM_linear, best_params_SVM_linear)
+
+fit_final_SVM_linear <- fit(wflow_final_SVM_linear, df_Train)
+
+# 6. Prediction and evaluation
+pred_final_SVM_linear <-
+  predict(fit_final_SVM_linear, df_Test) |>
+  bind_cols(df_Test |> dplyr::select(evapo_r))
+
+metrics(pred_final_SVM_linear, truth = evapo_r, estimate = .pred)
+
+# 7. Plot predicted vs observed
+ggplot(pred_final_SVM_linear, aes(x = evapo_r, y = .pred)) +
+  geom_point(alpha = 0.6, color = color_RUB_blue) +
+  geom_abline(
+    intercept = 0,
+    slope = 1,
+    linetype = "dashed",
+    color = color_TUD_pink
+  ) +
+  labs(x = "Observed", y = "Predicted")
+```
+
+
+### Polynomial kernel
+
+```{r}
+# 1. Define tunable SVM model
+mdl_tune_SVM_poly <-
+  svm_poly(
+    cost         = tune(),  # C penalty
+    degree       = tune(),  # polynomial degree
+    scale_factor = tune()   # kernel scale
+  ) |>
+  set_engine("kernlab") |>
+  set_mode("regression")
+
+# 2. Workflow (recipe + model)
+wflow_tune_SVM_poly <-
+  workflow() |>
+  add_recipe(rcp_Norm) |>
+  add_model(mdl_tune_SVM_poly)
+
+# 3. Bayesian tuning
+set.seed(123)
+tune_SVM_poly <-
+  tune_bayes(
+    wflow_tune_SVM_poly,
+    resamples = cv_folds_Norm,
+    metrics   = metric_set(rmse, rsq, mae),
+    initial   = 10,
+    iter      = 40,
+    control   = control_bayes(save_pred = TRUE)
+  )
+
+# 4. Best hyperparameters
+show_best(tune_SVM_poly, metric = "rmse")
+best_params_SVM_poly <- select_best(tune_SVM_poly, metric = "rmse")
+
+# 5. Final model
+wflow_final_SVM_poly <-
+  finalize_workflow(wflow_tune_SVM_poly, best_params_SVM_poly)
+
+fit_final_SVM_poly <- fit(wflow_final_SVM_poly, df_Train)
+
+# 6. Prediction and evaluation
+pred_final_SVM_poly <-
+  predict(fit_final_SVM_poly, df_Test) |>
+  bind_cols(df_Test |> dplyr::select(evapo_r))
+
+metrics(pred_final_SVM_poly, truth = evapo_r, estimate = .pred)
+
+# 7. Plot predicted vs observed
+ggplot(pred_final_SVM_poly, aes(x = evapo_r, y = .pred)) +
+  geom_point(alpha = 0.6, color = color_RUB_blue) +
+  geom_abline(
+    intercept = 0,
+    slope = 1,
+    linetype = "dashed",
+    color = color_TUD_pink
+  ) +
+  labs(x = "Observed", y = "Predicted")
+
+```
+
+
+### Radial Basis Function (RBF) kernel
+
+
+```{r}
+# 1. Define tunable SVM model
+mdl_tune_SVM_rbf <-
+  svm_rbf(
+    cost      = tune(),   # C penalty
+    rbf_sigma = tune()    # kernel width
+  ) |>
+  set_engine("kernlab") |>
+  set_mode("regression")
+
+# 2. Workflow (recipe + model)
+wflow_tune_SVM_rbf <-
+  workflow() |>
+  add_recipe(rcp_Norm) |>
+  add_model(mdl_tune_SVM_rbf)
+
+# 3. Bayesian tuning
+set.seed(123)
+tune_SVM_rbf <-
+  tune_bayes(
+    wflow_tune_SVM_rbf,
+    resamples = cv_folds_Norm,
+    metrics   = metric_set(rmse, rsq, mae),
+    initial   = 10,
+    iter      = 40,
+    control   = control_bayes(save_pred = TRUE)
+  )
+
+# 4. Best hyperparameters
+show_best(tune_SVM_rbf, metric = "rmse")
+best_params_SVM_rbf <- select_best(tune_SVM_rbf, metric = "rmse")
+
+# 5. Final model
+wflow_final_SVM_rbf <-
+  finalize_workflow(wflow_tune_SVM_rbf, best_params_SVM_rbf)
+
+fit_final_SVM_rbf <- fit(wflow_final_SVM_rbf, df_Train)
+
+# 6. Prediction and evaluation
+pred_final_SVM_rbf <-
+  predict(fit_final_SVM_rbf, df_Test) |>
+  bind_cols(df_Test |> dplyr::select(evapo_r))
+
+metrics(pred_final_SVM_rbf, truth = evapo_r, estimate = .pred)
+
+# 7. Plot predicted vs observed
+ggplot(pred_final_SVM_rbf, aes(x = evapo_r, y = .pred)) +
+  geom_point(alpha = 0.6, color = color_RUB_blue) +
+  geom_abline(
+    intercept = 0,
+    slope = 1,
+    linetype = "dashed",
+    color = color_TUD_pink
+  ) +
+  labs(x = "Observed", y = "Predicted")
+
+
+```
+
+
 
